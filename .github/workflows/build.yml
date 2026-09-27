@@ -1,0 +1,76 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: codeengine-build-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build and test (Java 21)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Java 21
+        uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Set up Gradle and validate wrapper
+        uses: gradle/actions/setup-gradle@9c971963bec38e04b3d30dcc455b5382be2fdbfb # v6.3.0
+        with:
+          cache-provider: basic
+          cache-read-only: ${{ github.ref != 'refs/heads/main' || github.event_name == 'pull_request' }}
+
+      - name: Build and run tests
+        run: ./gradlew --no-daemon --stacktrace build
+
+      - name: Prepare build download
+        shell: bash
+        run: |
+          mkdir -p build/artifacts
+          for jarPath in codeengine-plugin/build/libs/*.jar codeengine-api/build/libs/*.jar; do
+            case "$jarPath" in
+              *-sources.jar) continue ;;
+            esac
+            cp "$jarPath" build/artifacts/
+          done
+          cp LICENSE.md THIRD_PARTY_NOTICES.md README.md build/artifacts/
+          git archive --format=zip --output=build/artifacts/codeengine-source.zip HEAD
+          cd build/artifacts
+          sha256sum *.jar codeengine-source.zip > SHA256SUMS
+
+      - name: Upload plugin, API and source
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: codeengine-build-${{ github.run_number }}
+          path: build/artifacts/
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Upload test reports
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: codeengine-test-reports-${{ github.run_number }}
+          path: |
+            **/build/reports/tests/
+            **/build/test-results/test/*.xml
+          if-no-files-found: warn
+          retention-days: 7

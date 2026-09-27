@@ -25,6 +25,14 @@ Windows에서는 `gradlew.bat clean build`를 사용합니다. 빌드 의존성�
 
 API JAR는 개발용입니다. 서버의 `plugins/`에는 플러그인 JAR 하나만 설치합니다. `verification` JAR는 임시 테스트 서버 전용이며 배포 서버에 설치하지 않습니다.
 
+## GitHub Actions
+
+`main`에 push하거나 `main` 대상 Pull Request를 열면 Ubuntu 24.04 / Temurin JDK 21에서 Gradle Wrapper를 검증하고 `./gradlew --no-daemon --stacktrace build`를 실행합니다. GitHub의 **Actions → Build → Run workflow**에서 수동으로 실행할 수도 있습니다.
+
+성공한 실행의 **Artifacts**에서 `codeengine-build-<실행 번호>`를 다운로드할 수 있습니다. 플러그인·API JAR, 해당 커밋의 전체 소스 ZIP, 라이선스 문서와 SHA-256 체크섬이 포함됩니다. `codeengine-test-reports-<실행 번호>`에는 생성된 JUnit XML과 HTML 테스트 보고서를 보관하며, 테스트가 실패해도 업로드를 시도합니다. 두 아티팩트의 보관 기간은 7일입니다.
+
+CI는 단위 테스트와 컴파일 통합 테스트를 실행하고 실서버 검증 도구도 빌드합니다. 실제 Paper 서버를 실행하는 회귀 테스트·벤치마크·브라우저 검증은 아래의 별도 재현 절차를 사용합니다.
+
 ## 구조
 
 | 디렉토리 | 책임 |
