@@ -3,7 +3,6 @@ package kr.codenamemc.codeengine.verification;
 import java.nio.file.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
-import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 import kr.codenamemc.codeengine.runtime.ModuleManager;
 
@@ -140,7 +139,7 @@ final class ReloadVerification {
         check(!manager.loadedIds().contains(id), "stopped module absent from loaded list: " + id);
         check(engine.getServer().getCommandMap().getCommand(command) == null, "command absent: " + command);
         check(engine.getServer().getCommandMap().getCommand("codeengine_" + id + ":" + command) == null, "namespaced command absent: " + command);
-        check(HandlerList.getRegisteredListeners(engine).isEmpty(), "no lingering event listener");
+        check(ListenerAssertions.managedListeners(engine).isEmpty(), "no lingering event listener");
         check(engine.getServer().getScheduler().getPendingTasks().stream().noneMatch(task -> task.getOwner() == engine), "no lingering engine task");
     }
     private void check(boolean condition, String message) {

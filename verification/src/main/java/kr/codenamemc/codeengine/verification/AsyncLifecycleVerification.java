@@ -43,7 +43,7 @@ final class AsyncLifecycleVerification {
             .thenCompose(value -> shutdownFromDisable())
             .thenRun(() -> {
                 check(manager.loadedIds().isEmpty() && manager.stoppingIds().isEmpty(), "async lifecycle leaves no loaded or stopping modules");
-                check(HandlerList.getRegisteredListeners(engine).isEmpty(), "async lifecycle leaves no registered listeners");
+                check(ListenerAssertions.managedListeners(engine).isEmpty(), "async lifecycle leaves no registered listeners");
                 check(engine.getServer().getScheduler().getPendingTasks().stream().noneMatch(task -> task.getOwner() == engine), "async lifecycle leaves no cleanup poll task");
             }).whenComplete((value, error) -> {
                 for (Probe probe : probes) probe.release.countDown();
@@ -58,7 +58,7 @@ final class AsyncLifecycleVerification {
             .thenRun(probe::start)
             .thenCompose(value -> probe.awaitEntry())
             .thenCompose(value -> {
-                probe.cached = HandlerList.getRegisteredListeners(engine).getFirst();
+                probe.cached = ListenerAssertions.singleManagedListener(engine);
                 if (reload) write(id, probe.replacement());
                 probe.operation = manager.submit(id, reload ? "reload" : "unload");
                 return ticks(4);

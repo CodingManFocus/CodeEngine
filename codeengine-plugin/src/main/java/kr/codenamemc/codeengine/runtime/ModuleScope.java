@@ -2,10 +2,12 @@ package kr.codenamemc.codeengine.runtime;
 
 import java.nio.file.Path;
 import java.util.*;
+import java.util.function.BooleanSupplier;
 import java.util.logging.Level;
 import kr.codenamemc.codeengine.api.ModuleContext;
 import org.bukkit.*;
 import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandMap;
 import org.bukkit.event.*;
 import org.bukkit.plugin.EventExecutor;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -19,6 +21,7 @@ final class ModuleScope implements ModuleContext {
     // Paper unregisters by Listener identity; caller-supplied listeners may be shared.
     private final Listener eventOwner = new Listener() { };
     private final EventActivity eventActivity = new EventActivity();
+    private final ResourceScope resources = new ResourceScope();
     private final List<EventRegistration> events = new ArrayList<>();
     private final List<NativeCommand> commands = new ArrayList<>();
     private final List<TimerRegistration> timers = new ArrayList<>();
@@ -37,12 +40,36 @@ final class ModuleScope implements ModuleContext {
         mutable();
         if (!name.matches("[a-z][a-z0-9_]{0,47}") || name.equals("ce") || name.equals("codeengine")) throw new IllegalArgumentException("Invalid command name");
         if (commands.stream().anyMatch(c -> c.getName().equals(name))) throw new IllegalArgumentException("Duplicate command: " + name);
-        commands.add(new NativeCommand(plugin, name, permission, executor));
+        commands.add(new NativeCommand(plugin, name, permission,
+            new ScopedCommandExecutor(eventActivity, Objects.requireNonNull(executor))));
     }
     @Override public void every(long delayTicks, long periodTicks, Runnable action) {
         mutable();
         if (delayTicks < 1 || periodTicks < 1) throw new IllegalArgumentException("Tick counts must be positive");
-        timers.add(new TimerRegistration(delayTicks, periodTicks, Objects.requireNonNull(action)));
+        timers.add(new TimerRegistration(delayTicks, periodTicks,
+            new ScopedTask(eventActivity, Objects.requireNonNull(action))));
+    }
+    @Override public void onClose(AutoCloseable resource) {
+        mutable();
+        resources.add(resource);
+    }
+    Throwable closeResources(BooleanSupplier cleanupAllowed) {
+        requireMain();
+        sealed = true;
+        return resources.close(cleanupAllowed);
+    }
+    void discardResources() {
+        requireMain();
+        sealed = true;
+        resources.discard();
+    }
+    void beginActivation() {
+        requireMain();
+        if (!eventActivity.enter(false)) throw new IllegalStateException("Module is already stopping");
+    }
+    void endActivation() {
+        requireMain();
+        eventActivity.leave(false);
     }
     void preflight() {
         requireMain();
@@ -75,18 +102,44 @@ final class ModuleScope implements ModuleContext {
                 };
                 task.runTaskTimer(plugin, timer.delay(), timer.period()); runningTasks.add(task);
             }
-        } catch (RuntimeException | LinkageError e) { deactivate(); throw e; }
+        } catch (RuntimeException | LinkageError e) {
+            try { deactivate(); }
+            catch (Throwable cleanupError) { if (e != cleanupError) e.addSuppressed(cleanupError); }
+            throw e;
+        }
     }
     void deactivate() {
         requireMain();
         sealed = true;
-        eventActivity.close();
-        for (BukkitRunnable task : runningTasks) task.cancel();
+        Throwable failure = null;
+        try { eventActivity.close(); }
+        catch (Throwable error) { failure = combine(failure, error); }
+        for (BukkitRunnable task : runningTasks) {
+            try { task.cancel(); }
+            catch (Throwable error) { failure = combine(failure, error); }
+        }
         runningTasks.clear();
-        HandlerList.unregisterAll(eventOwner);
-        var commandMap = server().getCommandMap();
-        CommandBindings.removeOwned(commandMap.getKnownCommands(), commands);
-        for (NativeCommand command : commands) command.unregister(commandMap);
+        try { HandlerList.unregisterAll(eventOwner); }
+        catch (Throwable error) { failure = combine(failure, error); }
+        CommandMap commandMap = null;
+        try { commandMap = server().getCommandMap(); }
+        catch (Throwable error) { failure = combine(failure, error); }
+        if (commandMap != null) {
+            for (NativeCommand command : commands) {
+                try { CommandBindings.removeOwned(commandMap.getKnownCommands(), List.of(command)); }
+                catch (Throwable error) { failure = combine(failure, error); }
+                try { command.unregister(commandMap); }
+                catch (Throwable error) { failure = combine(failure, error); }
+            }
+        }
+        if (failure instanceof RuntimeException error) throw error;
+        if (failure instanceof Error error) throw error;
+        if (failure != null) throw new IllegalStateException("Module registration cleanup failed", failure);
+    }
+    private static Throwable combine(Throwable first, Throwable next) {
+        if (first == null) return next;
+        if (first != next) first.addSuppressed(next);
+        return first;
     }
     java.util.concurrent.CompletableFuture<Void> drained() { return eventActivity.drained(); }
     private String namespace() { return "codeengine_" + id; }

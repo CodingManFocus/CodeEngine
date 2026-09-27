@@ -1,0 +1,3 @@
+results/**/*.jar
+results/**/generated-source.java
+results/pilot/

@@ -8,6 +8,7 @@
 
 ```text
 module <id>;
+requires plugin "<PluginName>";
 use <qualified.Type>;
 state <Java field declaration>;
 fn <name>(<Java parameters>) -> <Java return type> { <Java body> }
@@ -39,6 +40,10 @@ fn score(UUID playerId) -> int {
 - `net.kyori.adventure.text.Component`, `java.util.*`
 
 다른 타입은 `use org.bukkit.event.entity.EntityDamageEvent;`처럼 명시합니다. `use`에 wildcard와 static import는 허용하지 않습니다. 충돌하는 단순 이름은 완전한 클래스명을 씁니다.
+
+외부 플러그인은 `requires plugin "PlaceholderAPI";`처럼 정확한 등록 이름을 선언한 뒤
+`use`로 API 타입을 가져옵니다. 선언은 중복될 수 없고 런타임 API 호출 중계 코드로
+변환되지 않습니다. [지원 범위와 생명주기](plugin-dependencies.md)를 확인하세요.
 
 ## 이벤트
 
@@ -88,9 +93,13 @@ disable { ctx.plugin().getLogger().info("비활성화"); }
 
 `ctx`가 제공하는 값은 `plugin()`, `server()`, `dataDirectory()`입니다. `listen`, `command`, `every` 등록 메서드도 있지만 등록 준비·enable 단계에서만 허용됩니다. 생성기가 준비 단계에서 선언들을 등록하므로 대부분 직접 호출할 필요가 없습니다.
 
-`reload`는 기존 모듈의 등록 해제, 이미 진입한 관리 대상 이벤트의 완료, `disable`, 클래스로더 종료가 끝난 뒤 새 소스를 읽고 컴파일하여 `prepare`/`enable`을 실행합니다. 실패한 경우 이전 모듈을 복구하지 않습니다. 기존 `disable`이 실패하면 새 컴파일/로드를 시작하지 않고 실패를 반환합니다. 따라서 컴파일하는 동안에도 모듈은 미실행 상태이며, 저장과 복원을 구현한 경우 이전 `disable`의 저장이 새 `enable`의 읽기보다 먼저 실행됩니다.
+`ctx.onClose(AutoCloseable)`도 준비·enable 단계에서만 허용됩니다. 외부 등록 해제 작업을
+등록하면 관리 대상 호출이 끝난 뒤 `disable` 다음에 역순으로 실행합니다. 의존 플러그인이
+종료됐거나 엔진이 실행 중 콜백을 기다릴 수 없는 종료 상태라면 사용자 정리를 건너뛰고 경고합니다.
 
-이벤트 완료를 기다리는 동안 메인 스레드를 차단하지 않습니다. `unloadTimeoutSeconds`(기본 10초, 1~300초)를 넘으면 작업을 실패로 반환하고 해당 모듈을 Stopping 상태로 유지합니다. 이벤트가 반환하기 전까지 클래스로더를 닫거나 새 인스턴스를 로드하지 않습니다. 나중에 완료되면 자동 정리하지만 실패한 reload는 재시작하지 않습니다. 이 추적은 DSL 이벤트와 `ctx.listen`에 적용하며 직접 생성한 스레드나 외부 등록에는 적용하지 않습니다.
+`reload`는 기존 모듈의 등록 해제, 이미 진입한 관리 대상 호출의 완료, `disable`, 외부 자원 정리, 클래스로더 종료가 끝난 뒤 새 소스를 읽고 컴파일하여 `prepare`/`enable`을 실행합니다. 실패한 경우 이전 모듈을 복구하지 않습니다. 기존 `disable`이 실패하면 새 컴파일/로드를 시작하지 않고 실패를 반환합니다. 따라서 컴파일하는 동안에도 모듈은 미실행 상태이며, 저장과 복원을 구현한 경우 이전 `disable`의 저장이 새 `enable`의 읽기보다 먼저 실행됩니다.
+
+이벤트 완료를 기다리는 동안 메인 스레드를 차단하지 않습니다. `unloadTimeoutSeconds`(기본 10초, 1~300초)를 넘으면 작업을 실패로 반환하고 해당 모듈을 Stopping 상태로 유지합니다. 이벤트가 반환하기 전까지 클래스로더를 닫거나 새 인스턴스를 로드하지 않습니다. 나중에 완료되면 자동 정리하지만 실패한 reload는 재시작하지 않습니다. 이 추적은 DSL 이벤트·명령·반복 작업과 해당 `ctx` 등록에 적용하며 직접 생성한 스레드나 외부 API 콜백에는 적용하지 않습니다.
 
 엔진/서버 종료 때 실행 중인 이벤트가 남으면 disable을 건너뛰고 경고를 기록합니다. 해당 콜백이 반환한 후 Paper API 호출 없이 클래스로더와 파일만 정리합니다. 반환하지 않는 콜백을 강제로 중단하거나 그 클래스로더를 강제로 닫지 않습니다.
 
