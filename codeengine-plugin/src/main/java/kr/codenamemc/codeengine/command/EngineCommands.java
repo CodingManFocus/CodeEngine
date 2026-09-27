@@ -4,15 +4,15 @@ import java.util.*;
 import org.bukkit.command.*;
 import org.bukkit.plugin.java.JavaPlugin;
 import kr.codenamemc.codeengine.runtime.ModuleManager;
-import kr.codenamemc.codeengine.workspace.ScriptStore;
+import kr.codenamemc.codeengine.workspace.ModuleSourceStore;
 import kr.codenamemc.codeengine.web.WebIdeServer;
 
 public final class EngineCommands implements TabExecutor, AutoCloseable {
     private final JavaPlugin plugin;
-    private final ScriptStore store;
+    private final ModuleSourceStore store;
     private final ModuleManager manager;
     private WebIdeServer web;
-    public EngineCommands(JavaPlugin plugin, ScriptStore store, ModuleManager manager) {
+    public EngineCommands(JavaPlugin plugin, ModuleSourceStore store, ModuleManager manager) {
         this.plugin = plugin; this.store = store; this.manager = manager;
     }
     @Override public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {

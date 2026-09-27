@@ -115,7 +115,7 @@ final class ListenerOwnershipVerification {
         passed.accept(message);
     }
     private CompletableFuture<String> source(String id, String text, String operation) {
-        try { Files.writeString(engine.getDataFolder().toPath().resolve("scripts").resolve(id + ".ce"), text); }
+        try { Files.writeString(engine.getDataFolder().toPath().resolve("modules").resolve(id + ".ce"), text); }
         catch (Exception e) { return CompletableFuture.failedFuture(e); }
         return operation(id, operation);
     }

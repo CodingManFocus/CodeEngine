@@ -8,12 +8,12 @@ import java.util.logging.Level;
 import org.bukkit.plugin.java.JavaPlugin;
 import kr.codenamemc.codeengine.api.CodeModule;
 import kr.codenamemc.codeengine.compiler.*;
-import kr.codenamemc.codeengine.workspace.ScriptStore;
+import kr.codenamemc.codeengine.workspace.ModuleSourceStore;
 
 /** Compilation is serialized off-thread; all lifecycle transitions execute on the server thread. */
 public final class ModuleManager implements AutoCloseable {
     private final JavaPlugin plugin;
-    private final ScriptStore store;
+    private final ModuleSourceStore store;
     private final ModuleCompiler compiler;
     private final ModuleDisposer disposer;
     private final Map<String, LoadedModule> loaded = new HashMap<>();
@@ -24,14 +24,14 @@ public final class ModuleManager implements AutoCloseable {
         new ArrayBlockingQueue<>(16), runnable -> { Thread t = new Thread(runnable, "CodeEngine-Compiler"); t.setDaemon(true); return t; });
     private volatile Set<String> loadedIds = Set.of();
     private volatile boolean closed;
-    public ModuleManager(JavaPlugin plugin, ScriptStore store, ModuleCompiler compiler) {
+    public ModuleManager(JavaPlugin plugin, ModuleSourceStore store, ModuleCompiler compiler) {
         this.plugin = plugin; this.store = store; this.compiler = compiler;
         disposer = new ModuleDisposer(plugin, plugin.getConfig().getLong("unloadTimeoutSeconds", 10));
     }
     public Set<String> loadedIds() { return loadedIds; }
     public Set<String> stoppingIds() { return disposer.stoppingIds(); }
     public CompletableFuture<String> submit(String id, String operation) {
-        ScriptStore.validateId(id);
+        ModuleSourceStore.validateId(id);
         if (!Set.of("build", "load", "reload", "unload").contains(operation)) throw new IllegalArgumentException("Unknown operation");
         if (closed) return CompletableFuture.failedFuture(new IllegalStateException("Engine stopped"));
         if (stoppingIds().contains(id)) return CompletableFuture.failedFuture(new IllegalStateException("Module is still stopping: " + id));

@@ -6,7 +6,7 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.io.TempDir;
-import kr.codenamemc.codeengine.workspace.ScriptStore;
+import kr.codenamemc.codeengine.workspace.ModuleSourceStore;
 import static org.junit.jupiter.api.Assertions.*;
 
 class WebIdeServerTest {
@@ -15,7 +15,7 @@ class WebIdeServerTest {
     String address, token;
     HttpClient client;
     @BeforeEach void start() throws Exception {
-        var store = new ScriptStore(directory); store.save("hello", "module hello;", "new");
+        var store = new ModuleSourceStore(directory); store.save("hello", "module hello;", "new");
         server = new WebIdeServer(store, (id, action) -> CompletableFuture.completedFuture(action + " " + id), Set::of, 0);
         String[] parts = server.url().split("#"); address = parts[0]; token = parts[1]; client = HttpClient.newHttpClient();
     }

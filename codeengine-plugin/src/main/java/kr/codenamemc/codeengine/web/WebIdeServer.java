@@ -9,11 +9,11 @@ import java.nio.file.NoSuchFileException;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.function.*;
-import kr.codenamemc.codeengine.workspace.ScriptStore;
+import kr.codenamemc.codeengine.workspace.ModuleSourceStore;
 
 /** Loopback-only authenticated editor. No CDN, cookies, CORS or token persistence. */
 public final class WebIdeServer implements AutoCloseable {
-    private final ScriptStore store;
+    private final ModuleSourceStore store;
     private final BiFunction<String, String, CompletableFuture<String>> operations;
     private final Supplier<Set<String>> loadedIds;
     private final HttpServer server;
@@ -21,7 +21,7 @@ public final class WebIdeServer implements AutoCloseable {
     private final WebSecurity security = new WebSecurity();
     private final JobRegistry jobs = new JobRegistry();
     private final Gson json = new Gson();
-    public WebIdeServer(ScriptStore store, BiFunction<String, String, CompletableFuture<String>> operations,
+    public WebIdeServer(ModuleSourceStore store, BiFunction<String, String, CompletableFuture<String>> operations,
                         Supplier<Set<String>> loadedIds, int port) throws IOException {
         this.store = store; this.operations = operations; this.loadedIds = loadedIds;
         server = HttpServer.create(new InetSocketAddress(InetAddress.getByName("127.0.0.1"), port), 16);
@@ -41,7 +41,7 @@ public final class WebIdeServer implements AutoCloseable {
             if (!path.startsWith("/api/")) { staticFile(exchange, path); return; }
             if (!security.authorize(exchange)) { send(exchange, 401, Map.of("error", "Session expired or unauthorized")); return; }
             try { api(exchange, path, query(exchange.getRequestURI().getRawQuery())); }
-            catch (ScriptStore.ConflictException e) { send(exchange, 409, Map.of("error", e.getMessage())); }
+            catch (ModuleSourceStore.ConflictException e) { send(exchange, 409, Map.of("error", e.getMessage())); }
             catch (NoSuchFileException e) { send(exchange, 404, Map.of("error", "File not found")); }
             catch (IllegalArgumentException e) { send(exchange, 400, Map.of("error", String.valueOf(e.getMessage()))); }
             catch (IllegalStateException e) { send(exchange, 409, Map.of("error", String.valueOf(e.getMessage()))); }
@@ -63,12 +63,12 @@ public final class WebIdeServer implements AutoCloseable {
                 if (revision == null || !revision.matches("\"(?:new|[0-9a-f]{64})\"")) {
                     send(exchange, 428, Map.of("error", "If-Match revision required")); return;
                 }
-                byte[] bytes = exchange.getRequestBody().readNBytes(ScriptStore.maxBytes + 1);
-                if (bytes.length > ScriptStore.maxBytes) { send(exchange, 413, Map.of("error", "Source exceeds 256 KiB")); return; }
+                byte[] bytes = exchange.getRequestBody().readNBytes(ModuleSourceStore.maxBytes + 1);
+                if (bytes.length > ModuleSourceStore.maxBytes) { send(exchange, 413, Map.of("error", "Source exceeds 256 KiB")); return; }
                 send(exchange, 200, store.save(id, new String(bytes, StandardCharsets.UTF_8), revision.substring(1, revision.length() - 1)));
             }
             case "POST /api/operation" -> {
-                ScriptStore.validateId(id);
+                ModuleSourceStore.validateId(id);
                 String action = query.get("action");
                 if (action == null || !Set.of("build", "load", "reload", "unload").contains(action)) throw new IllegalArgumentException("Unknown operation");
                 send(exchange, 202, Map.of("job", jobs.track(operations.apply(id, action))));
