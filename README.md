@@ -29,8 +29,6 @@ API JAR는 개발용입니다. 서버의 `plugins/`에는 플러그인 JAR 하�
 
 작성·빌드·로드·언로드하는 기능 단위의 이름은 **모듈**로 통일합니다. `.ce`는 **모듈 소스 파일**, 컴파일 결과는 **모듈 JAR**입니다. 현재 모듈 소스 파일 하나가 모듈 하나를 정의하며, `modules/welcome.ce`의 선언은 `module welcome;`이어야 합니다.
 
-구버전의 `plugins/CodeEngine/scripts/` 폴더는 서버 시작 시 `modules/`로 자동 이전됩니다. 예제 생성과 자동 로드보다 먼저 폴더 전체를 이동하므로 기존 파일은 유지됩니다. 두 폴더가 모두 있으면 자동 병합이나 덮어쓰기를 하지 않고 Code Engine 시작을 중단합니다. 이때 서버를 종료하고 양쪽 파일을 확인하여 `modules/`로 합친 뒤, 이전 폴더를 제거하고 재시작하세요.
-
 ## GitHub Actions
 
 `main`에 push하거나 `main` 대상 Pull Request를 열면 Ubuntu 24.04 / Temurin JDK 21에서 Gradle Wrapper를 검증하고 `./gradlew --no-daemon --stacktrace build`를 실행합니다. GitHub의 **Actions → Build → Run workflow**에서 수동으로 실행할 수도 있습니다.
