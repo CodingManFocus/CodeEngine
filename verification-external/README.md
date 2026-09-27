@@ -5,6 +5,9 @@ This test-only plugin runs on a fresh local Paper server with the real, free
 It is **not** part of the CodeEngine distribution. Do not install it on a live
 server: its final checks deliberately disable PlaceholderAPI or CodeEngine.
 
+The completed run summary and its evidence-availability limitations are documented
+in [REPORT.md](REPORT.md).
+
 ## What is compared
 
 `NativeApiWork.java` and `external.ce` independently call the same public
@@ -92,12 +95,15 @@ python3 verification-external/run-integration.py \
   --verification-jar "$PWD/verification-external/build/libs/verification-external-0.1.0.jar" \
   --java /absolute/path/jdk21/bin/java \
   --prepared-server /absolute/path/prepared-paper \
-  --work /absolute/path/new-disposable-servers \
+  --work /tmp/codeengine-external-new-disposable-servers \
   --results "$PWD/verification-external/results/final" \
   --forks 3 --accept-eula
 
 python3 verification-external/summarize.py verification-external/results/final
 ```
+
+Keep disposable server working directories outside synchronized workspaces; an
+external synchronizer can restore deleted build files and distort lifecycle checks.
 
 Use a fresh `--work` and `--results` directory with `--forks 1 --scenario NAME`
 for each destructive scenario: `reentrant`, `engine-stop`, `engine-disable-hook`,

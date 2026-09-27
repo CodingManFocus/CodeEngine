@@ -1,0 +1,167 @@
+{
+  "fork-1": {
+    "apiMultiple": {
+      "native": {
+        "medianNs": 587.8388671875,
+        "p95Ns": 768.001953125,
+        "medianBytes": 908.8125
+      },
+      "module": {
+        "medianNs": 589.84375,
+        "p95Ns": 770.9853515625,
+        "medianBytes": 908.8125
+      },
+      "pairedMedianDeltaNs": 3.5546875,
+      "moduleVsNativeMedianPercent": 0.34105992720290246,
+      "pairs": 240
+    },
+    "apiSingle": {
+      "native": {
+        "medianNs": 232.05859375,
+        "p95Ns": 272.1376953125,
+        "medianBytes": 436.875
+      },
+      "module": {
+        "medianNs": 229.6279296875,
+        "p95Ns": 299.630859375,
+        "medianBytes": 436.875
+      },
+      "pairedMedianDeltaNs": -8.75341796875,
+      "moduleVsNativeMedianPercent": -1.047435487400472,
+      "pairs": 240
+    },
+    "commandSingle": {
+      "native": {
+        "medianNs": 1098.609375,
+        "p95Ns": 1439.046875,
+        "medianBytes": 3044.625
+      },
+      "module": {
+        "medianNs": 1101.578125,
+        "p95Ns": 1413.21875,
+        "medianBytes": 3044.625
+      },
+      "pairedMedianDeltaNs": 61.3828125,
+      "moduleVsNativeMedianPercent": 0.2702279870859359,
+      "pairs": 240
+    },
+    "coldLoadMillis": [
+      197.408319,
+      195.509005,
+      203.51537,
+      250.234036,
+      186.831273,
+      199.361415
+    ]
+  },
+  "fork-2": {
+    "apiMultiple": {
+      "native": {
+        "medianNs": 580.6396484375,
+        "p95Ns": 784.892578125,
+        "medianBytes": 908.8125
+      },
+      "module": {
+        "medianNs": 580.244140625,
+        "p95Ns": 754.0947265625,
+        "medianBytes": 908.8125
+      },
+      "pairedMedianDeltaNs": -2.94921875,
+      "moduleVsNativeMedianPercent": -0.06811588109153499,
+      "pairs": 240
+    },
+    "apiSingle": {
+      "native": {
+        "medianNs": 214.10693359375,
+        "p95Ns": 355.6083984375,
+        "medianBytes": 436.875
+      },
+      "module": {
+        "medianNs": 214.771484375,
+        "p95Ns": 310.3701171875,
+        "medianBytes": 436.875
+      },
+      "pairedMedianDeltaNs": 0.3125,
+      "moduleVsNativeMedianPercent": 0.3103826532357523,
+      "pairs": 240
+    },
+    "commandSingle": {
+      "native": {
+        "medianNs": 1133.3046875,
+        "p95Ns": 2108.6484375,
+        "medianBytes": 3044.625
+      },
+      "module": {
+        "medianNs": 1148.25,
+        "p95Ns": 1958.65625,
+        "medianBytes": 3044.625
+      },
+      "pairedMedianDeltaNs": 27.58203125,
+      "moduleVsNativeMedianPercent": 1.3187373761744947,
+      "pairs": 240
+    },
+    "coldLoadMillis": [
+      246.144953,
+      196.994761,
+      249.166557,
+      250.945486,
+      251.832491,
+      241.121825
+    ]
+  },
+  "fork-3": {
+    "apiMultiple": {
+      "native": {
+        "medianNs": 589.07080078125,
+        "p95Ns": 897.689453125,
+        "medianBytes": 908.8125
+      },
+      "module": {
+        "medianNs": 592.748046875,
+        "p95Ns": 825.392578125,
+        "medianBytes": 908.8125
+      },
+      "pairedMedianDeltaNs": 2.08349609375,
+      "moduleVsNativeMedianPercent": 0.6242451822213946,
+      "pairs": 240
+    },
+    "apiSingle": {
+      "native": {
+        "medianNs": 217.8916015625,
+        "p95Ns": 409.3564453125,
+        "medianBytes": 436.875
+      },
+      "module": {
+        "medianNs": 216.81591796875,
+        "p95Ns": 373.9716796875,
+        "medianBytes": 436.875
+      },
+      "pairedMedianDeltaNs": -5.0224609375,
+      "moduleVsNativeMedianPercent": -0.4936783180426785,
+      "pairs": 240
+    },
+    "commandSingle": {
+      "native": {
+        "medianNs": 1117.0703125,
+        "p95Ns": 1877.28125,
+        "medianBytes": 3044.625
+      },
+      "module": {
+        "medianNs": 1110.02734375,
+        "p95Ns": 1832.9921875,
+        "medianBytes": 3044.625
+      },
+      "pairedMedianDeltaNs": 18.390625,
+      "moduleVsNativeMedianPercent": -0.6304857152848231,
+      "pairs": 240
+    },
+    "coldLoadMillis": [
+      246.185501,
+      246.098872,
+      251.617125,
+      245.588993,
+      246.281817,
+      199.258543
+    ]
+  }
+}
