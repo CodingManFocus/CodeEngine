@@ -12,19 +12,29 @@ permissions:
 
 concurrency:
   group: codeengine-build-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   build:
     name: Build and test (Java 21)
     runs-on: ubuntu-24.04
     timeout-minutes: 15
+    outputs:
+      releaseTag: ${{ steps.releaseMeta.outputs.releaseTag }}
 
     steps:
       - name: Check out source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+
+      - name: Determine release tag
+        id: releaseMeta
+        shell: bash
+        run: |
+          commitTimestamp=$(git show -s --format=%ct "$GITHUB_SHA")
+          releaseDate=$(TZ=Asia/Seoul date --date="@$commitTimestamp" +%Y-%m-%d)
+          printf 'releaseTag=%s-%s\n' "$releaseDate" "${GITHUB_SHA:0:7}" >> "$GITHUB_OUTPUT"
 
       - name: Set up Java 21
         uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
@@ -74,3 +84,31 @@ jobs:
             **/build/test-results/test/*.xml
           if-no-files-found: warn
           retention-days: 7
+
+  release:
+    name: Publish date-commit release
+    needs: build
+    if: ${{ github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch') }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+
+    steps:
+      - name: Check out release script
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Download verified build
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: codeengine-build-${{ github.run_number }}
+          path: release-assets
+
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ needs.build.outputs.releaseTag }}
+        run: bash .github/scripts/publish-release.sh release-assets
