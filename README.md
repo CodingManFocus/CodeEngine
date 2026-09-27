@@ -126,4 +126,6 @@ python3 verification/run-integration.py \
 
 ## 라이선스
 
-Code Engine은 **Sustainable Use License 1.0 (SUL-v1.0)**으로 공개합니다. 전체 조건은 [LICENSE.md](LICENSE.md)를 확인하세요. 제3자 구성 요소의 라이선스는 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)를 참고하세요.
+Copyright (c) 2026 CodingManFocus
+
+Code Engine은 **GNU General Public License v3.0 (GPL-3.0-only)**으로 공개합니다. 전체 조건은 [LICENSE.md](LICENSE.md)를 확인하세요. 제3자 구성 요소의 라이선스는 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)를 참고하세요.

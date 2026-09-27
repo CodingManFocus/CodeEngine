@@ -1,6 +1,6 @@
 # Third-party notices
 
-The Sustainable Use License in `LICENSE.md` applies to Code Engine's original code and documentation. It does not replace the licenses of third-party components.
+The GNU General Public License, Version 3.0 (GPL-3.0-only), in `LICENSE.md` applies to Code Engine's original code and documentation. It does not replace the licenses of third-party components.
 
 ## Gradle Wrapper
 
