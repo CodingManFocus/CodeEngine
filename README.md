@@ -20,10 +20,14 @@ Windows에서는 `gradlew.bat clean build`를 사용합니다. 빌드 의존성�
 
 1. `codeengine-plugin/build/libs/codeengine-plugin-0.1.0.jar`를 서버의 `plugins/`에 넣습니다.
 2. 서버를 JDK 21로 시작합니다. 플러그인 업데이트에는 서버 재시작을 사용합니다.
-3. `plugins/CodeEngine/scripts/hello.ce` 예제가 생성되고 기본 설정에서는 자동 로드됩니다.
+3. `plugins/CodeEngine/modules/hello.ce` 예제가 생성되고 기본 설정에서는 자동 로드됩니다.
 4. `/cehello`를 실행합니다. 예제 권한 `codeengine.hello`는 OP 또는 권한 플러그인으로 부여합니다.
 
 API JAR는 개발용입니다. 서버의 `plugins/`에는 플러그인 JAR 하나만 설치합니다. `verification` JAR는 임시 테스트 서버 전용이며 배포 서버에 설치하지 않습니다.
+
+### 모듈과 소스 파일
+
+작성·빌드·로드·언로드하는 기능 단위의 이름은 **모듈**로 통일합니다. `.ce`는 **모듈 소스 파일**, 컴파일 결과는 **모듈 JAR**입니다. 현재 모듈 소스 파일 하나가 모듈 하나를 정의하며, `modules/welcome.ce`의 선언은 `module welcome;`이어야 합니다.
 
 ## GitHub Actions
 
@@ -50,7 +54,7 @@ Java 패키지 루트는 `kr.codenamemc.codeengine`입니다. 변수·메서드�
 
 ## 최소 예제
 
-`plugins/CodeEngine/scripts/welcome.ce`:
+`plugins/CodeEngine/modules/welcome.ce`:
 
 ```java
 module welcome;

@@ -9,12 +9,12 @@ import java.util.HexFormat;
 import java.util.List;
 
 /** Flat module namespace eliminates user-controlled directory traversal. */
-public final class ScriptStore {
+public final class ModuleSourceStore {
     public static final int maxBytes = 262144;
     private final Path root;
-    public ScriptStore(Path root) throws IOException {
+    public ModuleSourceStore(Path root) throws IOException {
         Files.createDirectories(root);
-        if (Files.isSymbolicLink(root)) throw new IOException("Scripts directory cannot be a symlink");
+        if (Files.isSymbolicLink(root)) throw new IOException("Module source directory cannot be a symlink");
         this.root = root.toRealPath();
     }
     public static String validateId(String id) {

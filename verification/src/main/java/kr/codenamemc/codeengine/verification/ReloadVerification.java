@@ -13,10 +13,10 @@ final class ReloadVerification {
     private final JavaPlugin engine;
     private final ModuleManager manager;
     private final Consumer<String> passed;
-    private final Path scripts;
+    private final Path modules;
     ReloadVerification(JavaPlugin observer, JavaPlugin engine, ModuleManager manager, Consumer<String> passed) {
         this.observer = observer; this.engine = engine; this.manager = manager; this.passed = passed;
-        scripts = engine.getDataFolder().toPath().resolve("scripts");
+        modules = engine.getDataFolder().toPath().resolve("modules");
     }
     CompletableFuture<Void> run() {
         return persistedStateAndLock().thenCompose(value -> failedDisable())
@@ -99,7 +99,7 @@ final class ReloadVerification {
                     check(error != null, "constructor error reported"); stopped("reloadfailure", "cereloadfailure"); return null;
                 }))
             .thenCompose(value -> source("reloadfailure", good, "load"))
-            .thenRun(() -> { try { Files.delete(scripts.resolve("reloadfailure.ce")); } catch (Exception e) { throw new RuntimeException(e); } })
+            .thenRun(() -> { try { Files.delete(modules.resolve("reloadfailure.ce")); } catch (Exception e) { throw new RuntimeException(e); } })
             .thenCompose(value -> operation("reloadfailure", "reload").handle((result, error) -> {
                 check(error != null, "missing source reported after unload"); stopped("reloadfailure", "cereloadfailure"); return null;
             }));
@@ -157,7 +157,7 @@ final class ReloadVerification {
         return error.toString();
     }
     private CompletableFuture<String> source(String id, String text, String operation) {
-        try { Files.writeString(scripts.resolve(id + ".ce"), text); }
+        try { Files.writeString(modules.resolve(id + ".ce"), text); }
         catch (Exception e) { return CompletableFuture.failedFuture(e); }
         return operation(id, operation);
     }

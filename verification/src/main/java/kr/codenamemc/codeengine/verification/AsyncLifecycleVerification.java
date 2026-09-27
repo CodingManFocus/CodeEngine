@@ -16,7 +16,7 @@ import net.kyori.adventure.text.Component;
 import kr.codenamemc.codeengine.api.CodeModule;
 import kr.codenamemc.codeengine.compiler.ModuleCompiler;
 import kr.codenamemc.codeengine.runtime.*;
-import kr.codenamemc.codeengine.workspace.ScriptStore;
+import kr.codenamemc.codeengine.workspace.ModuleSourceStore;
 
 /** Deterministic barriers around real Paper async event dispatch; no connected players. */
 final class AsyncLifecycleVerification {
@@ -146,7 +146,7 @@ final class AsyncLifecycleVerification {
     private CompletableFuture<Void> shutdown(boolean alreadyStopping) {
         try {
             Path isolated = observer.getDataFolder().toPath().resolve(alreadyStopping ? "shutdown-stopping" : "shutdown-loaded");
-            var isolatedManager = new ModuleManager(engine, new ScriptStore(isolated.resolve("scripts")),
+            var isolatedManager = new ModuleManager(engine, new ModuleSourceStore(isolated.resolve("modules")),
                 new ModuleCompiler(isolated.resolve("builds"), RuntimeClasspath.collect(CodeModule.class, Bukkit.class, Component.class)));
             var test = new AsyncLifecycleVerification(observer, engine, isolatedManager, isolated, passed);
             Probe probe = test.probe(alreadyStopping ? "asyncclosing" : "asyncshutdown");
@@ -172,7 +172,7 @@ final class AsyncLifecycleVerification {
         String key = "codeengine.verification.reentrant.";
         try {
             Path isolated = observer.getDataFolder().toPath().resolve("shutdown-reentrant");
-            var isolatedManager = new ModuleManager(engine, new ScriptStore(isolated.resolve("scripts")),
+            var isolatedManager = new ModuleManager(engine, new ModuleSourceStore(isolated.resolve("modules")),
                 new ModuleCompiler(isolated.resolve("builds"), RuntimeClasspath.collect(CodeModule.class, Bukkit.class, Component.class)));
             var calls = new AtomicInteger();
             System.getProperties().put(key + "calls", calls);
@@ -185,7 +185,7 @@ final class AsyncLifecycleVerification {
                     new Runnable() { public void run() { System.setProperty("%1$scompleted", "yes"); } }.run();
                 }
                 """.formatted(key);
-            Files.writeString(isolated.resolve("scripts/reentrantclose.ce"), source);
+            Files.writeString(isolated.resolve("modules/reentrantclose.ce"), source);
             return settle(isolatedManager.submit("reentrantclose", "load"))
                 .thenCompose(value -> settle(isolatedManager.submit("reentrantclose", "unload").handle((result, error) -> {
                     check(error != null, "shutdown from disable fails outstanding operation"); return null;
@@ -269,7 +269,7 @@ final class AsyncLifecycleVerification {
     private void check(boolean condition, String message) { if (!condition) throw new AssertionError(message); passed.accept(message); }
     private Throwable rootCause(Throwable error) { if (error == null) return null; while (error.getCause() != null) error = error.getCause(); return error; }
     private void write(String id, String text) {
-        try { Files.writeString(root.resolve("scripts").resolve(id + ".ce"), text); }
+        try { Files.writeString(root.resolve("modules").resolve(id + ".ce"), text); }
         catch (Exception e) { throw new RuntimeException(e); }
     }
     private boolean hasBuild(String id) {

@@ -19,7 +19,7 @@ import kr.codenamemc.codeengine.runtime.ModuleManager;
 public final class VerificationPlugin extends JavaPlugin {
     private JavaPlugin engine;
     private ModuleManager manager;
-    private Path scripts;
+    private Path modules;
     private World world;
     private volatile String response;
     private CommandSender capture;
@@ -30,7 +30,7 @@ public final class VerificationPlugin extends JavaPlugin {
         try {
             engine = (JavaPlugin) getServer().getPluginManager().getPlugin("CodeEngine");
             var field = engine.getClass().getDeclaredField("manager"); field.setAccessible(true); manager = (ModuleManager) field.get(engine);
-            scripts = engine.getDataFolder().toPath().resolve("scripts");
+            modules = engine.getDataFolder().toPath().resolve("modules");
             capture = getServer().createCommandSender(component -> response = PlainTextComponentSerializer.plainText().serialize(component));
             Objects.requireNonNull(getCommand("ceverify")).setExecutor((sender, command, label, args) -> { if (!running) { running = true; start(); } return true; });
             Objects.requireNonNull(getCommand("nativecalc")).setExecutor((sender, command, label, args) -> {
@@ -94,7 +94,7 @@ public final class VerificationPlugin extends JavaPlugin {
         chain.exceptionally(error -> { fail(error); return null; });
     }
     private CompletableFuture<String> submitSource(String id, String source, String operation) {
-        try { Files.writeString(scripts.resolve(id + ".ce"), source); }
+        try { Files.writeString(modules.resolve(id + ".ce"), source); }
         catch (java.io.IOException e) { return CompletableFuture.failedFuture(e); }
         return settle(manager.submit(id, operation));
     }

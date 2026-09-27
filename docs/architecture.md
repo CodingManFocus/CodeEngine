@@ -7,7 +7,7 @@
 - `JavaEmitter`: 타입과 호출을 Java로 직접 내보내고 소스 줄 번호 맵 생성.
 - `ModuleCompiler`: JDK `JavaCompiler` 호출. annotation processor 비활성화, 명시적 클래스패스, 임시 출력 경로 및 실패 정리.
 - `RuntimeClasspath`: 실제 서버/플러그인 로더의 JAR 위치 수집. 버전별 경로 하드코딩이나 원격 의존성 다운로드 없음.
-- `ScriptStore`: 모듈명, 크기, symlink 검사, SHA-256 revision, atomic move 저장.
+- `ModuleSourceStore`: 모듈 소스 파일의 ID, 크기, symlink 검사, SHA-256 revision, atomic move 저장.
 - `ModuleScope`: 리스너, native 명령, 반복 작업의 등록·해제 소유권.
 - `ModuleManager`: 큐와 busy 상태, 스레드 전환, 로딩 및 실패 복구, ClassLoader 폐기.
 - `EngineCommands`: 관리자 명령과 WebIDE 세션 생명주기.

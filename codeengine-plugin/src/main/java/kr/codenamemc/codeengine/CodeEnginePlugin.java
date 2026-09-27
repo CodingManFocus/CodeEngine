@@ -8,10 +8,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 import kr.codenamemc.codeengine.api.CodeModule;
 import kr.codenamemc.codeengine.compiler.ModuleCompiler;
 import kr.codenamemc.codeengine.runtime.*;
-import kr.codenamemc.codeengine.workspace.ScriptStore;
+import kr.codenamemc.codeengine.workspace.ModuleSourceStore;
 
 public final class CodeEnginePlugin extends JavaPlugin  {
-    private ScriptStore store;
+    private ModuleSourceStore store;
     private ModuleManager manager;
     private kr.codenamemc.codeengine.command.EngineCommands commands;
     @Override public void onEnable() {
@@ -19,7 +19,7 @@ public final class CodeEnginePlugin extends JavaPlugin  {
             if (ToolProvider.getSystemJavaCompiler() == null) throw new IllegalStateException("Use a full JDK 21+, not a JRE");
             saveDefaultConfig();
             Path root = getDataFolder().toPath();
-            store = new ScriptStore(root.resolve("scripts"));
+            store = new ModuleSourceStore(root.resolve("modules"));
             if (getConfig().getBoolean("seedExample", true) && store.list().isEmpty()) {
                 try (var input = getResource("examples/hello.ce")) {
                     if (input == null) throw new IllegalStateException("Missing bundled example");
