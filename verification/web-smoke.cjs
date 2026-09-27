@@ -1,0 +1,41 @@
+const {chromium} = require(process.env.CODEX_PRIMARY_RUNTIME_NODE_MODULES + '/playwright');
+(async () => {
+  const browser = await chromium.launch({headless:true,executablePath:process.env.CHROMIUM_PATH || undefined,args:['--no-sandbox','--disable-dev-shm-usage']});
+  try {
+    const page = await browser.newPage({viewport:{width:1440,height:1000}});
+    const errors=[];page.on('pageerror',e=>errors.push(e.message));
+    await page.goto(process.env.CE_URL);
+    await page.getByText('로컬 세션 연결됨',{exact:true}).waitFor();
+    await page.getByRole('button',{name:'새 모듈'}).click();
+    await page.locator('#moduleInput').fill('ui_probe');
+    await page.getByRole('button',{name:'만들기',exact:true}).click();
+    await page.locator('#filename').filter({hasText:'ui_probe.ce'}).waitFor();
+    await page.getByRole('button',{name:'새 모듈'}).click();
+    await page.keyboard.press('Escape');
+    if (await page.locator('#newDialog').isVisible()) throw new Error('Dialog did not cancel');
+    await page.waitForFunction(()=>!document.querySelector('#saveButton').disabled);
+    if ((await page.locator('#output').textContent()).includes('오류:')) throw new Error('Cancel unexpectedly submitted dialog');
+    const source='module ui_probe;\n\nstate int joins = 0;\n\non PlayerJoinEvent event {\n    joins++;\n    event.getPlayer().sendMessage(Component.text("Hello, Code Engine!"));\n}\n\ncommand studiohello {\n    sender.sendMessage(Component.text("Joins: " + joins));\n    return true;\n}\n';
+    await page.locator('#editor').fill(source);
+    await page.locator('#applyButton').click();
+    await page.locator('#output').filter({hasText:'load succeeded: ui_probe'}).waitFor({timeout:20000});
+    if (!(await page.locator('#moduleStatus').textContent()).includes('실행 중')) throw new Error('Module not running');
+    await page.locator('#editor').fill(source.replace('joins++;','missingSymbol();'));
+    await page.locator('#buildButton').click();
+    await page.locator('#output').filter({hasText:'ui_probe.ce:6:'}).waitFor({timeout:20000});
+    if (!(await page.locator('#moduleStatus').textContent()).includes('실행 중')) throw new Error('Failed build stopped active module');
+    await page.locator('#editor').fill(source);
+    await page.locator('#saveButton').click();
+    await page.waitForFunction(()=>!document.querySelector('#saveButton').disabled);
+    await page.screenshot({path:process.env.CE_SCREENSHOT,fullPage:true});
+    await page.setViewportSize({width:390,height:844});
+    await page.screenshot({path:process.env.CE_SCREENSHOT.replace('desktop','mobile'),fullPage:true});
+    const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth);
+    if(overflow)throw new Error('Mobile horizontal overflow');
+    await page.locator('#unloadButton').click();
+    await page.locator('#output').filter({hasText:'unload succeeded: ui_probe'}).waitFor({timeout:15000});
+    if(errors.length)throw new Error(errors.join('\n'));
+    require('fs').writeFileSync(process.env.CE_SCREENSHOT.replace('webide-desktop.png','browser.json'), JSON.stringify({status:'passed',browser:await browser.version(),checks:['connect','create','dialogCancel','save','load','diagnostics','unload','desktop1440','mobile390','noHorizontalOverflow','noPageErrors']},null,2));
+    console.log('Browser smoke PASS: connect/create/save/load/diagnostics/unload/desktop/mobile');
+  } finally {await browser.close();}
+})().catch(e=>{console.error(e);process.exitCode=1;});

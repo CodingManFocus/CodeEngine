@@ -1,0 +1,7 @@
+# Paper 1.21.11 / JDK 21+. Full server restart for plugin upgrades.
+autoLoad: true
+seedExample: true
+# Report a timeout after this many seconds; active callbacks are never force-closed.
+unloadTimeoutSeconds: 10
+# WebIDE always binds to 127.0.0.1; remote access uses an SSH tunnel.
+webPort: 17777

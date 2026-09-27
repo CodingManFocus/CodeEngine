@@ -1,0 +1,14 @@
+{
+  "date": "2026-09-25",
+  "paper": "1.21.11 build 132",
+  "paperSha256": "5ffef465eeeb5f2a3c23a24419d97c51afd7dbb4923ff42df9a3f58bba1ccfba",
+  "jdk": "Corretto 21.0.12.1+9-LTS",
+  "pluginSha256": "61fb111b320ee1c4c16d53e2838d65295f3483089a592ed5363ac2f45a47bb8d",
+  "forks": 2,
+  "checksPerFork": 391,
+  "junitPassed": 51,
+  "unloadTimeoutSeconds": 1,
+  "players": 0,
+  "build": "javac --release 21; manual JAR assembly",
+  "expectedOutcome": "PASS"
+}

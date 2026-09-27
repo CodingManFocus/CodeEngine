@@ -1,0 +1,11 @@
+{
+  "date": "2026-09-25",
+  "paper": "1.21.11 build 132",
+  "java": "Corretto 21.0.12.1+9-LTS",
+  "engineSha256": "8b7c9444ca6f33a6066ba7f2ba1cdf2ed4783935823343bbf582da73a0c7acb8",
+  "junitTests": 45,
+  "paperChecks": 295,
+  "build": "javac --release 21 -proc:none -parameters; local Paper distribution libraries; manual resource/JAR assembly",
+  "forks": 1,
+  "players": 0
+}

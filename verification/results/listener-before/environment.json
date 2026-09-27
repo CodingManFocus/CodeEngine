@@ -1,0 +1,5 @@
+{
+  "engineSha256": "8b7c9444ca6f33a6066ba7f2ba1cdf2ed4783935823343bbf582da73a0c7acb8",
+  "expectedResult": "fails at unloading shareda preserves sharedb registration",
+  "paper": "1.21.11 build 132"
+}

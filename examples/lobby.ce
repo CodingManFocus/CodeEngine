@@ -1,0 +1,18 @@
+module lobby;
+
+// Exact native Paper Block and Event access; no location or player wrapper.
+on BlockBreakEvent event priority HIGH ignoreCancelled {
+    var block = event.getBlock();
+    if (!block.getWorld().getName().equals("world")) return;
+    long x = block.getX();
+    long z = block.getZ();
+    if (x * x + z * z <= 256L) event.setCancelled(true);
+}
+
+on BlockPlaceEvent event priority HIGH ignoreCancelled {
+    var block = event.getBlock();
+    if (!block.getWorld().getName().equals("world")) return;
+    long x = block.getX();
+    long z = block.getZ();
+    if (x * x + z * z <= 256L) event.setCancelled(true);
+}

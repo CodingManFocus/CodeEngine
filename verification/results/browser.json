@@ -1,0 +1,17 @@
+{
+  "status": "passed",
+  "browser": "133.0.6943.0",
+  "checks": [
+    "connect",
+    "create",
+    "dialogCancel",
+    "save",
+    "load",
+    "diagnostics",
+    "unload",
+    "desktop1440",
+    "mobile390",
+    "noHorizontalOverflow",
+    "noPageErrors"
+  ]
+}

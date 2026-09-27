@@ -1,0 +1,105 @@
+{
+  "paper": "1.21.11 build 132 c5eb079",
+  "paperSha256": "5ffef465eeeb5f2a3c23a24419d97c51afd7dbb4923ff42df9a3f58bba1ccfba",
+  "java": "Amazon Corretto 21.0.12.1+9-LTS",
+  "jvm": "-Xms512M -Xmx2G, default GC",
+  "forks": [
+    {
+      "fork": 1,
+      "metrics": {
+        "cebenchblocks": {
+          "medianNs": 5420.57421875,
+          "medianBytes": 4795.90625,
+          "samples": 120
+        },
+        "cebenchcalc": {
+          "medianNs": 2093.16796875,
+          "medianBytes": 3087.5,
+          "samples": 120
+        },
+        "nativeblocks": {
+          "medianNs": 4939.58984375,
+          "medianBytes": 3078.75,
+          "samples": 120
+        },
+        "nativecalc": {
+          "medianNs": 2108.5390625,
+          "medianBytes": 3086.25,
+          "samples": 120
+        }
+      }
+    },
+    {
+      "fork": 2,
+      "metrics": {
+        "cebenchblocks": {
+          "medianNs": 5618.9140625,
+          "medianBytes": 4819.90625,
+          "samples": 120
+        },
+        "cebenchcalc": {
+          "medianNs": 2021.265625,
+          "medianBytes": 3111.5,
+          "samples": 120
+        },
+        "nativeblocks": {
+          "medianNs": 5376.91796875,
+          "medianBytes": 3102.75,
+          "samples": 120
+        },
+        "nativecalc": {
+          "medianNs": 2136.35546875,
+          "medianBytes": 3110.25,
+          "samples": 120
+        }
+      }
+    },
+    {
+      "fork": 3,
+      "metrics": {
+        "cebenchblocks": {
+          "medianNs": 5596.15625,
+          "medianBytes": 4795.90625,
+          "samples": 120
+        },
+        "cebenchcalc": {
+          "medianNs": 2069.7734375,
+          "medianBytes": 3087.5,
+          "samples": 120
+        },
+        "nativeblocks": {
+          "medianNs": 4711.08984375,
+          "medianBytes": 3078.75,
+          "samples": 120
+        },
+        "nativecalc": {
+          "medianNs": 2089.453125,
+          "medianBytes": 3086.25,
+          "samples": 120
+        }
+      }
+    }
+  ],
+  "representative": {
+    "cebenchblocks": {
+      "medianNs": 5596.15625,
+      "medianBytes": 4795.90625
+    },
+    "cebenchcalc": {
+      "medianNs": 2069.7734375,
+      "medianBytes": 3087.5
+    },
+    "nativeblocks": {
+      "medianNs": 4939.58984375,
+      "medianBytes": 3078.75
+    },
+    "nativecalc": {
+      "medianNs": 2108.5390625,
+      "medianBytes": 3086.25
+    }
+  },
+  "ratios": {
+    "calc": 0.9816149362895666,
+    "blocks": 1.1329192153637504
+  }
+}

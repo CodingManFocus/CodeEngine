@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="kr.codenamemc.codeengine.web.WebIdeServerTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-09-25T05:39:42.997Z" hostname="33b196f6351a" time="0.55">
+  <properties/>
+  <testcase name="oversizedBodyRejected()" classname="kr.codenamemc.codeengine.web.WebIdeServerTest" time="0.222"/>
+  <testcase name="operationsReturnPollableJobs()" classname="kr.codenamemc.codeengine.web.WebIdeServerTest" time="0.063"/>
+  <testcase name="saveRequiresRevisionAndProtectsConflicts()" classname="kr.codenamemc.codeengine.web.WebIdeServerTest" time="0.103"/>
+  <testcase name="listAndStaticUiWork()" classname="kr.codenamemc.codeengine.web.WebIdeServerTest" time="0.053"/>
+  <testcase name="crossOriginRequestRejected()" classname="kr.codenamemc.codeengine.web.WebIdeServerTest" time="0.007"/>
+  <testcase name="traversalAndDuplicateArgumentsAreRejected()" classname="kr.codenamemc.codeengine.web.WebIdeServerTest" time="0.091"/>
+  <testcase name="apiRequiresBearer()" classname="kr.codenamemc.codeengine.web.WebIdeServerTest" time="0.008"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

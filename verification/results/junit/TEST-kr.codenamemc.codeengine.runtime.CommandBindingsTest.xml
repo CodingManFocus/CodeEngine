@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="kr.codenamemc.codeengine.runtime.CommandBindingsTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-09-25T05:39:42.992Z" hostname="33b196f6351a" time="0.003">
+  <properties/>
+  <testcase name="removesOnlyOwnedCommandsWithoutIteratorRemove()" classname="kr.codenamemc.codeengine.runtime.CommandBindingsTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

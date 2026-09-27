@@ -1,0 +1,1 @@
+java.util.concurrent.CompletionException: java.lang.AssertionError: unloading shareda preserves sharedb registration

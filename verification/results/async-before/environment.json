@@ -1,0 +1,14 @@
+{
+  "date": "2026-09-25",
+  "paper": "1.21.11 build 132",
+  "paperSha256": "5ffef465eeeb5f2a3c23a24419d97c51afd7dbb4923ff42df9a3f58bba1ccfba",
+  "jdk": "Corretto 21.0.12.1+9-LTS",
+  "pluginSha256": "93500f42374047fa0688e0bdffa95b2e32abca27bfaf56c025cbef70322fe6fc",
+  "forks": 1,
+  "checksPerFork": null,
+  "junitPassed": null,
+  "unloadTimeoutSeconds": 1,
+  "players": 0,
+  "build": "javac --release 21; manual JAR assembly",
+  "expectedOutcome": "FAIL: premature unload and NoClassDefFoundError"
+}

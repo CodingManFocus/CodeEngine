@@ -1,0 +1,9 @@
+module pulse;
+state long pulses = 0L;
+every 20 ticks after 1 ticks {
+    pulses++;
+}
+command cepulse permission "codeengine.pulse" {
+    sender.sendMessage(Component.text("Pulses: " + pulses));
+    return true;
+}

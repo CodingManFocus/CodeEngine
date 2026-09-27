@@ -1,0 +1,116 @@
+Compiled from "Entry.java"
+public final class kr.codenamemc.codeengine.generated.m_bench.Entry implements kr.codenamemc.codeengine.api.CodeModule,org.bukkit.event.Listener {
+  private kr.codenamemc.codeengine.api.ModuleContext ctx;
+
+  private org.bukkit.World world;
+
+  public kr.codenamemc.codeengine.generated.m_bench.Entry();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  public void prepare(kr.codenamemc.codeengine.api.ModuleContext);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #7                  // Field ctx:Lkr/codenamemc/codeengine/api/ModuleContext;
+       5: aload_0
+       6: getfield      #7                  // Field ctx:Lkr/codenamemc/codeengine/api/ModuleContext;
+       9: new           #13                 // class kr/codenamemc/codeengine/generated/m_bench/Entry$__ceNativeCommand2
+      12: dup
+      13: aload_0
+      14: invokespecial #15                 // Method kr/codenamemc/codeengine/generated/m_bench/Entry$__ceNativeCommand2."<init>":(Lkr/codenamemc/codeengine/generated/m_bench/Entry;)V
+      17: invokeinterface #18,  2           // InterfaceMethod kr/codenamemc/codeengine/api/ModuleContext.command:(Lorg/bukkit/command/Command;)V
+      22: aload_0
+      23: getfield      #7                  // Field ctx:Lkr/codenamemc/codeengine/api/ModuleContext;
+      26: new           #24                 // class kr/codenamemc/codeengine/generated/m_bench/Entry$__ceNativeCommand3
+      29: dup
+      30: aload_0
+      31: invokespecial #26                 // Method kr/codenamemc/codeengine/generated/m_bench/Entry$__ceNativeCommand3."<init>":(Lkr/codenamemc/codeengine/generated/m_bench/Entry;)V
+      34: invokeinterface #18,  2           // InterfaceMethod kr/codenamemc/codeengine/api/ModuleContext.command:(Lorg/bukkit/command/Command;)V
+      39: return
+
+  public void enable() throws java.lang.Exception;
+    Code:
+       0: aload_0
+       1: aload_0
+       2: getfield      #7                  // Field ctx:Lkr/codenamemc/codeengine/api/ModuleContext;
+       5: invokeinterface #27,  1           // InterfaceMethod kr/codenamemc/codeengine/api/ModuleContext.server:()Lorg/bukkit/Server;
+      10: invokeinterface #31,  1           // InterfaceMethod org/bukkit/Server.getWorlds:()Ljava/util/List;
+      15: invokeinterface #37,  1           // InterfaceMethod java/util/List.getFirst:()Ljava/lang/Object;
+      20: checkcast     #43                 // class org/bukkit/World
+      23: putfield      #45                 // Field world:Lorg/bukkit/World;
+      26: return
+
+  private boolean __ceCommand2(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[]);
+    Code:
+       0: aload         4
+       2: iconst_0
+       3: aaload
+       4: invokestatic  #49                 // Method java/lang/Long.parseLong:(Ljava/lang/String;)J
+       7: lstore        5
+       9: iconst_0
+      10: istore        7
+      12: iload         7
+      14: sipush        1024
+      17: if_icmpge     42
+      20: lload         5
+      22: ldc2_w        #55                 // long 1664525l
+      25: lmul
+      26: ldc2_w        #57                 // long 1013904223l
+      29: ladd
+      30: ldc2_w        #59                 // long 4294967295l
+      33: land
+      34: lstore        5
+      36: iinc          7, 1
+      39: goto          12
+      42: aload_1
+      43: lload         5
+      45: invokestatic  #61                 // Method java/lang/Long.toString:(J)Ljava/lang/String;
+      48: invokeinterface #65,  2           // InterfaceMethod org/bukkit/command/CommandSender.sendMessage:(Ljava/lang/String;)V
+      53: iconst_1
+      54: ireturn
+
+  private boolean __ceCommand3(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[]);
+    Code:
+       0: aload         4
+       2: iconst_0
+       3: aaload
+       4: invokestatic  #71                 // Method java/lang/Integer.parseInt:(Ljava/lang/String;)I
+       7: istore        5
+       9: iconst_0
+      10: istore        6
+      12: iconst_0
+      13: istore        7
+      15: iload         7
+      17: sipush        256
+      20: if_icmpge     70
+      23: aload_0
+      24: getfield      #45                 // Field world:Lorg/bukkit/World;
+      27: iload         7
+      29: iload         5
+      31: iadd
+      32: bipush        15
+      34: iand
+      35: bipush        80
+      37: iload         7
+      39: iconst_4
+      40: iushr
+      41: invokeinterface #77,  4           // InterfaceMethod org/bukkit/World.getBlockAt:(III)Lorg/bukkit/block/Block;
+      46: invokeinterface #81,  1           // InterfaceMethod org/bukkit/block/Block.getType:()Lorg/bukkit/Material;
+      51: getstatic     #87                 // Field org/bukkit/Material.STONE:Lorg/bukkit/Material;
+      54: if_acmpne     64
+      57: iload         6
+      59: iload         7
+      61: iadd
+      62: istore        6
+      64: iinc          7, 1
+      67: goto          15
+      70: aload_1
+      71: iload         6
+      73: invokestatic  #93                 // Method java/lang/Integer.toString:(I)Ljava/lang/String;
+      76: invokeinterface #65,  2           // InterfaceMethod org/bukkit/command/CommandSender.sendMessage:(Ljava/lang/String;)V
+      81: iconst_1
+      82: ireturn
+}

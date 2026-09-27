@@ -1,0 +1,10 @@
+{
+  "engineSha256": "93500f42374047fa0688e0bdffa95b2e32abca27bfaf56c025cbef70322fe6fc",
+  "paper": "1.21.11 build 132",
+  "java": "Corretto 21.0.12.1+9-LTS",
+  "build": "javac --release 21 -proc:none -parameters; existing Paper libraries; manual JAR assembly",
+  "junitTests": 45,
+  "paperChecks": 329,
+  "players": 0,
+  "forks": 1
+}

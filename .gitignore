@@ -1,0 +1,16 @@
+.gradle/
+**/build/
+.idea/
+*.iml
+run/
+dist/
+node_modules/
+__pycache__/
+*.py[cod]
+*.class
+/verification/results/**/*.jar
+/verification/results/**/module-data/
+.DS_Store
+.env
+.env.*
+!.env.example

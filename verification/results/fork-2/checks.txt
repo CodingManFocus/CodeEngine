@@ -1,0 +1,236 @@
+PASS 235 checks
+PASS module load
+PASS real Paper event cancellation
+PASS exactly one event handler invocation
+PASS one module task
+PASS real Paper event cancellation
+PASS exactly one event handler invocation
+PASS no task duplication after reload
+PASS no listener duplication
+PASS real Paper event cancellation
+PASS exactly one event handler invocation
+PASS no task duplication after reload
+PASS no listener duplication
+PASS real Paper event cancellation
+PASS exactly one event handler invocation
+PASS no task duplication after reload
+PASS no listener duplication
+PASS real Paper event cancellation
+PASS exactly one event handler invocation
+PASS no task duplication after reload
+PASS no listener duplication
+PASS real Paper event cancellation
+PASS exactly one event handler invocation
+PASS no task duplication after reload
+PASS no listener duplication
+PASS real Paper event cancellation
+PASS exactly one event handler invocation
+PASS no task duplication after reload
+PASS no listener duplication
+PASS real Paper event cancellation
+PASS exactly one event handler invocation
+PASS no task duplication after reload
+PASS no listener duplication
+PASS real Paper event cancellation
+PASS exactly one event handler invocation
+PASS no task duplication after reload
+PASS no listener duplication
+PASS real Paper event cancellation
+PASS exactly one event handler invocation
+PASS no task duplication after reload
+PASS no listener duplication
+PASS real Paper event cancellation
+PASS exactly one event handler invocation
+PASS no task duplication after reload
+PASS no listener duplication
+PASS real Paper event cancellation
+PASS exactly one event handler invocation
+PASS no task duplication after reload
+PASS no listener duplication
+PASS real Paper event cancellation
+PASS exactly one event handler invocation
+PASS no task duplication after reload
+PASS no listener duplication
+PASS real Paper event cancellation
+PASS exactly one event handler invocation
+PASS no task duplication after reload
+PASS no listener duplication
+PASS real Paper event cancellation
+PASS exactly one event handler invocation
+PASS no task duplication after reload
+PASS no listener duplication
+PASS real Paper event cancellation
+PASS exactly one event handler invocation
+PASS no task duplication after reload
+PASS no listener duplication
+PASS real Paper event cancellation
+PASS exactly one event handler invocation
+PASS no task duplication after reload
+PASS no listener duplication
+PASS real Paper event cancellation
+PASS exactly one event handler invocation
+PASS no task duplication after reload
+PASS no listener duplication
+PASS real Paper event cancellation
+PASS exactly one event handler invocation
+PASS no task duplication after reload
+PASS no listener duplication
+PASS real Paper event cancellation
+PASS exactly one event handler invocation
+PASS no task duplication after reload
+PASS no listener duplication
+PASS real Paper event cancellation
+PASS exactly one event handler invocation
+PASS no task duplication after reload
+PASS no listener duplication
+PASS invalid replacement fails
+PASS old module remains loaded
+PASS real Paper event cancellation
+PASS exactly one event handler invocation
+PASS compile failure preserves task
+PASS invalid replacement fails
+PASS old module remains loaded
+PASS real Paper event cancellation
+PASS exactly one event handler invocation
+PASS enable error preserves task
+PASS invalid replacement fails
+PASS old module remains loaded
+PASS real Paper event cancellation
+PASS exactly one event handler invocation
+PASS registration rollback restores task
+PASS command collision rejected
+PASS real Paper event cancellation
+PASS exactly one event handler invocation
+PASS module unload
+PASS command removed
+PASS namespaced command removed
+PASS listeners removed
+PASS tasks cancelled
+PASS matching calc result seed=0
+PASS matching blocks result seed=0
+PASS matching calc result seed=1
+PASS matching blocks result seed=1
+PASS matching calc result seed=2
+PASS matching blocks result seed=2
+PASS matching calc result seed=3
+PASS matching blocks result seed=3
+PASS matching calc result seed=4
+PASS matching blocks result seed=4
+PASS matching calc result seed=5
+PASS matching blocks result seed=5
+PASS matching calc result seed=6
+PASS matching blocks result seed=6
+PASS matching calc result seed=7
+PASS matching blocks result seed=7
+PASS matching calc result seed=8
+PASS matching blocks result seed=8
+PASS matching calc result seed=9
+PASS matching blocks result seed=9
+PASS matching calc result seed=10
+PASS matching blocks result seed=10
+PASS matching calc result seed=11
+PASS matching blocks result seed=11
+PASS matching calc result seed=12
+PASS matching blocks result seed=12
+PASS matching calc result seed=13
+PASS matching blocks result seed=13
+PASS matching calc result seed=14
+PASS matching blocks result seed=14
+PASS matching calc result seed=15
+PASS matching blocks result seed=15
+PASS matching calc result seed=16
+PASS matching blocks result seed=16
+PASS matching calc result seed=17
+PASS matching blocks result seed=17
+PASS matching calc result seed=18
+PASS matching blocks result seed=18
+PASS matching calc result seed=19
+PASS matching blocks result seed=19
+PASS matching calc result seed=20
+PASS matching blocks result seed=20
+PASS matching calc result seed=21
+PASS matching blocks result seed=21
+PASS matching calc result seed=22
+PASS matching blocks result seed=22
+PASS matching calc result seed=23
+PASS matching blocks result seed=23
+PASS matching calc result seed=24
+PASS matching blocks result seed=24
+PASS matching calc result seed=25
+PASS matching blocks result seed=25
+PASS matching calc result seed=26
+PASS matching blocks result seed=26
+PASS matching calc result seed=27
+PASS matching blocks result seed=27
+PASS matching calc result seed=28
+PASS matching blocks result seed=28
+PASS matching calc result seed=29
+PASS matching blocks result seed=29
+PASS matching calc result seed=30
+PASS matching blocks result seed=30
+PASS matching calc result seed=31
+PASS matching blocks result seed=31
+PASS matching calc result seed=32
+PASS matching blocks result seed=32
+PASS matching calc result seed=33
+PASS matching blocks result seed=33
+PASS matching calc result seed=34
+PASS matching blocks result seed=34
+PASS matching calc result seed=35
+PASS matching blocks result seed=35
+PASS matching calc result seed=36
+PASS matching blocks result seed=36
+PASS matching calc result seed=37
+PASS matching blocks result seed=37
+PASS matching calc result seed=38
+PASS matching blocks result seed=38
+PASS matching calc result seed=39
+PASS matching blocks result seed=39
+PASS matching calc result seed=40
+PASS matching blocks result seed=40
+PASS matching calc result seed=41
+PASS matching blocks result seed=41
+PASS matching calc result seed=42
+PASS matching blocks result seed=42
+PASS matching calc result seed=43
+PASS matching blocks result seed=43
+PASS matching calc result seed=44
+PASS matching blocks result seed=44
+PASS matching calc result seed=45
+PASS matching blocks result seed=45
+PASS matching calc result seed=46
+PASS matching blocks result seed=46
+PASS matching calc result seed=47
+PASS matching blocks result seed=47
+PASS matching calc result seed=48
+PASS matching blocks result seed=48
+PASS matching calc result seed=49
+PASS matching blocks result seed=49
+PASS matching calc result seed=50
+PASS matching blocks result seed=50
+PASS matching calc result seed=51
+PASS matching blocks result seed=51
+PASS matching calc result seed=52
+PASS matching blocks result seed=52
+PASS matching calc result seed=53
+PASS matching blocks result seed=53
+PASS matching calc result seed=54
+PASS matching blocks result seed=54
+PASS matching calc result seed=55
+PASS matching blocks result seed=55
+PASS matching calc result seed=56
+PASS matching blocks result seed=56
+PASS matching calc result seed=57
+PASS matching blocks result seed=57
+PASS matching calc result seed=58
+PASS matching blocks result seed=58
+PASS matching calc result seed=59
+PASS matching blocks result seed=59
+PASS matching calc result seed=60
+PASS matching blocks result seed=60
+PASS matching calc result seed=61
+PASS matching blocks result seed=61
+PASS matching calc result seed=62
+PASS matching blocks result seed=62
+PASS matching calc result seed=63
+PASS matching blocks result seed=63

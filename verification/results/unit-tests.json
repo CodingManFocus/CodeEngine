@@ -1,0 +1,32 @@
+[
+  {
+    "suite": "kr.codenamemc.codeengine.compiler.ParserTest",
+    "tests": 20,
+    "failures": 0,
+    "errors": 0
+  },
+  {
+    "suite": "kr.codenamemc.codeengine.workspace.ScriptStoreTest",
+    "tests": 13,
+    "failures": 0,
+    "errors": 0
+  },
+  {
+    "suite": "kr.codenamemc.codeengine.web.WebIdeServerTest",
+    "tests": 7,
+    "failures": 0,
+    "errors": 0
+  },
+  {
+    "suite": "kr.codenamemc.codeengine.runtime.CommandBindingsTest",
+    "tests": 1,
+    "failures": 0,
+    "errors": 0
+  },
+  {
+    "suite": "kr.codenamemc.codeengine.compiler.CompilerIntegrationTest",
+    "tests": 4,
+    "failures": 0,
+    "errors": 0
+  }
+]

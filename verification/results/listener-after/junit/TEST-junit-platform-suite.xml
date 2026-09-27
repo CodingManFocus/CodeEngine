@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="JUnit Platform Suite" tests="0" skipped="0" failures="0" errors="0" time="0.002" hostname="be2db1dc8e17" timestamp="2026-09-25T09:54:59">
+<properties>
+<property name="file.encoding" value="UTF-8"/>
+<property name="file.separator" value="/"/>
+<property name="java.class.path" value="/tmp/ce-reload-build/junit.jar:/tmp/ce-reload-build/tests:/workspace/scratch/8d424160be87/kr.codenamemc.codeengine/codeengine-plugin/build/libs/codeengine-plugin-0.1.0.jar:/tmp/ce-audit-tools/compile-libs/jline-terminal-jni-3.27.1.jar:/tmp/ce-audit-tools/compile-libs/maven-resolver-impl-1.9.18.jar:/tmp/ce-audit-tools/compile-libs/netty-codec-http-4.2.7.Final.jar:/tmp/ce-audit-tools/compile-libs/maven-artifact-3.9.6.jar:/tmp/ce-audit-tools/compile-libs/adventure-key-4.26.1.jar:/tmp/ce-audit-tools/compile-libs/httpclient-4.5.14.jar:/tmp/ce-audit-tools/compile-libs/jline-terminal-3.27.1.jar:/tmp/ce-audit-tools/compile-libs/jline-terminal-ffm-3.27.1.jar:/tmp/ce-audit-tools/compile-libs/netty-transport-4.2.7.Final.jar:/tmp/ce-audit-tools/compile-libs/maven-resolver-api-1.9.18.jar:/tmp/ce-audit-tools/compile-libs/reflection-rewriter-runtime-0.0.3.jar:/tmp/ce-audit-tools/compile-libs/maven-builder-support-3.9.6.jar:/tmp/ce-audit-tools/compile-libs/guava-33.5.0-jre.jar:/tmp/ce-audit-tools/compile-libs/httpcore-4.4.16.jar:/tmp/ce-audit-tools/compile-libs/maven-resolver-util-1.9.18.jar:/tmp/ce-audit-tools/compile-libs/maven-resolver-connector-basic-1.9.18.jar:/tmp/ce-audit-tools/compile-libs/adventure-text-logger-slf4j-4.26.1.jar:/tmp/ce-audit-tools/compile-libs/logging-1.6.11.jar:/tmp/ce-audit-tools/compile-libs/examination-api-1.3.0.jar:/tmp/ce-audit-tools/compile-libs/plexus-utils-3.5.1.jar:/tmp/ce-audit-tools/compile-libs/log4j-iostreams-2.24.1.jar:/tmp/ce-audit-tools/compile-libs/slf4j-api-2.0.17.jar:/tmp/ce-audit-tools/compile-libs/authlib-7.0.61.jar:/tmp/ce-audit-tools/compile-libs/maven-resolver-provider-3.9.6.jar:/tmp/ce-audit-tools/compile-libs/brigadier-1.3.10.jar:/tmp/ce-audit-tools/compile-libs/gson-2.13.2.jar:/tmp/ce-audit-tools/compile-libs/maven-model-3.9.6.jar:/tmp/ce-audit-tools/compile-libs/protobuf-java-4.29.0.jar:/tmp/ce-audit-tools/compile-libs/asm-tree-9.9.1.jar:/tmp/ce-audit-tools/compile-libs/maven-repository-metadata-3.9.6.jar:/tmp/ce-audit-tools/compile-libs/geantyref-1.3.16.jar:/tmp/ce-audit-tools/compile-libs/netty-codec-compression-4.2.7.Final.jar:/tmp/ce-audit-tools/compile-libs/jna-5.17.0.jar:/tmp/ce-audit-tools/compile-libs/commons-lang3-3.19.0.jar:/tmp/ce-audit-tools/compile-libs/jline-reader-3.20.0.jar:/tmp/ce-audit-tools/compile-libs/json-simple-1.1.1.jar:/tmp/ce-audit-tools/compile-libs/fastutil-8.5.18.jar:/tmp/ce-audit-tools/compile-libs/netty-codec-haproxy-4.2.7.Final.jar:/tmp/ce-audit-tools/compile-libs/snakeyaml-2.2.jar:/tmp/ce-audit-tools/compile-libs/reflection-rewriter-0.0.3.jar:/tmp/ce-audit-tools/compile-libs/org.eclipse.sisu.inject-0.9.0.M2.jar:/tmp/ce-audit-tools/compile-libs/j2objc-annotations-3.1.jar:/tmp/ce-audit-tools/compile-libs/adventure-text-serializer-gson-4.26.1.jar:/tmp/ce-audit-tools/compile-libs/bungeecord-chat-1.21-R0.2-deprecated+build.21.jar:/tmp/ce-audit-tools/compile-libs/netty-transport-classes-kqueue-4.2.7.Final.jar:/tmp/ce-audit-tools/compile-libs/netty-transport-classes-epoll-4.2.7.Final.jar:/tmp/ce-audit-tools/compile-libs/plexus-interpolation-1.26.jar:/tmp/ce-audit-tools/compile-libs/adventure-api-4.26.1.jar:/tmp/ce-audit-tools/compile-libs/netty-resolver-4.2.7.Final.jar:/tmp/ce-audit-tools/compile-libs/concurrentutil-0.0.8.jar:/tmp/ce-audit-tools/compile-libs/adventure-text-serializer-json-4.26.1.jar:/tmp/ce-audit-tools/compile-libs/AutoRenamingTool-2.0.3.jar:/tmp/ce-audit-tools/compile-libs/failureaccess-1.0.3.jar:/tmp/ce-audit-tools/compile-libs/jspecify-1.0.0.jar:/tmp/ce-audit-tools/compile-libs/reflection-rewriter-proxy-generator-0.0.3.jar:/tmp/ce-audit-tools/compile-libs/option-1.1.0.jar:/tmp/ce-audit-tools/compile-libs/netty-transport-native-epoll-4.2.7.Final-linux-aarch_64.jar:/tmp/ce-audit-tools/compile-libs/log4j-api-2.25.2.jar:/tmp/ce-audit-tools/compile-libs/oshi-core-6.9.0.jar:/tmp/ce-audit-tools/compile-libs/netty-transport-native-kqueue-4.2.7.Final-osx-x86_64.jar:/tmp/ce-audit-tools/compile-libs/adventure-text-serializer-plain-4.26.1.jar:/tmp/ce-audit-tools/compile-libs/commons-io-2.20.0.jar:/tmp/ce-audit-tools/compile-libs/spec-2.0.17.jar:/tmp/ce-audit-tools/compile-libs/configurate-core-4.2.0.jar:/tmp/ce-audit-tools/compile-libs/maven-resolver-transport-http-1.9.18.jar:/tmp/ce-audit-tools/compile-libs/adventure-text-minimessage-4.26.1.jar:/tmp/ce-audit-tools/compile-libs/error_prone_annotations-2.41.0.jar:/tmp/ce-audit-tools/compile-libs/ansi-1.1.1.jar:/tmp/ce-audit-tools/compile-libs/netty-transport-native-unix-common-4.2.7.Final.jar:/tmp/ce-audit-tools/compile-libs/javax.inject-1.jar:/tmp/ce-audit-tools/compile-libs/asm-9.9.1.jar:/tmp/ce-audit-tools/compile-libs/velocity-native-3.4.0-SNAPSHOT.jar:/tmp/ce-audit-tools/compile-libs/jopt-simple-5.0.4.jar:/tmp/ce-audit-tools/compile-libs/jcl-over-slf4j-1.7.36.jar:/tmp/ce-audit-tools/compile-libs/netty-transport-native-kqueue-4.2.7.Final-osx-aarch_64.jar:/tmp/ce-audit-tools/compile-libs/spark-api-0.1-20240720.200737-2.jar:/tmp/ce-audit-tools/compile-libs/netty-handler-4.2.7.Final.jar:/tmp/ce-audit-tools/compile-libs/azure-json-1.4.0.jar:/tmp/ce-audit-tools/compile-libs/configurate-yaml-4.2.0.jar:/tmp/ce-audit-tools/compile-libs/maven-model-builder-3.9.6.jar:/tmp/ce-audit-tools/compile-libs/commons-lang-2.6.jar:/tmp/ce-audit-tools/compile-libs/disruptor-3.4.4.jar:/tmp/ce-audit-tools/compile-libs/jline-native-3.27.1.jar:/tmp/ce-audit-tools/compile-libs/log4j-slf4j2-impl-2.25.2.jar:/tmp/ce-audit-tools/compile-libs/netty-transport-native-epoll-4.2.7.Final-linux-x86_64.jar:/tmp/ce-audit-tools/compile-libs/terminalconsoleappender-1.3.0.jar:/tmp/ce-audit-tools/compile-libs/sqlite-jdbc-3.49.1.0.jar:/tmp/ce-audit-tools/compile-libs/asm-utils-0.0.3.jar:/tmp/ce-audit-tools/compile-libs/commons-codec-1.16.0.jar:/tmp/ce-audit-tools/compile-libs/mysql-connector-j-9.2.0.jar:/tmp/ce-audit-tools/compile-libs/adventure-text-serializer-commons-4.26.1.jar:/tmp/ce-audit-tools/compile-libs/spark-paper-1.10.152.jar:/tmp/ce-audit-tools/compile-libs/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar:/tmp/ce-audit-tools/compile-libs/srgutils-1.0.9.jar:/tmp/ce-audit-tools/compile-libs/netty-codec-base-4.2.7.Final.jar:/tmp/ce-audit-tools/compile-libs/adventure-text-serializer-legacy-4.26.1.jar:/tmp/ce-audit-tools/compile-libs/paper-api-1.21.11-R0.1-SNAPSHOT.jar:/tmp/ce-audit-tools/compile-libs/msal4j-1.23.1.jar:/tmp/ce-audit-tools/compile-libs/netty-buffer-4.2.7.Final.jar:/tmp/ce-audit-tools/compile-libs/log4j-core-2.25.2.jar:/tmp/ce-audit-tools/compile-libs/adventure-text-serializer-ansi-4.26.1.jar:/tmp/ce-audit-tools/compile-libs/maven-resolver-named-locks-1.9.18.jar:/tmp/ce-audit-tools/compile-libs/examination-string-1.3.0.jar:/tmp/ce-audit-tools/compile-libs/cli-utils-2.1.4.jar:/tmp/ce-audit-tools/compile-libs/lz4-java-1.8.1.jar:/tmp/ce-audit-tools/compile-libs/maven-resolver-spi-1.9.18.jar:/tmp/ce-audit-tools/compile-libs/jtracy-1.0.37.jar:/tmp/ce-audit-tools/compile-libs/jna-platform-5.17.0.jar:/tmp/ce-audit-tools/compile-libs/asm-commons-9.9.1.jar:/tmp/ce-audit-tools/compile-libs/datafixerupper-9.0.19.jar:/tmp/ce-audit-tools/compile-libs/joml-1.10.8.jar:/tmp/ce-audit-tools/compile-libs/netty-common-4.2.7.Final.jar:/tmp/ce-audit-tools/compile-libs/gson-io-2.0.17.jar:/tmp/ce-audit-tools/compile-libs/parchment-1.21.11-pre3+build.2.jar"/>
+<property name="java.class.version" value="65.0"/>
+<property name="java.home" value="/tmp/ce-audit-tools/amazon-corretto-21.0.12.9.1-linux-x64"/>
+<property name="java.io.tmpdir" value="/tmp"/>
+<property name="java.library.path" value="/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib"/>
+<property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
+<property name="java.runtime.version" value="21.0.12.1+9-LTS"/>
+<property name="java.specification.name" value="Java Platform API Specification"/>
+<property name="java.specification.vendor" value="Oracle Corporation"/>
+<property name="java.specification.version" value="21"/>
+<property name="java.vendor" value="Amazon.com Inc."/>
+<property name="java.vendor.url" value="https://aws.amazon.com/corretto/"/>
+<property name="java.vendor.url.bug" value="https://github.com/corretto/corretto-21/issues/"/>
+<property name="java.vendor.version" value="Corretto-21.0.12.9.1"/>
+<property name="java.version" value="21.0.12.1"/>
+<property name="java.version.date" value="2026-08-18"/>
+<property name="java.vm.compressedOopsMode" value="32-bit"/>
+<property name="java.vm.info" value="mixed mode, sharing"/>
+<property name="java.vm.name" value="OpenJDK 64-Bit Server VM"/>
+<property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+<property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+<property name="java.vm.specification.version" value="21"/>
+<property name="java.vm.vendor" value="Amazon.com Inc."/>
+<property name="java.vm.version" value="21.0.12.1+9-LTS"/>
+<property name="jdk.debug" value="release"/>
+<property name="junit.docs.version" value="1.12.2"/>
+<property name="line.separator" value="&#10;"/>
+<property name="native.encoding" value="UTF-8"/>
+<property name="os.arch" value="amd64"/>
+<property name="os.name" value="Linux"/>
+<property name="os.version" value="6.18.44"/>
+<property name="path.separator" value=":"/>
+<property name="stderr.encoding" value="UTF-8"/>
+<property name="stdout.encoding" value="UTF-8"/>
+<property name="sun.arch.data.model" value="64"/>
+<property name="sun.boot.library.path" value="/tmp/ce-audit-tools/amazon-corretto-21.0.12.9.1-linux-x64/lib"/>
+<property name="sun.cpu.endian" value="little"/>
+<property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
+<property name="sun.java.command" value="org.junit.platform.console.ConsoleLauncher execute --scan-class-path=/tmp/ce-reload-build/tests --reports-dir=/workspace/scratch/8d424160be87/kr.codenamemc.codeengine/verification/results/listener-after/junit --details=summary"/>
+<property name="sun.java.launcher" value="SUN_STANDARD"/>
+<property name="sun.jnu.encoding" value="UTF-8"/>
+<property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+<property name="user.dir" value="/workspace/scratch/8d424160be87"/>
+<property name="user.home" value="/root"/>
+<property name="user.language" value="en"/>
+<property name="user.name" value="root"/>
+<property name="user.timezone" value="Europe/Berlin"/>
+</properties>
+<system-out><![CDATA[
+unique-id: [engine:junit-platform-suite]
+display-name: JUnit Platform Suite
+]]></system-out>
+</testsuite>

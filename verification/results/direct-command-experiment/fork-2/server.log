@@ -1,0 +1,232 @@
+Starting org.bukkit.craftbukkit.Main
+[14:36:27 INFO]: [bootstrap] Running Java 21 (OpenJDK 64-Bit Server VM 21.0.12.1+9-LTS; Amazon.com Inc. Corretto-21.0.12.9.1) on Linux 6.18.44 (amd64)
+[14:36:27 INFO]: [bootstrap] Loading Paper 1.21.11-132-ver/1.21.11@c5eb079 (2026-05-11T11:43:09Z) for Minecraft 1.21.11
+[14:36:28 INFO]: [PluginInitializerManager] Initializing plugins...
+[14:36:28 INFO]: [PluginInitializerManager] Initialized 2 plugins
+[14:36:28 INFO]: [PluginInitializerManager] Bukkit plugins (2):
+ - CodeEngine (0.1.0), CodeEngineVerification (0.1.0)
+[14:36:31 INFO]: Environment: Environment[sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, profilesHost=https://api.mojang.com, name=PROD]
+[14:36:31 ERROR]: Failed to request yggdrasil public key
+com.mojang.authlib.exceptions.MinecraftClientException: Failed to read from https://api.minecraftservices.com/publickeys due to api.minecraftservices.com
+	at com.mojang.authlib.minecraft.client.MinecraftClient.readInputStream(MinecraftClient.java:111) ~[authlib-7.0.61.jar:?]
+	at com.mojang.authlib.minecraft.client.MinecraftClient.get(MinecraftClient.java:56) ~[authlib-7.0.61.jar:?]
+	at com.mojang.authlib.yggdrasil.YggdrasilServicesKeyInfo.fetch(YggdrasilServicesKeyInfo.java:114) ~[authlib-7.0.61.jar:?]
+	at com.mojang.authlib.yggdrasil.YggdrasilServicesKeyInfo$1.run(YggdrasilServicesKeyInfo.java:89) ~[authlib-7.0.61.jar:?]
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572) ~[?:?]
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317) ~[?:?]
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:304) ~[?:?]
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144) ~[?:?]
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642) ~[?:?]
+	at java.base/java.lang.Thread.run(Thread.java:1583) ~[?:?]
+Caused by: java.net.UnknownHostException: api.minecraftservices.com
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:567) ~[?:?]
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327) ~[?:?]
+	at java.base/java.net.Socket.connect(Socket.java:751) ~[?:?]
+	at java.base/sun.security.ssl.SSLSocketImpl.connect(SSLSocketImpl.java:304) ~[?:?]
+	at java.base/sun.net.NetworkClient.doConnect(NetworkClient.java:178) ~[?:?]
+	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:539) ~[?:?]
+	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:644) ~[?:?]
+	at java.base/sun.net.www.protocol.https.HttpsClient.<init>(HttpsClient.java:265) ~[?:?]
+	at java.base/sun.net.www.protocol.https.HttpsClient.New(HttpsClient.java:378) ~[?:?]
+	at java.base/sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.getNewHttpClient(AbstractDelegateHttpsURLConnection.java:196) ~[?:?]
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1305) ~[?:?]
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:1146) ~[?:?]
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.connect(HttpURLConnection.java:1075) ~[?:?]
+	at java.base/sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.connect(AbstractDelegateHttpsURLConnection.java:181) ~[?:?]
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1707) ~[?:?]
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1632) ~[?:?]
+	at java.base/java.net.HttpURLConnection.getResponseCode(HttpURLConnection.java:531) ~[?:?]
+	at java.base/sun.net.www.protocol.https.HttpsURLConnectionImpl.getResponseCode(HttpsURLConnectionImpl.java:307) ~[?:?]
+	at com.mojang.authlib.minecraft.client.MinecraftClient.readInputStream(MinecraftClient.java:82) ~[authlib-7.0.61.jar:?]
+	... 9 more
+[14:36:31 INFO]: Found new data pack file/bukkit, loading it automatically
+[14:36:31 INFO]: Found new data pack paper, loading it automatically
+[14:36:32 INFO]: No existing world data, creating new world
+[14:36:32 INFO]: Loaded 1470 recipes
+[14:36:32 INFO]: Loaded 1584 advancements
+[14:36:32 INFO]: [ca.spottedleaf.dataconverter.minecraft.datatypes.MCTypeRegistry] Initialising converters for DataConverter...
+[14:36:33 INFO]: [ca.spottedleaf.dataconverter.minecraft.datatypes.MCTypeRegistry] Finished initialising converters for DataConverter in 289.9ms
+[14:36:33 INFO]: Starting minecraft server version 1.21.11
+[14:36:33 WARN]: ****************************
+[14:36:33 WARN]: YOU ARE RUNNING THIS SERVER AS AN ADMINISTRATIVE OR ROOT USER. THIS IS NOT ADVISED.
+[14:36:33 WARN]: YOU ARE OPENING YOURSELF UP TO POTENTIAL RISKS WHEN DOING THIS.
+[14:36:33 WARN]: FOR MORE INFORMATION, SEE https://madelinemiller.dev/blog/root-minecraft-server/
+[14:36:33 WARN]: ****************************
+[14:36:33 INFO]: Loading properties
+[14:36:33 INFO]: This server is running Paper version 1.21.11-132-ver/1.21.11@c5eb079 (2026-05-11T11:43:09Z) (Implementing API version 1.21.11-R0.1-SNAPSHOT)
+[14:36:33 INFO]: [spark] This server bundles the spark profiler. For more information please visit https://docs.papermc.io/paper/profiling
+[14:36:33 INFO]: Server Ping Player Sample Count: 12
+[14:36:33 INFO]: Using 4 threads for Netty based IO
+[14:36:34 WARN]: [Configurations] The global config file didn't have a version set, assuming latest
+[14:36:34 INFO]: [MoonriseCommon] Paper is using 2 worker threads, 1 I/O threads
+[14:36:34 INFO]: Default game type: SURVIVAL
+[14:36:34 INFO]: Generating keypair
+[14:36:34 INFO]: Starting Minecraft server on 127.0.0.1:25586
+[14:36:34 INFO]: Paper: Using libdeflate (Linux x86_64) compression from Velocity.
+[14:36:34 INFO]: Paper: Using OpenSSL 3.x.x (Linux x86_64) cipher from Velocity.
+[14:36:34 WARN]: [io.netty.util.internal.MacAddressUtil] Failed to find a usable hardware address from the network interfaces; using random bytes: af:9a:d8:c7:f2:e1:94:b9
+[14:36:34 INFO]: [CodeEngine] Loading server plugin CodeEngine v0.1.0
+[14:36:34 INFO]: [CodeEngineVerification] Loading server plugin CodeEngineVerification v0.1.0
+[14:36:34 WARN]: **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!
+[14:36:34 WARN]: The server will make no attempt to authenticate usernames. Beware.
+[14:36:34 WARN]: While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.
+[14:36:34 WARN]: To change this, set "online-mode" to "true" in the server.properties file.
+[14:36:34 INFO]: Preparing level "world"
+[14:36:34 INFO]: [ca.spottedleaf.moonrise.common.util.MoonriseConstants] NUMA enable flag is not set; however there is NUMA interaction support for this OS.
+[14:36:34 INFO]: [ca.spottedleaf.moonrise.common.util.MoonriseConstants] Detected 1 NUMA nodes.
+[14:36:34 INFO]: Selecting spawn point for world 'minecraft:overworld'...
+[14:36:34 INFO]: Selecting spawn point for world 'minecraft:the_nether'...
+[14:36:35 INFO]: Selecting spawn point for world 'minecraft:the_end'...
+[14:36:35 INFO]: Loading 0 persistent chunks for world 'minecraft:overworld'...
+[14:36:35 INFO]: Preparing spawn area: 100%
+[14:36:35 INFO]: Prepared spawn area in 914 ms
+[14:36:35 INFO]: Loading 0 persistent chunks for world 'minecraft:the_nether'...
+[14:36:35 INFO]: Preparing spawn area: 100%
+[14:36:35 INFO]: Prepared spawn area in 649 ms
+[14:36:35 INFO]: Loading 0 persistent chunks for world 'minecraft:the_end'...
+[14:36:35 INFO]: Preparing spawn area: 100%
+[14:36:35 INFO]: Prepared spawn area in 162 ms
+[14:36:35 INFO]: Done preparing level "world" (1.106s)
+[14:36:35 INFO]: [CodeEngine] Enabling CodeEngine v0.1.0
+[14:36:35 INFO]: [CodeEngine] Code Engine ready. WebIDE is stopped; use /ce web from the server console.
+[14:36:35 INFO]: [CodeEngineVerification] Enabling CodeEngineVerification v0.1.0
+[14:36:35 INFO]: [spark] The spark profiler will not be enabled because it is currently disabled in the configuration.
+[14:36:35 INFO]: Running delayed init tasks
+[14:36:35 INFO]: Done (8.288s)! For help, type "help"
+[14:36:35 ERROR]: [PaperVersionFetcher] Error while parsing version list
+java.net.UnknownHostException: fill.papermc.io
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:567) ~[?:?]
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327) ~[?:?]
+	at java.base/java.net.Socket.connect(Socket.java:751) ~[?:?]
+	at java.base/sun.security.ssl.SSLSocketImpl.connect(SSLSocketImpl.java:304) ~[?:?]
+	at java.base/sun.net.NetworkClient.doConnect(NetworkClient.java:178) ~[?:?]
+	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:539) ~[?:?]
+	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:644) ~[?:?]
+	at java.base/sun.net.www.protocol.https.HttpsClient.<init>(HttpsClient.java:265) ~[?:?]
+	at java.base/sun.net.www.protocol.https.HttpsClient.New(HttpsClient.java:378) ~[?:?]
+	at java.base/sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.getNewHttpClient(AbstractDelegateHttpsURLConnection.java:196) ~[?:?]
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1260) ~[?:?]
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:1146) ~[?:?]
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.connect(HttpURLConnection.java:1075) ~[?:?]
+	at java.base/sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.connect(AbstractDelegateHttpsURLConnection.java:181) ~[?:?]
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1707) ~[?:?]
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1632) ~[?:?]
+	at java.base/sun.net.www.protocol.https.HttpsURLConnectionImpl.getInputStream(HttpsURLConnectionImpl.java:223) ~[?:?]
+	at com.destroystokyo.paper.PaperVersionFetcher.fetchMinecraftVersionList(PaperVersionFetcher.java:149) ~[paper-1.21.11.jar:?]
+	at com.destroystokyo.paper.PaperVersionFetcher.getUpdateStatusStartupMessage(PaperVersionFetcher.java:74) ~[paper-1.21.11.jar:?]
+	at java.base/java.util.concurrent.CompletableFuture$AsyncRun.run(CompletableFuture.java:1804) ~[?:?]
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144) ~[?:?]
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642) ~[?:?]
+	at java.base/java.lang.Thread.run(Thread.java:1583) ~[?:?]
+[14:36:35 ERROR]: [PaperVersionFetcher] Error while parsing version
+java.net.UnknownHostException: fill.papermc.io
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:567) ~[?:?]
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327) ~[?:?]
+	at java.base/java.net.Socket.connect(Socket.java:751) ~[?:?]
+	at java.base/sun.security.ssl.SSLSocketImpl.connect(SSLSocketImpl.java:304) ~[?:?]
+	at java.base/sun.net.NetworkClient.doConnect(NetworkClient.java:178) ~[?:?]
+	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:539) ~[?:?]
+	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:644) ~[?:?]
+	at java.base/sun.net.www.protocol.https.HttpsClient.<init>(HttpsClient.java:265) ~[?:?]
+	at java.base/sun.net.www.protocol.https.HttpsClient.New(HttpsClient.java:378) ~[?:?]
+	at java.base/sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.getNewHttpClient(AbstractDelegateHttpsURLConnection.java:196) ~[?:?]
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1260) ~[?:?]
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:1146) ~[?:?]
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.connect(HttpURLConnection.java:1075) ~[?:?]
+	at java.base/sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.connect(AbstractDelegateHttpsURLConnection.java:181) ~[?:?]
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1707) ~[?:?]
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1632) ~[?:?]
+	at java.base/sun.net.www.protocol.https.HttpsURLConnectionImpl.getInputStream(HttpsURLConnectionImpl.java:223) ~[?:?]
+	at com.destroystokyo.paper.PaperVersionFetcher.fetchDistanceFromSiteApi(PaperVersionFetcher.java:203) ~[paper-1.21.11.jar:?]
+	at com.destroystokyo.paper.PaperVersionFetcher.getUpdateStatusStartupMessage(PaperVersionFetcher.java:76) ~[paper-1.21.11.jar:?]
+	at java.base/java.util.concurrent.CompletableFuture$AsyncRun.run(CompletableFuture.java:1804) ~[?:?]
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144) ~[?:?]
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642) ~[?:?]
+	at java.base/java.lang.Thread.run(Thread.java:1583) ~[?:?]
+[14:36:35 ERROR]: *** Error obtaining version information! Cannot fetch version info ***
+[14:36:39 WARN]: [CodeEngine] Module operation failed: probe
+java.lang.AssertionError: expected activation failure
+	at kr.codenamemc.codeengine.generated.m_probe.Entry.enable(Entry.java:28) ~[?:?]
+	at CodeEngine.jar//kr.codenamemc.codeengine.runtime.ModuleManager.install(ModuleManager.java:91) ~[?:?]
+	at CodeEngine.jar//kr.codenamemc.codeengine.runtime.ModuleManager.apply(ModuleManager.java:68) ~[?:?]
+	at CodeEngine.jar//kr.codenamemc.codeengine.runtime.ModuleManager.lambda$submit$2(ModuleManager.java:52) ~[?:?]
+	at org.bukkit.craftbukkit.scheduler.CraftTask.run(CraftTask.java:78) ~[paper-1.21.11.jar:1.21.11-132-c5eb079]
+	at org.bukkit.craftbukkit.scheduler.CraftScheduler.mainThreadHeartbeat(CraftScheduler.java:474) ~[paper-1.21.11.jar:1.21.11-132-c5eb079]
+	at net.minecraft.server.MinecraftServer.tickChildren(MinecraftServer.java:1756) ~[paper-1.21.11.jar:1.21.11-132-c5eb079]
+	at net.minecraft.server.MinecraftServer.tickServer(MinecraftServer.java:1611) ~[paper-1.21.11.jar:1.21.11-132-c5eb079]
+	at net.minecraft.server.dedicated.DedicatedServer.tickServer(DedicatedServer.java:427) ~[paper-1.21.11.jar:1.21.11-132-c5eb079]
+	at net.minecraft.server.MinecraftServer.processPacketsAndTick(MinecraftServer.java:1667) ~[paper-1.21.11.jar:1.21.11-132-c5eb079]
+	at net.minecraft.server.MinecraftServer.runServer(MinecraftServer.java:1335) ~[paper-1.21.11.jar:1.21.11-132-c5eb079]
+	at net.minecraft.server.MinecraftServer.lambda$spin$2(MinecraftServer.java:388) ~[paper-1.21.11.jar:1.21.11-132-c5eb079]
+	at java.base/java.lang.Thread.run(Thread.java:1583) ~[?:?]
+[14:36:39 WARN]: [CodeEngine] Module operation failed: probe
+org.bukkit.plugin.IllegalPluginAccessException: org.bukkit.plugin.IllegalPluginAccessException: Unable to find handler list for event org.bukkit.event.Event. Static getHandlerList method required!
+	at io.papermc.paper.plugin.manager.PaperEventManager.getEventListeners(PaperEventManager.java:109) ~[paper-1.21.11.jar:1.21.11-132-c5eb079]
+	at io.papermc.paper.plugin.manager.PaperEventManager.registerEvent(PaperEventManager.java:99) ~[paper-1.21.11.jar:1.21.11-132-c5eb079]
+	at io.papermc.paper.plugin.manager.PaperPluginManagerImpl.registerEvent(PaperPluginManagerImpl.java:146) ~[paper-1.21.11.jar:1.21.11-132-c5eb079]
+	at org.bukkit.plugin.SimplePluginManager.registerEvent(SimplePluginManager.java:717) ~[paper-api-1.21.11-R0.1-SNAPSHOT.jar:?]
+	at CodeEngine.jar//kr.codenamemc.codeengine.runtime.ModuleScope.activate(ModuleScope.java:59) ~[?:?]
+	at CodeEngine.jar//kr.codenamemc.codeengine.runtime.ModuleManager.install(ModuleManager.java:94) ~[?:?]
+	at CodeEngine.jar//kr.codenamemc.codeengine.runtime.ModuleManager.apply(ModuleManager.java:68) ~[?:?]
+	at CodeEngine.jar//kr.codenamemc.codeengine.runtime.ModuleManager.lambda$submit$2(ModuleManager.java:52) ~[?:?]
+	at org.bukkit.craftbukkit.scheduler.CraftTask.run(CraftTask.java:78) ~[paper-1.21.11.jar:1.21.11-132-c5eb079]
+	at org.bukkit.craftbukkit.scheduler.CraftScheduler.mainThreadHeartbeat(CraftScheduler.java:474) ~[paper-1.21.11.jar:1.21.11-132-c5eb079]
+	at net.minecraft.server.MinecraftServer.tickChildren(MinecraftServer.java:1756) ~[paper-1.21.11.jar:1.21.11-132-c5eb079]
+	at net.minecraft.server.MinecraftServer.tickServer(MinecraftServer.java:1611) ~[paper-1.21.11.jar:1.21.11-132-c5eb079]
+	at net.minecraft.server.dedicated.DedicatedServer.tickServer(DedicatedServer.java:427) ~[paper-1.21.11.jar:1.21.11-132-c5eb079]
+	at net.minecraft.server.MinecraftServer.processPacketsAndTick(MinecraftServer.java:1667) ~[paper-1.21.11.jar:1.21.11-132-c5eb079]
+	at net.minecraft.server.MinecraftServer.runServer(MinecraftServer.java:1335) ~[paper-1.21.11.jar:1.21.11-132-c5eb079]
+	at net.minecraft.server.MinecraftServer.lambda$spin$2(MinecraftServer.java:388) ~[paper-1.21.11.jar:1.21.11-132-c5eb079]
+	at java.base/java.lang.Thread.run(Thread.java:1583) ~[?:?]
+[14:36:40 WARN]: [CodeEngine] Module operation failed: other
+java.lang.IllegalStateException: Command collision: ceprobe
+	at CodeEngine.jar//kr.codenamemc.codeengine.runtime.ModuleScope.preflight(ModuleScope.java:52) ~[?:?]
+	at CodeEngine.jar//kr.codenamemc.codeengine.runtime.ModuleManager.install(ModuleManager.java:90) ~[?:?]
+	at CodeEngine.jar//kr.codenamemc.codeengine.runtime.ModuleManager.apply(ModuleManager.java:68) ~[?:?]
+	at CodeEngine.jar//kr.codenamemc.codeengine.runtime.ModuleManager.lambda$submit$2(ModuleManager.java:52) ~[?:?]
+	at org.bukkit.craftbukkit.scheduler.CraftTask.run(CraftTask.java:78) ~[paper-1.21.11.jar:1.21.11-132-c5eb079]
+	at org.bukkit.craftbukkit.scheduler.CraftScheduler.mainThreadHeartbeat(CraftScheduler.java:474) ~[paper-1.21.11.jar:1.21.11-132-c5eb079]
+	at net.minecraft.server.MinecraftServer.tickChildren(MinecraftServer.java:1756) ~[paper-1.21.11.jar:1.21.11-132-c5eb079]
+	at net.minecraft.server.MinecraftServer.tickServer(MinecraftServer.java:1611) ~[paper-1.21.11.jar:1.21.11-132-c5eb079]
+	at net.minecraft.server.dedicated.DedicatedServer.tickServer(DedicatedServer.java:427) ~[paper-1.21.11.jar:1.21.11-132-c5eb079]
+	at net.minecraft.server.MinecraftServer.processPacketsAndTick(MinecraftServer.java:1667) ~[paper-1.21.11.jar:1.21.11-132-c5eb079]
+	at net.minecraft.server.MinecraftServer.runServer(MinecraftServer.java:1335) ~[paper-1.21.11.jar:1.21.11-132-c5eb079]
+	at net.minecraft.server.MinecraftServer.lambda$spin$2(MinecraftServer.java:388) ~[paper-1.21.11.jar:1.21.11-132-c5eb079]
+	at java.base/java.lang.Thread.run(Thread.java:1583) ~[?:?]
+[14:36:40 INFO]: [CodeEngineVerification] LIFECYCLE PASS checks=235; starting paired benchmark
+[14:36:53 INFO]: [CodeEngineVerification] VERIFICATION PASS checks=235 samples=480
+[14:36:53 INFO]: Stopping the server
+[14:36:53 INFO]: Stopping server
+[14:36:53 INFO]: [CodeEngineVerification] Disabling CodeEngineVerification v0.1.0
+[14:36:53 INFO]: [CodeEngine] Disabling CodeEngine v0.1.0
+[14:36:53 INFO]: Saving players
+[14:36:53 INFO]: Saving worlds
+[14:36:53 INFO]: Saving chunks for level 'ServerLevel[world]'/minecraft:overworld
+[14:36:53 INFO]: [ChunkHolderManager] Waiting 60s for chunk system to halt for world 'world'
+[14:36:53 INFO]: [ChunkHolderManager] Halted chunk system for world 'world'
+[14:36:53 INFO]: [ChunkHolderManager] Saving all chunkholders for world 'world'
+[14:36:53 INFO]: [ChunkHolderManager] Saved 1 block chunks, 1 entity chunks, 0 poi chunks in world 'world' in 0.00s
+[14:36:53 INFO]: [ChunkHolderManager] Waiting 60s for chunk I/O to halt for world 'world'
+[14:36:53 INFO]: [ChunkHolderManager] Halted I/O scheduler for world 'world'
+[14:36:53 INFO]: Saving chunks for level 'ServerLevel[world_nether]'/minecraft:the_nether
+[14:36:53 INFO]: [ChunkHolderManager] Waiting 60s for chunk system to halt for world 'world_nether'
+[14:36:53 INFO]: [ChunkHolderManager] Halted chunk system for world 'world_nether'
+[14:36:53 INFO]: [ChunkHolderManager] Saving all chunkholders for world 'world_nether'
+[14:36:53 INFO]: [ChunkHolderManager] Saved 0 block chunks, 0 entity chunks, 0 poi chunks in world 'world_nether' in 0.00s
+[14:36:53 INFO]: [ChunkHolderManager] Waiting 60s for chunk I/O to halt for world 'world_nether'
+[14:36:53 INFO]: [ChunkHolderManager] Halted I/O scheduler for world 'world_nether'
+[14:36:53 INFO]: Saving chunks for level 'ServerLevel[world_the_end]'/minecraft:the_end
+[14:36:53 INFO]: [ChunkHolderManager] Waiting 60s for chunk system to halt for world 'world_the_end'
+[14:36:53 INFO]: [ChunkHolderManager] Halted chunk system for world 'world_the_end'
+[14:36:53 INFO]: [ChunkHolderManager] Saving all chunkholders for world 'world_the_end'
+[14:36:53 INFO]: [ChunkHolderManager] Saved 0 block chunks, 0 entity chunks, 0 poi chunks in world 'world_the_end' in 0.00s
+[14:36:53 INFO]: [ChunkHolderManager] Waiting 60s for chunk I/O to halt for world 'world_the_end'
+[14:36:53 INFO]: [ChunkHolderManager] Halted I/O scheduler for world 'world_the_end'
+[14:36:53 INFO]: ThreadedAnvilChunkStorage (world): All chunks are saved
+[14:36:53 INFO]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[14:36:53 INFO]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[14:36:53 INFO]: ThreadedAnvilChunkStorage: All dimensions are saved
+[14:36:53 INFO]: Waiting for all RegionFile I/O tasks to complete...
+[14:36:53 INFO]: All RegionFile I/O tasks to complete
+[14:36:53 INFO]: [MoonriseCommon] Awaiting termination of worker pool for up to 60s...
+[14:36:53 INFO]: [MoonriseCommon] Awaiting termination of I/O pool for up to 60s...

@@ -1,0 +1,12 @@
+name: CodeEngineVerification
+version: 0.1.0
+main: kr.codenamemc.codeengine.verification.VerificationPlugin
+api-version: '1.21.11'
+depend: [CodeEngine]
+commands:
+  ceverify:
+    description: Run isolated integration verification
+  nativecalc:
+    description: Native calculation baseline
+  nativeblocks:
+    description: Native block lookup baseline

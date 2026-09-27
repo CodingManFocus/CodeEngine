@@ -1,0 +1,13 @@
+name: CodeEngine
+version: 0.1.0
+main: kr.codenamemc.codeengine.CodeEnginePlugin
+api-version: '1.21.11'
+description: Native Paper bytecode module engine
+commands:
+  codeengine:
+    description: Manage Code Engine modules
+    aliases: [ce]
+    permission: codeengine.admin
+permissions:
+  codeengine.admin:
+    default: op

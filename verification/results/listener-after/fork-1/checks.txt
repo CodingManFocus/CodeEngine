@@ -1,0 +1,330 @@
+PASS 329 checks
+PASS module load
+PASS real Paper event cancellation
+PASS exactly one event handler invocation
+PASS one module task
+PASS real Paper event cancellation
+PASS exactly one event handler invocation
+PASS no task duplication after reload
+PASS no listener duplication
+PASS real Paper event cancellation
+PASS exactly one event handler invocation
+PASS no task duplication after reload
+PASS no listener duplication
+PASS real Paper event cancellation
+PASS exactly one event handler invocation
+PASS no task duplication after reload
+PASS no listener duplication
+PASS real Paper event cancellation
+PASS exactly one event handler invocation
+PASS no task duplication after reload
+PASS no listener duplication
+PASS real Paper event cancellation
+PASS exactly one event handler invocation
+PASS no task duplication after reload
+PASS no listener duplication
+PASS real Paper event cancellation
+PASS exactly one event handler invocation
+PASS no task duplication after reload
+PASS no listener duplication
+PASS real Paper event cancellation
+PASS exactly one event handler invocation
+PASS no task duplication after reload
+PASS no listener duplication
+PASS real Paper event cancellation
+PASS exactly one event handler invocation
+PASS no task duplication after reload
+PASS no listener duplication
+PASS real Paper event cancellation
+PASS exactly one event handler invocation
+PASS no task duplication after reload
+PASS no listener duplication
+PASS real Paper event cancellation
+PASS exactly one event handler invocation
+PASS no task duplication after reload
+PASS no listener duplication
+PASS real Paper event cancellation
+PASS exactly one event handler invocation
+PASS no task duplication after reload
+PASS no listener duplication
+PASS real Paper event cancellation
+PASS exactly one event handler invocation
+PASS no task duplication after reload
+PASS no listener duplication
+PASS real Paper event cancellation
+PASS exactly one event handler invocation
+PASS no task duplication after reload
+PASS no listener duplication
+PASS real Paper event cancellation
+PASS exactly one event handler invocation
+PASS no task duplication after reload
+PASS no listener duplication
+PASS real Paper event cancellation
+PASS exactly one event handler invocation
+PASS no task duplication after reload
+PASS no listener duplication
+PASS real Paper event cancellation
+PASS exactly one event handler invocation
+PASS no task duplication after reload
+PASS no listener duplication
+PASS real Paper event cancellation
+PASS exactly one event handler invocation
+PASS no task duplication after reload
+PASS no listener duplication
+PASS real Paper event cancellation
+PASS exactly one event handler invocation
+PASS no task duplication after reload
+PASS no listener duplication
+PASS real Paper event cancellation
+PASS exactly one event handler invocation
+PASS no task duplication after reload
+PASS no listener duplication
+PASS real Paper event cancellation
+PASS exactly one event handler invocation
+PASS no task duplication after reload
+PASS no listener duplication
+PASS invalid replacement fails
+PASS failed reload leaves module stopped
+PASS failed reload leaves no timer
+PASS failed reload leaves no listener
+PASS failed reload removes old command
+PASS failed reload removes old namespaced command
+PASS invalid replacement fails
+PASS failed reload leaves module stopped
+PASS failed reload leaves no timer
+PASS failed reload leaves no listener
+PASS failed reload removes old command
+PASS failed reload removes old namespaced command
+PASS invalid replacement fails
+PASS failed reload leaves module stopped
+PASS failed reload leaves no timer
+PASS failed reload leaves no listener
+PASS failed reload removes old command
+PASS failed reload removes old namespaced command
+PASS command collision rejected
+PASS real Paper event cancellation
+PASS exactly one event handler invocation
+PASS module unload
+PASS command removed
+PASS namespaced command removed
+PASS listeners removed
+PASS tasks cancelled
+PASS old disable precedes new enable; exclusive lock reacquired
+PASS reload preserves saved count through next unload
+PASS each instance enabled and disabled exactly once
+PASS stopped module absent from loaded list: reloadstate
+PASS command absent: cereloadstate
+PASS namespaced command absent: cereloadstate
+PASS no lingering event listener
+PASS no lingering engine task
+PASS unload reports disable failure
+PASS stopped module absent from loaded list: reloadstop
+PASS command absent: cereloadstop
+PASS namespaced command absent: cereloadstop
+PASS no lingering event listener
+PASS no lingering engine task
+PASS disable failure stops reload before compilation
+PASS stopped module absent from loaded list: reloadstop
+PASS command absent: cereloadstop
+PASS namespaced command absent: cereloadstop
+PASS no lingering event listener
+PASS no lingering engine task
+PASS disable failure prevents replacement enable
+PASS stopped module absent from loaded list: reloadstop
+PASS command absent: cereloadstop
+PASS namespaced command absent: cereloadstop
+PASS no lingering event listener
+PASS no lingering engine task
+PASS build failure preserves running module
+PASS reload compile error reported
+PASS stopped module absent from loaded list: reloadfailure
+PASS command absent: cereloadfailure
+PASS namespaced command absent: cereloadfailure
+PASS no lingering event listener
+PASS no lingering engine task
+PASS reload of stopped module loads it
+PASS constructor error reported
+PASS stopped module absent from loaded list: reloadfailure
+PASS command absent: cereloadfailure
+PASS namespaced command absent: cereloadfailure
+PASS no lingering event listener
+PASS no lingering engine task
+PASS missing source reported after unload
+PASS stopped module absent from loaded list: reloadfailure
+PASS command absent: cereloadfailure
+PASS namespaced command absent: cereloadfailure
+PASS no lingering event listener
+PASS no lingering engine task
+PASS failed timer executed once
+PASS invalid event replacement rejected
+PASS failed reload never resurrects cancelled timer
+PASS stopped module absent from loaded list: reloadtimer
+PASS command absent: cereloadtimer
+PASS namespaced command absent: cereloadtimer
+PASS no lingering event listener
+PASS no lingering engine task
+PASS busy guard covers complete unload-to-load operation
+PASS all reload regression modules stopped
+PASS no abandoned build directories after failures
+PASS two managed registrations share caller Listener
+PASS external registration retains original listener/event
+PASS both module callbacks and external callback execute
+PASS Paper priority order preserved
+PASS external registration retains original listener/event
+PASS ignoreCancelled preserved
+PASS unloading shareda preserves sharedb registration
+PASS external registration retains original listener/event
+PASS unload preserves other module and external callback
+PASS shared listener reload has exactly one registration
+PASS external registration retains original listener/event
+PASS reload preserves external registration without duplicates
+PASS shared listener reload has exactly one registration
+PASS external registration retains original listener/event
+PASS reload preserves external registration without duplicates
+PASS shared listener reload has exactly one registration
+PASS external registration retains original listener/event
+PASS reload preserves external registration without duplicates
+PASS shared listener reload has exactly one registration
+PASS external registration retains original listener/event
+PASS reload preserves external registration without duplicates
+PASS shared listener reload has exactly one registration
+PASS external registration retains original listener/event
+PASS reload preserves external registration without duplicates
+PASS post-enable preflight collision rejected
+PASS unactivated candidate cleanup preserves active listener
+PASS partial event registration fails as expected
+PASS partial activation cleanup removes only candidate registrations
+PASS external registration retains original listener/event
+PASS failed candidate never removes other callbacks
+PASS null caller Listener rejected without removing existing registration
+PASS all managed registrations removed
+PASS external registration retains original listener/event
+PASS last module unload leaves external registration intact
+PASS matching calc result seed=0
+PASS matching blocks result seed=0
+PASS matching calc result seed=1
+PASS matching blocks result seed=1
+PASS matching calc result seed=2
+PASS matching blocks result seed=2
+PASS matching calc result seed=3
+PASS matching blocks result seed=3
+PASS matching calc result seed=4
+PASS matching blocks result seed=4
+PASS matching calc result seed=5
+PASS matching blocks result seed=5
+PASS matching calc result seed=6
+PASS matching blocks result seed=6
+PASS matching calc result seed=7
+PASS matching blocks result seed=7
+PASS matching calc result seed=8
+PASS matching blocks result seed=8
+PASS matching calc result seed=9
+PASS matching blocks result seed=9
+PASS matching calc result seed=10
+PASS matching blocks result seed=10
+PASS matching calc result seed=11
+PASS matching blocks result seed=11
+PASS matching calc result seed=12
+PASS matching blocks result seed=12
+PASS matching calc result seed=13
+PASS matching blocks result seed=13
+PASS matching calc result seed=14
+PASS matching blocks result seed=14
+PASS matching calc result seed=15
+PASS matching blocks result seed=15
+PASS matching calc result seed=16
+PASS matching blocks result seed=16
+PASS matching calc result seed=17
+PASS matching blocks result seed=17
+PASS matching calc result seed=18
+PASS matching blocks result seed=18
+PASS matching calc result seed=19
+PASS matching blocks result seed=19
+PASS matching calc result seed=20
+PASS matching blocks result seed=20
+PASS matching calc result seed=21
+PASS matching blocks result seed=21
+PASS matching calc result seed=22
+PASS matching blocks result seed=22
+PASS matching calc result seed=23
+PASS matching blocks result seed=23
+PASS matching calc result seed=24
+PASS matching blocks result seed=24
+PASS matching calc result seed=25
+PASS matching blocks result seed=25
+PASS matching calc result seed=26
+PASS matching blocks result seed=26
+PASS matching calc result seed=27
+PASS matching blocks result seed=27
+PASS matching calc result seed=28
+PASS matching blocks result seed=28
+PASS matching calc result seed=29
+PASS matching blocks result seed=29
+PASS matching calc result seed=30
+PASS matching blocks result seed=30
+PASS matching calc result seed=31
+PASS matching blocks result seed=31
+PASS matching calc result seed=32
+PASS matching blocks result seed=32
+PASS matching calc result seed=33
+PASS matching blocks result seed=33
+PASS matching calc result seed=34
+PASS matching blocks result seed=34
+PASS matching calc result seed=35
+PASS matching blocks result seed=35
+PASS matching calc result seed=36
+PASS matching blocks result seed=36
+PASS matching calc result seed=37
+PASS matching blocks result seed=37
+PASS matching calc result seed=38
+PASS matching blocks result seed=38
+PASS matching calc result seed=39
+PASS matching blocks result seed=39
+PASS matching calc result seed=40
+PASS matching blocks result seed=40
+PASS matching calc result seed=41
+PASS matching blocks result seed=41
+PASS matching calc result seed=42
+PASS matching blocks result seed=42
+PASS matching calc result seed=43
+PASS matching blocks result seed=43
+PASS matching calc result seed=44
+PASS matching blocks result seed=44
+PASS matching calc result seed=45
+PASS matching blocks result seed=45
+PASS matching calc result seed=46
+PASS matching blocks result seed=46
+PASS matching calc result seed=47
+PASS matching blocks result seed=47
+PASS matching calc result seed=48
+PASS matching blocks result seed=48
+PASS matching calc result seed=49
+PASS matching blocks result seed=49
+PASS matching calc result seed=50
+PASS matching blocks result seed=50
+PASS matching calc result seed=51
+PASS matching blocks result seed=51
+PASS matching calc result seed=52
+PASS matching blocks result seed=52
+PASS matching calc result seed=53
+PASS matching blocks result seed=53
+PASS matching calc result seed=54
+PASS matching blocks result seed=54
+PASS matching calc result seed=55
+PASS matching blocks result seed=55
+PASS matching calc result seed=56
+PASS matching blocks result seed=56
+PASS matching calc result seed=57
+PASS matching blocks result seed=57
+PASS matching calc result seed=58
+PASS matching blocks result seed=58
+PASS matching calc result seed=59
+PASS matching blocks result seed=59
+PASS matching calc result seed=60
+PASS matching blocks result seed=60
+PASS matching calc result seed=61
+PASS matching blocks result seed=61
+PASS matching calc result seed=62
+PASS matching blocks result seed=62
+PASS matching calc result seed=63
+PASS matching blocks result seed=63

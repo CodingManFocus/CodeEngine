@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Code Engine · Studio</title><link rel="stylesheet" href="/style.css"><script src="/app.js" defer></script></head>
+<body>
+<header><a class="brand" href="/">CE<span>Code Engine <small>STUDIO</small></span></a><span class="badge">PAPER / JVM</span><span id="connection">연결 대기</span><button id="connectButton">세션 연결</button></header>
+<main>
+<aside class="explorer"><div class="sectionLabel">WORKSPACE <button id="refreshButton" aria-label="목록 새로고침">↻</button></div><div class="sidebarTitle">모듈 <button id="newButton" aria-label="새 모듈">＋</button></div><nav id="moduleList" aria-label="모듈 목록"></nav><div class="sidebarNote"><span class="statusDot"></span> Native Paper objects<br><small>코드를 컴파일하고, 서버에 적용하세요.</small></div></aside>
+<section class="workbench"><div class="tabbar"><span id="filename">모듈을 선택하세요</span><span id="dirtyLabel"></span><span class="fileType">CODE ENGINE</span></div><div class="toolbar"><button id="saveButton" disabled>저장 <kbd>Ctrl S</kbd></button><button id="buildButton" disabled>빌드 검사</button><button id="applyButton" class="primary" disabled>서버에 적용</button><button id="unloadButton" disabled>해제</button><span id="moduleStatus">선택 없음</span></div><div class="editorWrap"><pre id="lineNumbers" aria-hidden="true">1</pre><textarea id="editor" spellcheck="false" aria-label="Code Engine 소스 편집기" autocapitalize="off" autocomplete="off" disabled placeholder="왼쪽에서 모듈을 선택하거나 새 모듈을 만드세요."></textarea></div><div class="editorStatus"><span id="cursor">Ln 1, Col 1</span><span>UTF-8 · Java expressions · .ce</span></div><section class="output"><div class="sectionLabel">BUILD & LIFECYCLE <button id="clearButton">지우기</button></div><pre id="output" role="log" aria-live="polite">Code Engine Studio
+모듈을 선택하면 소스와 실행 상태를 확인할 수 있습니다.</pre></section></section>
+<aside class="reference"><div class="sectionLabel">LANGUAGE GUIDE</div><h1>가볍게 작성하고,<br>직접 실행하세요.</h1><p>Paper 타입을 그대로 사용하는 컴파일 언어입니다.</p><article><h2>이벤트</h2><pre>on BlockBreakEvent event {
+  event.setCancelled(true);
+}</pre></article><article><h2>명령</h2><pre>command hello {
+  sender.sendMessage(
+    Component.text("Hello")
+  );
+  return true;
+}</pre></article><article><h2>주기 작업</h2><pre>every 20 ticks {
+  // 메인 스레드에서 실행
+}</pre></article><article><h2>상태와 함수</h2><pre>state int count = 0;
+fn twice(int n) -> int {
+  return n * 2;
+}</pre></article><p class="hint">저장과 서버 적용은 별개입니다. 빌드 검사만으로 실행 중인 모듈이 바뀌지 않습니다.</p><a href="https://jd.papermc.io/paper/1.21.11/" target="_blank" rel="noreferrer">Paper API 문서 ↗</a></aside>
+</main>
+<dialog id="connectDialog"><form method="dialog"><div class="sectionLabel">LOCAL SESSION</div><h2>Studio에 연결</h2><p>서버 콘솔에서 <code>ce web</code>을 실행한 뒤<br>링크 또는 세션 토큰을 입력하세요.</p><label for="sessionInput">세션 링크 / 토큰</label><input id="sessionInput" type="password" autocomplete="off" required><div class="dialogActions"><button value="cancel" formnovalidate>취소</button><button value="connect" class="primary">연결</button></div></form></dialog>
+<dialog id="newDialog"><form method="dialog"><div class="sectionLabel">NEW MODULE</div><h2>모듈 만들기</h2><label for="moduleInput">모듈 ID</label><input id="moduleInput" pattern="[a-z][a-z0-9_]{0,47}" maxlength="48" placeholder="welcome" required><p>영문 소문자로 시작하며 숫자와 _를 쓸 수 있습니다.</p><div class="dialogActions"><button value="cancel" formnovalidate>취소</button><button value="create" class="primary">만들기</button></div></form></dialog>
+</body></html>

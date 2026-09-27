@@ -1,0 +1,69 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.13/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+> Task :clean
+> Task :codeengine-api:clean
+> Task :codeengine-compiler:clean
+> Task :codeengine-plugin:clean
+> Task :verification:clean
+> Task :assemble UP-TO-DATE
+> Task :check UP-TO-DATE
+> Task :build UP-TO-DATE
+> Task :codeengine-api:compileJava
+> Task :codeengine-api:processResources NO-SOURCE
+> Task :codeengine-api:classes
+> Task :codeengine-api:jar
+> Task :codeengine-api:sourcesJar
+> Task :codeengine-api:assemble
+> Task :codeengine-api:compileTestJava NO-SOURCE
+> Task :codeengine-api:processTestResources NO-SOURCE
+> Task :codeengine-api:testClasses UP-TO-DATE
+> Task :codeengine-api:test NO-SOURCE
+> Task :codeengine-api:check UP-TO-DATE
+> Task :codeengine-api:build
+
+> Task :codeengine-compiler:compileJava
+/workspace/scratch/8d424160be87/kr.codenamemc.codeengine/codeengine-compiler/src/main/java/kr/codenamemc/codeengine/compiler/CompilationException.java:5: warning: [serial] non-transient instance field of a serializable class declared with a non-serializable type
+    private final List<String> diagnostics;
+                               ^
+1 warning
+
+> Task :codeengine-compiler:processResources NO-SOURCE
+> Task :codeengine-compiler:classes
+> Task :codeengine-compiler:jar
+> Task :codeengine-compiler:sourcesJar
+> Task :codeengine-compiler:assemble
+> Task :codeengine-compiler:compileTestJava
+> Task :codeengine-compiler:processTestResources NO-SOURCE
+> Task :codeengine-compiler:testClasses
+> Task :codeengine-compiler:test
+> Task :codeengine-compiler:check
+> Task :codeengine-compiler:build
+> Task :codeengine-plugin:compileJava
+> Task :codeengine-plugin:processResources
+> Task :codeengine-plugin:classes
+> Task :codeengine-plugin:jar
+> Task :codeengine-plugin:sourcesJar
+> Task :codeengine-plugin:assemble
+> Task :codeengine-plugin:compileTestJava
+> Task :codeengine-plugin:processTestResources NO-SOURCE
+> Task :codeengine-plugin:testClasses
+> Task :codeengine-plugin:test
+> Task :codeengine-plugin:check
+> Task :codeengine-plugin:build
+> Task :verification:compileJava
+> Task :verification:processResources
+> Task :verification:classes
+> Task :verification:jar
+> Task :verification:sourcesJar
+> Task :verification:assemble
+> Task :verification:compileTestJava NO-SOURCE
+> Task :verification:processTestResources NO-SOURCE
+> Task :verification:testClasses UP-TO-DATE
+> Task :verification:test NO-SOURCE
+> Task :verification:check UP-TO-DATE
+> Task :verification:build
+
+[Incubating] Problems report is available at: file:///workspace/scratch/8d424160be87/kr.codenamemc.codeengine/build/reports/problems/problems-report.html
+
+BUILD SUCCESSFUL in 10s
+23 actionable tasks: 23 executed

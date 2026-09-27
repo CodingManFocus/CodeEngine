@@ -1,0 +1,21 @@
+module hello;
+
+state int joins = 0;
+
+on PlayerJoinEvent event {
+    joins++;
+    event.getPlayer().sendMessage(Component.text("Welcome to Code Engine!"));
+}
+
+command cehello permission "codeengine.hello" {
+    sender.sendMessage(Component.text("Hello! Joins since activation: " + joins));
+    return true;
+}
+
+fn doubled(int value) -> int {
+    return value * 2;
+}
+
+enable {
+    ctx.plugin().getLogger().info("Hello module enabled: " + doubled(21));
+}
