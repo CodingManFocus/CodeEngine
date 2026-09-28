@@ -242,6 +242,21 @@ class DependencyClasspathTest {
         }
     }
 
+    @Test void requiredPluginIsSelectedWhenTheApiExposesItsType() throws Exception {
+        Path dependencyJar = compile("dependency", Map.of("dependency.Value", "package dependency; public class Value {}"), "");
+        Path apiJar = compile("api", Map.of("fixture.Api", "package fixture; public class Api { public dependency.Value value() { return null; } }"),
+            dependencyJar.toString());
+        try (URLClassLoader dependency = loader(dependencyJar);
+             URLClassLoader api = new URLClassLoader(new URL[]{apiJar.toUri().toURL()}, dependency)) {
+            var resolved = DependencyClasspath.prepare("", List.of(
+                new DependencyClasspath.Provider("Api", apiJar, api),
+                new DependencyClasspath.Provider("Dependency", dependencyJar, dependency)),
+                List.of(imported("fixture.Api", "Api")), ClassLoader.getPlatformClassLoader());
+            assertEquals(Map.of("fixture.Api", apiJar.toRealPath(), "dependency.Value", dependencyJar.toRealPath()),
+                resolved.selectedClasses());
+        }
+    }
+
     @Test void moduleDescriptorMetadataDoesNotCreateANamedModuleOnTheClasspath() throws Exception {
         Path providerJar = compile("provider", Map.of(
             "fixture.Api", "package fixture; public class Api {}",

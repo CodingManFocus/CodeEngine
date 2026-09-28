@@ -1,6 +1,5 @@
 package kr.codenamemc.codeengine.runtime;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.function.Consumer;
@@ -81,9 +80,9 @@ final class PluginDependencyRegistry implements Listener, AutoCloseable {
                     continue;
                 }
                 try {
-                    Path jar = Path.of(source.getLocation().toURI()).toRealPath();
+                    Path jar = Path.of(source.getLocation().toURI()).toAbsolutePath().normalize();
                     providers.add(new DependencyClasspath.Provider(plugin.getName(), jar, binding.loader()));
-                } catch (IOException | java.net.URISyntaxException | IllegalArgumentException error) {
+                } catch (java.net.URISyntaxException | IllegalArgumentException error) {
                     if (line != null) throw new SourceException(line, "Invalid provider JAR location: " + plugin.getName());
                 }
             }
