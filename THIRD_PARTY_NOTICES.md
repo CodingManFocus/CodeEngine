@@ -9,3 +9,7 @@ The GNU General Public License, Version 3.0 (GPL-3.0-only), in `LICENSE.md` appl
 ## External dependencies
 
 Paper API, JUnit, and optional Playwright/Chromium verification tools retain their respective upstream licenses. Their source code and dependency binaries are not vendored in this repository. Build dependencies are declared in the Gradle build files; browser verification setup is documented in `README.md`.
+
+## Studio runtime dependencies
+
+The plugin bundles React, React DOM, Scheduler, CodeMirror 6, Lezer, and their runtime dependencies under their respective MIT licenses. Exact versions are locked in `codeengine-webide/package-lock.json`. The Studio build collects each bundled package's full license into `webide/THIRD_PARTY_LICENSES.txt` in the JAR (also available at `/THIRD_PARTY_LICENSES.txt` from Studio). TypeScript, esbuild, tsx and Playwright are build/test tools and are not bundled into the plugin.

@@ -10,13 +10,13 @@ Paper 타입을 직접 사용하는 `.ce` 모듈 컴파일 엔진입니다. **�
 
 ## 빌드와 설치
 
-전체 **JDK 21**을 설치하고 다음 명령을 실행합니다.
+전체 **JDK 21**과 **Node.js 22 이상 (npm 포함)**을 설치하고 다음 명령을 실행합니다.
 
 ```bash
 ./gradlew clean build
 ```
 
-Windows에서는 `gradlew.bat clean build`를 사용합니다. 빌드 의존성은 최초 빌드 시 다운로드됩니다. 서버에서 모듈을 컴파일할 때 외부 컴파일러나 Kotlin 런타임을 다운로드하지 않습니다.
+Windows에서는 `gradlew.bat clean build`를 사용합니다. 빌드 의존성은 최초 빌드 시 다운로드됩니다. Gradle이 `npm ci`와 Studio 빌드를 실행하고 결과를 플러그인 JAR에 포함합니다. Node.js는 소스 빌드에만 필요하며, 배포 서버에는 필요하지 않습니다. 서버에서 모듈을 컴파일할 때 외부 컴파일러나 Kotlin 런타임을 다운로드하지 않습니다.
 
 1. `codeengine-plugin/build/libs/codeengine-plugin-0.1.0.jar`를 서버의 `plugins/`에 넣습니다.
 2. 서버를 JDK 21로 시작합니다. 플러그인 업데이트에는 서버 재시작을 사용합니다.
@@ -46,7 +46,7 @@ CI는 단위 테스트와 컴파일 통합 테스트를 실행하고 실서버 �
 | `codeengine-api` | `CodeModule`, `ModuleContext` 두 인터페이스. Paper 객체 추상화 없음 |
 | `codeengine-compiler` | Lexer, Parser, AST, JavaEmitter, javac 호출, JAR 생성 |
 | `codeengine-plugin` | Paper 생명주기, 모듈별 자원 소유권, 명령, 파일 저장, HTTP 서버 |
-| `codeengine-webide` | 외부 CDN 없이 동작하는 독립 HTML/CSS/JavaScript 편집기 |
+| `codeengine-webide` | React + TypeScript + CodeMirror 6 편집기. 외부 CDN 없이 JAR에서 제공 |
 | `verification` | 실서버 회귀 테스트, Java 기준 구현, 측정 및 브라우저 검증 도구 |
 | `examples` | 바로 사용할 수 있는 `.ce` 예제 |
 
@@ -100,7 +100,33 @@ command welcome permission "server.welcome" {
 ssh -L 17777:127.0.0.1:17777 user@server
 ```
 
-편집기에서 모듈 생성, 목록 조회, 저장, 빌드 검사, 서버 적용, 해제, 컴파일 진단을 사용할 수 있습니다. Ctrl/Cmd+S는 저장입니다. 서버 적용은 저장 후 로드/재로드를 요청합니다. 동시 편집으로 버전이 달라지면 HTTP 409로 저장을 거부합니다. 변경 내용을 따로 복사한 뒤 파일을 다시 열어 병합하세요.
+Studio는 React + CodeMirror 6 기반입니다. Code Engine 선언과 Java 본문의 문법 강조, 주석·문자열·Java text block 강조, 접기, 자동 들여쓰기, 괄호 자동 닫기, 실행 취소/다시 실행, 검색·치환, 다중 커서, 줄바꿈 설정을 제공합니다. 여러 모듈을 탭으로 열면 편집 내용·실행 취소 기록·커서·스크롤 위치를 탭별로 유지합니다. 새로고침 후에는 복구되지 않으며, 저장하지 않은 변경이 있으면 브라우저를 떠나기 전에 경고합니다.
+
+| 단축키 | 기능 |
+|---|---|
+| Ctrl/Cmd+S | 현재 모듈 저장 |
+| Ctrl/Cmd+Enter | 저장 후 빌드 검사 |
+| Ctrl/Cmd+F | 검색·치환 패널 |
+| Ctrl+Space | 문법 키워드·스니펫 완성 |
+| Tab / Shift+Tab | 들여쓰기 / 내어쓰기, 스니펫 필드 이동 |
+| Ctrl/Cmd+Z | 실행 취소 |
+
+문법 가이드의 삽입 버튼은 모듈 끝에 선언 스니펫을 추가합니다. 자동 완성은 키워드·스니펫 수준이며 Paper API 타입 기반 완성이나 LSP는 아닙니다. 타입 검사는 서버의 **빌드 검사**를 사용합니다. 컴파일 오류는 문제 패널과 편집기 밑줄에 표시하고, 문제를 클릭하면 원본 줄로 이동합니다. 수정 후에는 이전 오류 표시를 지우며 다시 빌드하여 확인합니다.
+
+서버 적용은 저장 후 로드/재로드를 요청하고, 해제는 현재 실행 중인 모듈을 중지합니다. 동시 편집으로 버전이 달라지면 HTTP 409로 저장을 거부하고 작성 중인 내용을 유지합니다. **로컬 사본 다운로드**로 보관한 뒤 **서버 파일 다시 열기**를 사용하여 변경을 병합하세요. 작업 중에는 편집·탭 전환을 잠가 저장한 소스와 빌드 진단이 엇갈리지 않게 합니다.
+
+프런트엔드 개발 검증:
+
+```bash
+cd codeengine-webide
+npm ci
+npm test
+npm run build
+npx playwright install chromium
+npm run test:browser
+```
+
+브라우저 테스트는 실제 CSP를 적용한 정적 서버와 API fixture에서 저장 충돌·탭 보존·진단 이동·모바일 레이아웃 등을 검증합니다. Java HTTP 서버와 리소스 패키징은 Gradle 테스트에서 확인하고, 실제 Paper 연동은 아래의 `verification --ui` 절차로 별도 확인합니다.
 
 ## 안정성과 성능 경계
 

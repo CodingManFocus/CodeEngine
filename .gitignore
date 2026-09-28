@@ -14,3 +14,5 @@ __pycache__/
 .env
 .env.*
 !.env.example
+codeengine-webide/test-results/
+codeengine-webide/playwright-report/
