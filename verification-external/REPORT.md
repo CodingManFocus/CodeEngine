@@ -1,4 +1,7 @@
-# 외부 Java API 검증 보고서
+# 외부 Java API 최초 검증 보고서
+
+> 이 보고서는 제공자 지정 문법 변경 전 실행의 기록입니다. 현재 `use ... from` 구현과
+> 재측정 결과는 [제공자 명시 변경 보고서](QUALIFIED-IMPORTS.md)를 참고하세요.
 
 2026-09-28 실행. 기준 main: `3afbac085fa0fe1e4994be236b747a78c97abcdf`.
 실행한 수정 소스의 정확한 SHA-256 목록은 [source-manifest.txt](results/final/source-manifest.txt),

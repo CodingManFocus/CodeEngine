@@ -1,6 +1,5 @@
 package kr.codenamemc.codeengine.runtime.dependency;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Map;
@@ -12,17 +11,17 @@ public final class ResolvedClasspath {
     private final Set<Path> baseEntries;
     private final Set<String> baseClasses;
     private final Map<String, DependencyClasspath.Provider> owners;
-    private final String additionalClasspath;
+    private final Map<String, Path> selectedClasses;
 
-    ResolvedClasspath(Set<Path> baseEntries, Set<String> baseClasses, Set<Path> providerJars,
+    ResolvedClasspath(Set<Path> baseEntries, Set<String> baseClasses,
                       Map<String, DependencyClasspath.Provider> owners) {
         this.baseEntries = Set.copyOf(baseEntries);
         this.baseClasses = Set.copyOf(baseClasses);
         this.owners = Map.copyOf(owners);
-        additionalClasspath = providerJars.stream().map(Path::toString).collect(Collectors.joining(File.pathSeparator));
+        selectedClasses = owners.entrySet().stream().collect(Collectors.toUnmodifiableMap(Map.Entry::getKey, entry -> entry.getValue().jar()));
     }
 
-    public String additionalClasspath() { return additionalClasspath; }
+    public Map<String, Path> selectedClasses() { return selectedClasses; }
 
     public ModuleClassLoader newLoader(Path moduleJar, ClassLoader engineParent) throws IOException {
         Path jar = moduleJar.toRealPath();

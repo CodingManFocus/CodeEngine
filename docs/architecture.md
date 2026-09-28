@@ -16,12 +16,14 @@
 
 ## 실행 경로
 
-이벤트는 Paper 이벤트 디스패처 → 생성된 typed executor → 생성 메서드로 전달됩니다. 객체를 복사하거나 별도 DTO로 변환하지 않습니다. 명령은 Paper CommandMap → 단일 NativeCommand 구현 → Paper CommandExecutor → 생성 메서드이며 모듈 ID를 다시 검색하는 중앙 라우터는 없습니다. 내부 반복 계산은 Java 원시 타입 연산입니다. 런타임 리플렉션은 모듈 로드 시 생성자 호출 한 번에 한정합니다.
+이벤트는 Paper 이벤트 디스패처 → 생성된 typed executor → 생성 메서드로 전달됩니다. 객체를 복사하거나 별도 DTO로 변환하지 않습니다. 명령은 Paper CommandMap → 단일 NativeCommand 구현 → Paper CommandExecutor → 생성 메서드이며 모듈 ID를 다시 검색하는 중앙 라우터는 없습니다. 내부 반복 계산은 Java 원시 타입 연산입니다. 모듈 로드 시 생성자는 리플렉션으로 한 번 호출합니다. 외부 API의 타입 서명은 컴파일 준비 단계에서 리플렉션으로 검사하며, API 클래스의 정적 초기화는 실행하지 않습니다.
 
 ## 외부 API 책임 분리
 
 - `PluginDependencyRegistry`: 메인 스레드에서 명시된 제공자의 인스턴스·세대 스냅샷과 종료 감지.
-- `DependencyClasspath` / `ClasspathIndex`: 컴파일 워커에서 JAR 인덱싱, 중복 검증.
+- `DependencyClasspath` / `ClasspathIndex`: 컴파일 워커에서 JAR 인덱싱과 `use ... from`의 제공자·타입 선택.
+- `ApiTypeGraph` / `ClassOrigin`: 선택된 API의 공개·protected 서명과 제네릭 타입 탐색, 실제 Class 동일성 및 원본 JAR 검증.
+- `SelectedApiJar`: 선택된 클래스만 담은 컴파일 전용 임시 JAR 생성. 실행 모듈에는 포함하지 않음.
 - `ResolvedClasspath` / `ModuleClassLoader`: 컴파일과 동일한 API 소유자에게 클래스 연결.
 - `ResourceScope`: 역순 정리, 각 등록의 단일 실행, 실패 집계. 제공자 조건은 개별 자원에 적용.
 - `ModuleDisposer`: 진입 차단 후 관리 콜백 완료를 기다리고 사용자 종료·자원·산출물 정리.

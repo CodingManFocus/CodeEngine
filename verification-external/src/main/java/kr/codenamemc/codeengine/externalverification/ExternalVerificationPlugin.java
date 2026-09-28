@@ -145,7 +145,7 @@ public final class ExternalVerificationPlugin extends JavaPlugin {
         closeNativeExpansion();
         BenchmarkRegistry.consume(0);
         String common = "module lifecycle; requires plugin \"PlaceholderAPI\"; requires plugin \"CodeEngineExternalVerification\"; "
-            + "use kr.codenamemc.codeengine.externalverification.BenchmarkRegistry; ";
+            + "use kr.codenamemc.codeengine.externalverification.BenchmarkRegistry from \"CodeEngineExternalVerification\"; ";
         String stopEngine = "ctx.server().getPluginManager().disablePlugin(ctx.plugin());";
         String stopProvider = "ctx.server().getPluginManager().disablePlugin(ctx.server().getPluginManager().getPlugin(\"PlaceholderAPI\"));";
         String continueAfterStop = "new Runnable() { public void run() { BenchmarkRegistry.consume(123456); } }.run();";
@@ -192,8 +192,7 @@ public final class ExternalVerificationPlugin extends JavaPlugin {
         normalStop = true;
         String source = """
             module normalstop;
-            requires plugin "PlaceholderAPI";
-            use me.clip.placeholderapi.PlaceholderAPI;
+            use me.clip.placeholderapi.PlaceholderAPI from "PlaceholderAPI";
             use java.nio.file.Files;
             enable {
                 PlaceholderAPI.setPlaceholders((OfflinePlayer) null, "ready");

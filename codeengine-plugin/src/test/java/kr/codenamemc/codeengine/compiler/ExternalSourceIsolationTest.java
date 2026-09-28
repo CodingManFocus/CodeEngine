@@ -21,11 +21,11 @@ class ExternalSourceIsolationTest {
             net.kyori.adventure.text.Component.class);
         Path builds = directory.resolve("builds");
         ModuleCompiler compiler = new ModuleCompiler(builds, baseClasspath);
-        CompilationException error = assertThrows(CompilationException.class, () -> compiler.compile("""
+        IOException error = assertThrows(IOException.class, () -> compiler.compile(new Parser("""
             module source_isolation;
             use external.SourceOnlyApi;
             enable { int result = SourceOnlyApi.value(); }
-            """, "source_isolation", dependency.toString()));
+            """).parse(), "source_isolation", java.util.Map.of("external.SourceOnlyApi", dependency)));
         assertTrue(error.getMessage().contains("external"), error.getMessage());
         try (var files = Files.list(builds)) { assertEquals(0, files.count()); }
     }

@@ -79,8 +79,7 @@ command welcome permission "server.welcome" {
 
 ```java
 module placeholders;
-requires plugin "PlaceholderAPI";
-use me.clip.placeholderapi.PlaceholderAPI;
+use me.clip.placeholderapi.PlaceholderAPI from "PlaceholderAPI";
 
 command placeholders {
     if (sender instanceof Player player)
@@ -89,7 +88,7 @@ command placeholders {
 }
 ```
 
-공개 생성자·메서드·필드·외부 이벤트를 Java 타입 그대로 사용할 수 있습니다. API는 제공자의
+`from`에는 제공 플러그인의 정확한 `plugin.yml` 이름을 적습니다. 같은 클래스명이 여러 플러그인에 있어도 명시한 제공자의 타입을 선택합니다. 공개 생성자·메서드·필드·외부 이벤트를 Java 타입 그대로 사용할 수 있습니다. API는 제공자의
 실제 클래스 로더를 공유하며, 실행 중 호출마다 리플렉션이나 인수 변환을 추가하지 않습니다.
 사용할 placeholder expansion은 별도 설치합니다. `onClose`는 독립 자원 정리를,
 `onPluginClose`는 해당 제공자가 살아 있을 때만 가능한 API 정리를 등록합니다.
@@ -168,7 +167,7 @@ npm run test:browser
 - `unloadTimeoutSeconds`는 기본 10초이며 1~300초로 설정합니다. 시간 초과 시 작업은 실패하지만 클래스로더와 빌드 파일은 유지합니다. `/ce list`의 Stopping 목록에 남고 같은 모듈의 작업을 거부합니다. 콜백이 나중에 반환하면 자동 정리하며, 실패한 reload를 자동 재시작하지 않습니다. 정리 이후 명시적으로 load/reload하세요.
 - 엔진/서버 종료 시에도 실행 중인 콜백 때문에 메인 스레드를 기다리게 하지 않습니다. 이 경우 해당 모듈의 disable을 건너뛰고 경고를 기록하며, 콜백 반환 후 클래스로더와 파일만 정리합니다. 콜백이 끝나지 않으면 JVM 종료까지 자원을 유지합니다. 종료 훅의 실행이 반드시 필요한 모듈은 서버 종료 전에 정상 unload를 완료하세요.
 - 비동기 이벤트 진입·종료에는 원자적 카운터 비용이 있습니다. 동기 이벤트에도 상태 확인과 호출 수 기록 비용이 있으며, 비용 0을 보장하지 않습니다. 이벤트를 기다리는 동안 메인 스레드를 차단하지 않지만 사용자 enable/disable 코드 자체의 실행 시간은 메인 스레드에 영향을 줍니다.
-- 현재 한 파일이 한 모듈입니다. 모듈 의존성 그래프, 모듈 간 클래스 공유, 사용자 정의 최상위 클래스, 별도 식 문법, LSP 자동 완성은 제공하지 않습니다. `use`는 런타임 클래스패스에 있는 타입을 가져옵니다. 다른 플러그인의 API는 `requires plugin`으로 선언한 제공자에 한해 연결합니다. [지원 범위](docs/plugin-dependencies.md)를 확인하세요.
+- 현재 한 파일이 한 모듈입니다. 모듈 의존성 그래프, 모듈 간 클래스 공유, 사용자 정의 최상위 클래스, 별도 식 문법, LSP 자동 완성은 제공하지 않습니다. `use`는 런타임 클래스패스에 있는 타입을 가져옵니다. 다른 플러그인의 API는 `use 타입 from "플러그인명";`으로 제공자를 지정합니다. `requires plugin`은 타입을 가져오지 않고 생존 의존성만 선언합니다. [지원 범위](docs/plugin-dependencies.md)를 확인하세요.
 
 ## 검증 재현
 

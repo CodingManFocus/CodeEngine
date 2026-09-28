@@ -131,6 +131,7 @@ test("snippets cover every supported declaration other than the file header", ()
     "requires",
     "state",
     "use",
+    "use from",
   ]);
 });
 test("compiler diagnostics preserve detail and only target the requested module", () => {
@@ -175,4 +176,10 @@ test("numeric snippet defaults insert usable values", () => {
     );
     assert.ok(editor.state.doc.toString().includes(expected));
   }
+});
+
+test("provider-qualified imports highlight from only in the declaration", () => {
+  const { tokens } = scan('module m; use example.Api from "PluginA"; enable { int from = 1; }');
+  const matches = tokens.filter((item) => item.text === "from");
+  assert.deepEqual(matches.map((item) => item.style), ["keyword", "variableName"]);
 });

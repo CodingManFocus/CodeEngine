@@ -1,0 +1,3 @@
+PASS invalid dependency fails: reentrant
+PASS invalid module stays unloaded: reentrant
+PASS provider stopped during enable cannot publish candidate command

@@ -17,15 +17,11 @@ public final class ModuleCompiler {
     }
     public String baseClasspath() { return classpath; }
     public CompiledModule compile(String source, String expectedId) throws IOException, CompilationException {
-        return compile(source, expectedId, "");
+        return compile(new Parser(source).parse(), expectedId, Map.of());
     }
-    public CompiledModule compile(String source, String expectedId, String additionalClasspath) throws IOException, CompilationException {
-        return compile(new Parser(source).parse(), expectedId, additionalClasspath);
-    }
-    /** Uses the same parsed source and immutable dependency snapshot selected before this build. */
-    public CompiledModule compile(ModuleAst ast, String expectedId, String additionalClasspath) throws IOException, CompilationException {
+    /** Compiles against a single selected definition for each provider class name. */
+    public CompiledModule compile(ModuleAst ast, String expectedId, Map<String, Path> selectedClasses) throws IOException, CompilationException {
         if (!ast.id().equals(expectedId)) throw new SourceException(1, "Module id must match file name: " + expectedId);
-        String buildClasspath = buildClasspath(additionalClasspath);
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         if (compiler == null) throw new IOException("A full JDK 21+ is required (jdk.compiler is missing)");
         GeneratedSource generated = new JavaEmitter().emit(ast);
@@ -33,6 +29,8 @@ public final class ModuleCompiler {
         Path directory = Files.createTempDirectory(buildRoot, ast.id() + "-");
         boolean success = false;
         try {
+            Path selectedApi = SelectedApiJar.write(directory, selectedClasses);
+            String buildClasspath = selectedApi == null ? classpath : buildClasspath(selectedApi.toString());
             Path input = directory.resolve("Entry.java"), classes = directory.resolve("classes");
             Path emptySources = Files.createDirectory(directory.resolve("empty-sources"));
             Files.createDirectories(classes);

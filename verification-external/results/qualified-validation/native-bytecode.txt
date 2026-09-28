@@ -1,0 +1,28 @@
+Compiled from "NativeApiWork.java"
+public final class kr.codenamemc.codeengine.externalverification.NativeApiWork {
+  private kr.codenamemc.codeengine.externalverification.NativeApiWork();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  public static int single(int);
+    Code:
+       0: aconst_null
+       1: checkcast     #7                  // class org/bukkit/OfflinePlayer
+       4: iload_0
+       5: invokestatic  #9                  // Method kr/codenamemc/codeengine/externalverification/BenchmarkRegistry.singleQuery:(I)Ljava/lang/String;
+       8: invokestatic  #15                 // Method me/clip/placeholderapi/PlaceholderAPI.setPlaceholders:(Lorg/bukkit/OfflinePlayer;Ljava/lang/String;)Ljava/lang/String;
+      11: invokevirtual #21                 // Method java/lang/String.hashCode:()I
+      14: ireturn
+
+  public static int multiple(int);
+    Code:
+       0: aconst_null
+       1: checkcast     #7                  // class org/bukkit/OfflinePlayer
+       4: iload_0
+       5: invokestatic  #27                 // Method kr/codenamemc/codeengine/externalverification/BenchmarkRegistry.multipleQuery:(I)Ljava/lang/String;
+       8: invokestatic  #15                 // Method me/clip/placeholderapi/PlaceholderAPI.setPlaceholders:(Lorg/bukkit/OfflinePlayer;Ljava/lang/String;)Ljava/lang/String;
+      11: invokevirtual #21                 // Method java/lang/String.hashCode:()I
+      14: ireturn
+}

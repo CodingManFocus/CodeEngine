@@ -15,7 +15,10 @@ public final class JavaEmitter {
         add("import org.bukkit.*;\nimport org.bukkit.entity.*;\nimport org.bukkit.event.*;\n");
         add("import org.bukkit.event.player.*;\nimport org.bukkit.event.block.*;\n");
         add("import net.kyori.adventure.text.Component;\nimport java.util.*;\n");
-        for (String imported : module.imports()) add("import " + imported + ";\n");
+        for (Import imported : module.imports()) {
+            lineMap.put(line, imported.line());
+            add("import " + imported.type() + ";\n");
+        }
         add("public final class Entry implements kr.codenamemc.codeengine.api.CodeModule, Listener {\n");
         add("private kr.codenamemc.codeengine.api.ModuleContext ctx;\n");
         for (Member member : module.members()) {

@@ -1,7 +1,6 @@
 package kr.codenamemc.codeengine.runtime.dependency;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Path;
@@ -47,14 +46,14 @@ public final class ModuleClassLoader extends URLClassLoader {
         // Exact own-JAR classes never pass through the engine's plugin loader.
         // That loader may already be closed when an admitted callback is unwinding.
         Class<?> type = findClass(name);
-        if (type.getClassLoader() != this || !moduleJar.equals(origin(type)))
+        if (type.getClassLoader() != this || !moduleJar.equals(ClassOrigin.path(type)))
             throw new ClassNotFoundException("Generated module class resolved outside its own JAR: " + name);
         return type;
     }
 
     private static Class<?> loadProviderClass(String name, DependencyClasspath.Provider provider) throws ClassNotFoundException {
         Class<?> type = provider.loader().loadClass(name);
-        if (type.getClassLoader() != provider.loader() || !provider.jar().equals(origin(type)))
+        if (type.getClassLoader() != provider.loader() || !provider.jar().equals(ClassOrigin.path(type)))
             throw new ClassNotFoundException("Plugin " + provider.name() + " resolved " + name
                 + " from a different loader or JAR than its compile-time API");
         return type;
@@ -65,15 +64,8 @@ public final class ModuleClassLoader extends URLClassLoader {
         var domain = type.getProtectionDomain();
         var source = domain == null ? null : domain.getCodeSource();
         if (source != null && source.getLocation() != null && source.getLocation().getProtocol().equals("jrt")) return true;
-        Path path = origin(type);
+        Path path = ClassOrigin.path(type);
         return path != null && baseEntries.contains(path);
     }
 
-    private static Path origin(Class<?> type) {
-        var domain = type.getProtectionDomain();
-        var source = domain == null ? null : domain.getCodeSource();
-        if (source == null || source.getLocation() == null || !source.getLocation().getProtocol().equals("file")) return null;
-        try { return Path.of(source.getLocation().toURI()).toRealPath(); }
-        catch (IOException | URISyntaxException | IllegalArgumentException ignored) { return null; }
-    }
 }

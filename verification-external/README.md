@@ -6,7 +6,7 @@ It is **not** part of the CodeEngine distribution. Do not install it on a live
 server: its final checks deliberately disable PlaceholderAPI or CodeEngine.
 
 The measured results and retained raw evidence are documented
-in [REPORT.md](REPORT.md).
+in [QUALIFIED-IMPORTS.md](QUALIFIED-IMPORTS.md); [REPORT.md](REPORT.md) retains the initial implementation measurements.
 
 ## What is compared
 
@@ -105,10 +105,10 @@ python3 verification-external/run-integration.py \
   --java /absolute/path/jdk21/bin/java \
   --prepared-server /absolute/path/prepared-paper \
   --work /tmp/codeengine-external-new-disposable-servers \
-  --results "$PWD/verification-external/results/final" \
+  --results "$PWD/verification-external/results/qualified-imports" \
   --forks 3 --accept-eula
 
-python3 verification-external/summarize.py verification-external/results/final
+python3 verification-external/summarize.py verification-external/results/qualified-imports
 ```
 
 Keep disposable server working directories outside synchronized workspaces; an
@@ -120,3 +120,7 @@ for each destructive scenario: `reentrant`, `engine-stop`, `engine-disable-hook`
 The runner binds to loopback, uses a flat disposable world and offline mode,
 disables bStats/PAPI network checks/spark, and refuses to reuse an existing server
 directory. `--accept-eula` confirms the Minecraft EULA for these disposable servers.
+
+Current provider-qualified import results: [QUALIFIED-IMPORTS.md](QUALIFIED-IMPORTS.md).
+`use ... from "PluginName";` selects both the compile-time type and its runtime provider;
+`requires plugin` alone declares lifecycle dependencies without exposing types.

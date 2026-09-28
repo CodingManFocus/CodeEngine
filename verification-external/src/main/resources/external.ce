@@ -1,10 +1,8 @@
 module external;
-requires plugin "PlaceholderAPI";
-requires plugin "CodeEngineExternalVerification";
-use me.clip.placeholderapi.PlaceholderAPI;
-use me.clip.placeholderapi.events.ExpansionRegisterEvent;
-use me.clip.placeholderapi.expansion.PlaceholderExpansion;
-use kr.codenamemc.codeengine.externalverification.BenchmarkRegistry;
+use me.clip.placeholderapi.PlaceholderAPI from "PlaceholderAPI";
+use me.clip.placeholderapi.events.ExpansionRegisterEvent from "PlaceholderAPI";
+use me.clip.placeholderapi.expansion.PlaceholderExpansion from "PlaceholderAPI";
+use kr.codenamemc.codeengine.externalverification.BenchmarkRegistry from "CodeEngineExternalVerification";
 
 on ExpansionRegisterEvent event { BenchmarkRegistry.externalEvent(); }
 

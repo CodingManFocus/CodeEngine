@@ -17,7 +17,8 @@ public final class Parser {
         expect("module"); String id = take().text();
         if (!id.matches("[a-z][a-z0-9_]{0,47}")) fail("Invalid module id");
         expect(";");
-        var imports = new ArrayList<String>();
+        var imports = new ArrayList<Import>();
+        var importedOwners = new java.util.HashMap<String, String>();
         var pluginDependencies = new ArrayList<String>();
         var members = new ArrayList<Member>();
         Set<String> unique = new HashSet<>();
@@ -34,7 +35,13 @@ public final class Parser {
                     pluginDependencies.add(pluginName);
                 }
                 case "use" -> {
-                    String type = qualifiedName(); expect(";"); imports.add(type);
+                    String type = qualifiedName();
+                    String owner = consume("from") ? pluginName() : "";
+                    String previous = importedOwners.putIfAbsent(type, owner);
+                    if (previous != null && !previous.equals(owner))
+                        throw new SourceException(keyword.line(), "Conflicting providers for imported type: " + type);
+                    expect(";");
+                    imports.add(new Import(type, owner, keyword.line()));
                 }
                 case "state" -> members.add(new Field(until(";")));
                 case "fn" -> {
@@ -77,6 +84,16 @@ public final class Parser {
                 }
                 default -> throw new SourceException(keyword.line(), "Unknown declaration: " + keyword.text());
             }
+        }
+        for (Import imported : imports) {
+            String owner = imported.pluginName();
+            if (!owner.isEmpty() && !pluginDependencies.contains(owner)) pluginDependencies.add(owner);
+        }
+        var dependencyNames = new java.util.HashMap<String, String>();
+        for (String name : pluginDependencies) {
+            String previous = dependencyNames.putIfAbsent(name.toLowerCase(Locale.ROOT), name);
+            if (previous != null && !previous.equals(name))
+                throw new SourceException(1, "Inconsistent plugin name case: " + previous + " / " + name);
         }
         return new ModuleAst(id, imports, pluginDependencies, members);
     }

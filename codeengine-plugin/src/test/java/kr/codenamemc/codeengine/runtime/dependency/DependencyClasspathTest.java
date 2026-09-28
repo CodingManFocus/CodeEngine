@@ -17,7 +17,8 @@ import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
-import javax.tools.ToolProvider;
+import kr.codenamemc.codeengine.compiler.ModuleAst;
+import kr.codenamemc.codeengine.compiler.SourceException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import static org.junit.jupiter.api.Assertions.*;
@@ -42,7 +43,7 @@ class DependencyClasspathTest {
             """), providerJar.toString());
         try (URLClassLoader provider = loader(providerJar)) {
             var resolved = prepare(providerJar, provider);
-            assertEquals(providerJar.toRealPath().toString(), resolved.additionalClasspath());
+            assertEquals(providerJar.toRealPath(), resolved.selectedClasses().get("fixture.Api"));
             try (ModuleClassLoader module = resolved.newLoader(moduleJar, ClassLoader.getPlatformClassLoader())) {
                 assertArrayEquals(new URL[]{moduleJar.toRealPath().toUri().toURL()}, module.getURLs());
                 Class<?> entry = module.loadClass("module.Entry");
@@ -89,10 +90,11 @@ class DependencyClasspathTest {
         Path first = compile("first", Map.of("fixture.Api", "package fixture; public class Api {}"), "");
         Path second = compile("second", Map.of("fixture.Api", "package fixture; public class Api {}"), "");
         try (URLClassLoader firstLoader = loader(first); URLClassLoader secondLoader = loader(second)) {
-            IOException error = assertThrows(IOException.class, () -> DependencyClasspath.prepare("", List.of(
+            SourceException error = assertThrows(SourceException.class, () -> DependencyClasspath.prepare("", List.of(
                 new DependencyClasspath.Provider("First", first, firstLoader),
-                new DependencyClasspath.Provider("Second", second, secondLoader))));
-            assertTrue(error.getMessage().contains("same class: fixture.Api"));
+                new DependencyClasspath.Provider("Second", second, secondLoader)),
+                    List.of(imported("fixture.Api", "First"), imported("fixture.Api", "Second")), ClassLoader.getPlatformClassLoader()));
+            assertTrue(error.getMessage().contains("Conflicting API type fixture.Api"));
         }
     }
 
@@ -100,8 +102,9 @@ class DependencyClasspathTest {
         Path base = compile("base", Map.of("fixture.Api", "package fixture; public class Api {}"), "");
         Path providerJar = compile("provider", Map.of("fixture.Api", "package fixture; public class Api {}"), "");
         try (URLClassLoader provider = loader(providerJar)) {
-            IOException error = assertThrows(IOException.class, () -> DependencyClasspath.prepare(base.toString(), List.of(
-                new DependencyClasspath.Provider("Provider", providerJar, provider))));
+            SourceException error = assertThrows(SourceException.class, () -> DependencyClasspath.prepare(base.toString(), List.of(
+                new DependencyClasspath.Provider("Provider", providerJar, provider)),
+                List.of(imported("fixture.Api", "Provider")), ClassLoader.getPlatformClassLoader()));
             assertTrue(error.getMessage().contains("duplicates a server/engine class: fixture.Api"));
         }
     }
@@ -112,7 +115,7 @@ class DependencyClasspathTest {
         Path moduleJar = compile("module", Map.of("module.Entry", "package module; public class Entry {}"), "");
         try (URLClassLoader parent = new URLClassLoader(new URL[]{base.toUri().toURL(), unrelated.toUri().toURL()},
                 ClassLoader.getPlatformClassLoader())) {
-            var resolved = DependencyClasspath.prepare(base.toString(), List.of());
+            var resolved = DependencyClasspath.prepare(base.toString(), List.of(), List.of(), parent);
             try (ModuleClassLoader module = resolved.newLoader(moduleJar, parent)) {
                 assertSame(parent.loadClass("base.Visible"), module.loadClass("base.Visible"));
                 assertSame(String.class, module.loadClass("java.lang.String"));
@@ -129,9 +132,8 @@ class DependencyClasspathTest {
         Path providerJar = compile("provider", Map.of("fixture.Api", "package fixture; public class Api {}"), "");
         Path moduleJar = compile("module", Map.of("module.Entry", "package module; public class Entry {}"), "");
         try (URLClassLoader parent = loader(parentJar);
-             URLClassLoader provider = new URLClassLoader(new URL[]{providerJar.toUri().toURL()}, parent);
-             ModuleClassLoader module = prepare(providerJar, provider).newLoader(moduleJar, ClassLoader.getPlatformClassLoader())) {
-            ClassNotFoundException error = assertThrows(ClassNotFoundException.class, () -> module.loadClass("fixture.Api"));
+             URLClassLoader provider = new URLClassLoader(new URL[]{providerJar.toUri().toURL()}, parent)) {
+            SourceException error = assertThrows(SourceException.class, () -> prepare(providerJar, provider));
             assertTrue(error.getMessage().contains("different loader or JAR"));
         }
     }
@@ -158,7 +160,7 @@ class DependencyClasspathTest {
                 return super.loadClass(name, resolve);
             }
         };
-        var resolved = DependencyClasspath.prepare("", List.of());
+        var resolved = DependencyClasspath.prepare("", List.of(), List.of(), ClassLoader.getPlatformClassLoader());
         try (ModuleClassLoader module = resolved.newLoader(moduleJar, engineParent)) {
             Class<?> entry = module.loadClass("module.Entry");
             stopped.set(true);
@@ -175,7 +177,8 @@ class DependencyClasspathTest {
         Path shadowsProvider = compile("providerModule", Map.of("fixture.Api", "package fixture; public class Api {}"), "");
         try (URLClassLoader provider = loader(providerJar)) {
             var resolved = DependencyClasspath.prepare(baseJar.toString(), List.of(
-                new DependencyClasspath.Provider("Provider", providerJar, provider)));
+                new DependencyClasspath.Provider("Provider", providerJar, provider)),
+                List.of(imported("fixture.Api", "Provider")), ClassLoader.getPlatformClassLoader());
             for (Path moduleJar : List.of(shadowsBase, shadowsProvider)) {
                 IOException error = assertThrows(IOException.class, () ->
                     resolved.newLoader(moduleJar, ClassLoader.getPlatformClassLoader()));
@@ -231,8 +234,13 @@ class DependencyClasspathTest {
         }
     }
 
+    private static ModuleAst.Import imported(String type, String provider) {
+        return new ModuleAst.Import(type, provider, 1);
+    }
+
     private ResolvedClasspath prepare(Path jar, ClassLoader loader) throws IOException {
-        return DependencyClasspath.prepare("", List.of(new DependencyClasspath.Provider("Provider", jar, loader)));
+        return DependencyClasspath.prepare("", List.of(new DependencyClasspath.Provider("Provider", jar, loader)),
+            List.of(imported("fixture.Api", "Provider")), ClassLoader.getPlatformClassLoader());
     }
 
     private static URLClassLoader loader(Path jar) throws IOException {
@@ -240,29 +248,6 @@ class DependencyClasspathTest {
     }
 
     private Path compile(String id, Map<String, String> sources, String classpath) throws IOException {
-        Path root = Files.createDirectory(temporary.resolve(id));
-        Path classes = Files.createDirectory(root.resolve("classes"));
-        List<Path> inputs = new ArrayList<>();
-        for (var source : sources.entrySet()) {
-            Path file = root.resolve(source.getKey().replace('.', '/') + ".java");
-            Files.createDirectories(file.getParent());
-            Files.writeString(file, source.getValue());
-            inputs.add(file);
-        }
-        var compiler = ToolProvider.getSystemJavaCompiler();
-        try (var manager = compiler.getStandardFileManager(null, null, null)) {
-            var options = List.of("--release", "21", "-proc:none", "-classpath", classpath, "-d", classes.toString());
-            assertTrue(compiler.getTask(null, manager, null, options, null,
-                manager.getJavaFileObjectsFromPaths(inputs)).call());
-        }
-        Path jar = root.resolve(id + ".jar");
-        try (JarOutputStream output = new JarOutputStream(Files.newOutputStream(jar)); var files = Files.walk(classes)) {
-            for (Path file : files.filter(Files::isRegularFile).toList()) {
-                output.putNextEntry(new JarEntry(classes.relativize(file).toString().replace('\\', '/')));
-                Files.copy(file, output);
-                output.closeEntry();
-            }
-        }
-        return jar;
+        return ProviderFixtures.compile(temporary, id, sources, classpath);
     }
 }

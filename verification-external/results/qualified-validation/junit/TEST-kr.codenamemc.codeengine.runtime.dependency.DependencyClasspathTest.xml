@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="kr.codenamemc.codeengine.runtime.dependency.DependencyClasspathTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2026-09-28T12:07:25.358Z" hostname="45e6c16efc66" time="0.73">
+  <properties/>
+  <testcase name="providerLoaderReturningAParentCopyFailsInsteadOfMixingTypes()" classname="kr.codenamemc.codeengine.runtime.dependency.DependencyClasspathTest" time="0.118"/>
+  <testcase name="ownClassesCannotShadowTheServerOrDeclaredProvider()" classname="kr.codenamemc.codeengine.runtime.dependency.DependencyClasspathTest" time="0.152"/>
+  <testcase name="unsupportedProviderJarLayoutsFailExplicitly()" classname="kr.codenamemc.codeengine.runtime.dependency.DependencyClasspathTest" time="0.004"/>
+  <testcase name="providerCannotReplaceABaseClasspathClass()" classname="kr.codenamemc.codeengine.runtime.dependency.DependencyClasspathTest" time="0.081"/>
+  <testcase name="nativeCallsUseTheExactProviderClassAndItsState()" classname="kr.codenamemc.codeengine.runtime.dependency.DependencyClasspathTest" time="0.075"/>
+  <testcase name="parallelClassResolutionKeepsProviderIdentityAndClosingModuleKeepsProviderOpen()" classname="kr.codenamemc.codeengine.runtime.dependency.DependencyClasspathTest" time="0.045"/>
+  <testcase name="duplicateProviderBinaryNamesFailBeforeLoading()" classname="kr.codenamemc.codeengine.runtime.dependency.DependencyClasspathTest" time="0.042"/>
+  <testcase name="moduleDescriptorMetadataDoesNotCreateANamedModuleOnTheClasspath()" classname="kr.codenamemc.codeengine.runtime.dependency.DependencyClasspathTest" time="0.058"/>
+  <testcase name="constructorsFieldsOverloadsGenericsAndCheckedExceptionsUseJavaSemantics()" classname="kr.codenamemc.codeengine.runtime.dependency.DependencyClasspathTest" time="0.071"/>
+  <testcase name="lazyOwnClassesLoadWithoutConsultingAStoppedEngineLoader()" classname="kr.codenamemc.codeengine.runtime.dependency.DependencyClasspathTest" time="0.025"/>
+  <testcase name="globallyVisibleUndeclaredPluginClassesAreRejected()" classname="kr.codenamemc.codeengine.runtime.dependency.DependencyClasspathTest" time="0.048"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

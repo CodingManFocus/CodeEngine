@@ -31,8 +31,34 @@ class ParserTest {
             requires plugin "Example_Plugin-2.0";
             """).parse();
         assertEquals(List.of("LuckPerms", "Example_Plugin-2.0"), ast.pluginDependencies());
-        assertEquals(List.of("java.time.Instant"), ast.imports());
+        assertEquals(List.of("java.time.Instant"), ast.imports().stream().map(ModuleAst.Import::type).toList());
         assertTrue(ast.members().isEmpty());
+    }
+    @Test void qualifiedImportsInferDependenciesAndPreserveSourceLines() {
+        var ast = new Parser("""
+            module sample;
+            use example.Api from "First";
+            use example.Other from "First";
+            use another.Api from "Second";
+            use java.time.Instant;
+            """).parse();
+        assertEquals(List.of("First", "Second"), ast.pluginDependencies());
+        assertEquals(new ModuleAst.Import("example.Api", "First", 2), ast.imports().getFirst());
+        String java = new JavaEmitter().emit(ast).source();
+        assertTrue(java.contains("import example.Api;"));
+        assertFalse(java.contains("from "));
+    }
+    @Test void explicitLifecycleDependencyAndImplicitImportDependencyAreDeduplicated() {
+        var ast = new Parser("module sample; use example.Api from \"First\"; requires plugin \"First\";").parse();
+        assertEquals(List.of("First"), ast.pluginDependencies());
+    }
+    @ParameterizedTest @ValueSource(strings = {
+        "use example.Api from First;", "use example.Api from \"../First\";",
+        "use example.Api from \"First\"; use example.Api from \"Second\";",
+        "use example.Api; use example.Api from \"First\";",
+        "use example.Api from \"First\"; use example.Other from \"first\";"
+    }) void rejectsInvalidOrConflictingImportProvider(String source) {
+        assertThrows(SourceException.class, () -> new Parser("module sample; " + source).parse());
     }
     @Test void moduleWithoutDependenciesKeepsEmptyDependencyList() {
         assertTrue(new Parser("module sample;").parse().pluginDependencies().isEmpty());

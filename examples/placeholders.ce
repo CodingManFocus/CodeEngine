@@ -1,7 +1,6 @@
 module placeholders;
-requires plugin "PlaceholderAPI";
 
-use me.clip.placeholderapi.PlaceholderAPI;
+use me.clip.placeholderapi.PlaceholderAPI from "PlaceholderAPI";
 
 command ceparse permission "codeengine.examples" {
     if (!(sender instanceof Player player)) {

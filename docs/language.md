@@ -100,8 +100,10 @@ disable { ctx.plugin().getLogger().info("비활성화"); }
 
 ## 외부 플러그인 API
 
-`requires plugin "PlaceholderAPI";`로 활성화된 제공자를 선언하고 `use`로 공개 타입을
-가져옵니다. 호출과 오버로드는 Java 컴파일 규칙을 그대로 따릅니다. 외부 이벤트도
+`use me.clip.placeholderapi.PlaceholderAPI from "PlaceholderAPI";`로 공개 타입과
+그 타입을 제공할 플러그인을 함께 지정합니다. 제공자의 생존 의존성도 자동으로 추가됩니다.
+JDK/Paper 타입은 기존 `use java.util.List;`처럼 사용합니다.
+`requires plugin "PluginName";`은 API 타입을 가져오지 않고 생존 의존성만 선언합니다. 호출과 오버로드는 Java 컴파일 규칙을 그대로 따릅니다. 외부 이벤트도
 기존 `on EventType event { ... }` 문법을 사용합니다. 제공자별 래퍼는 필요하지 않습니다.
 
 `ctx.onClose(resource)`는 독립 정리, `ctx.onPluginClose("PluginName", resource)`는

@@ -1,0 +1,23 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> codeengine-studio@0.1.0 test
+> node --import tsx --test tests/*.test.ts
+
+✔ all current declarations, modifiers, Java bodies and Unicode identifiers (5.143246ms)
+✔ DSL words are ordinary Java identifiers in bodies (0.305942ms)
+✔ multiline comments, escaped quotes and Java text blocks do not alter brace depth (0.642018ms)
+✔ repository examples finish with balanced lexical state (1.303476ms)
+✔ snippet completion only at top level, not in strings/comments or Java blocks (11.579372ms)
+✔ folding ignores braces inside comments and strings (1.786464ms)
+✔ snippets cover every supported declaration other than the file header (0.182986ms)
+✔ compiler diagnostics preserve detail and only target the requested module (0.708689ms)
+✔ numeric snippet defaults insert usable values (2.118104ms)
+✔ provider-qualified imports highlight from only in the declaration (0.639785ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 352.596466
