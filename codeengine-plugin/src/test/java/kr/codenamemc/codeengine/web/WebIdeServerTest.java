@@ -33,6 +33,24 @@ class WebIdeServerTest {
         assertTrue(page.headers().firstValue("Content-Security-Policy").orElse("").contains("frame-ancestors 'none'"));
         assertFalse(page.body().contains(token));
     }
+    @Test void studioAssetsUseNonceAndOnlyPackagedFilesAreServed() throws Exception {
+        var page = request("", "GET", "");
+        var next = request("", "GET", "");
+        var matcher = java.util.regex.Pattern.compile("name=\"ce-style-nonce\" content=\"([^\"]+)\"").matcher(page.body());
+        assertTrue(matcher.find());
+        String nonce = matcher.group(1);
+        assertFalse(nonce.equals("__CE_STYLE_NONCE__"));
+        assertTrue(page.headers().firstValue("Content-Security-Policy").orElseThrow().contains("'nonce-" + nonce + "'"));
+        assertFalse(next.body().contains(nonce));
+        assertTrue(page.headers().firstValue("Content-Security-Policy").orElseThrow().contains("script-src 'self';"));
+        assertTrue(page.headers().firstValue("Content-Security-Policy").orElseThrow().contains("style-src-attr 'unsafe-inline'"));
+        var js = request("app.js", "GET", ""); assertEquals(200, js.statusCode());
+        assertTrue(js.headers().firstValue("Content-Type").orElseThrow().startsWith("text/javascript"));
+        assertEquals(200, request("style.css", "GET", "").statusCode());
+        assertEquals(200, request("THIRD_PARTY_LICENSES.txt", "GET", "").statusCode());
+        assertEquals(404, request("src/App.tsx", "GET", "").statusCode());
+        assertEquals(404, request("package.json", "GET", "").statusCode());
+    }
     @Test void crossOriginRequestRejected() throws Exception {
         assertEquals(401, request("api/modules", "GET", "", "Authorization", "Bearer " + token, "Origin", "https://evil.example").statusCode());
     }

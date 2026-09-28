@@ -21,6 +21,7 @@ public final class WebIdeServer implements AutoCloseable {
     private final WebSecurity security = new WebSecurity();
     private final JobRegistry jobs = new JobRegistry();
     private final Gson json = new Gson();
+    private final java.security.SecureRandom random = new java.security.SecureRandom();
     public WebIdeServer(ModuleSourceStore store, BiFunction<String, String, CompletableFuture<String>> operations,
                         Supplier<Set<String>> loadedIds, int port) throws IOException {
         this.store = store; this.operations = operations; this.loadedIds = loadedIds;
@@ -35,10 +36,12 @@ public final class WebIdeServer implements AutoCloseable {
             exchange.getResponseHeaders().set("Cache-Control", "no-store");
             exchange.getResponseHeaders().set("X-Content-Type-Options", "nosniff");
             exchange.getResponseHeaders().set("Referrer-Policy", "no-referrer");
-            exchange.getResponseHeaders().set("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'");
+            byte[] nonceBytes = new byte[18]; random.nextBytes(nonceBytes);
+            String nonce = Base64.getEncoder().encodeToString(nonceBytes);
+            exchange.getResponseHeaders().set("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self' 'nonce-" + nonce + "'; style-src-attr 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'");
             if (!security.validHost(exchange)) { send(exchange, 403, Map.of("error", "Invalid host")); return; }
             String path = exchange.getRequestURI().getPath();
-            if (!path.startsWith("/api/")) { staticFile(exchange, path); return; }
+            if (!path.startsWith("/api/")) { staticFile(exchange, path, nonce); return; }
             if (!security.authorize(exchange)) { send(exchange, 401, Map.of("error", "Session expired or unauthorized")); return; }
             try { api(exchange, path, query(exchange.getRequestURI().getRawQuery())); }
             catch (ModuleSourceStore.ConflictException e) { send(exchange, 409, Map.of("error", e.getMessage())); }
@@ -80,15 +83,18 @@ public final class WebIdeServer implements AutoCloseable {
             default -> send(exchange, 405, Map.of("error", "Unsupported endpoint or method"));
         }
     }
-    private void staticFile(HttpExchange exchange, String path) throws IOException {
+    private void staticFile(HttpExchange exchange, String path, String nonce) throws IOException {
         if (!exchange.getRequestMethod().equals("GET")) { send(exchange, 405, Map.of("error", "GET required")); return; }
-        Map<String, String> assets = Map.of("/", "index.html", "/app.js", "app.js", "/style.css", "style.css");
+        Map<String, String> assets = Map.of("/", "index.html", "/app.js", "app.js", "/style.css", "style.css", "/THIRD_PARTY_LICENSES.txt", "THIRD_PARTY_LICENSES.txt");
         String asset = assets.get(path);
         if (asset == null) { send(exchange, 404, Map.of("error", "Not found")); return; }
         try (InputStream input = getClass().getResourceAsStream("/webide/" + asset)) {
             if (input == null) { send(exchange, 404, Map.of("error", "Missing asset")); return; }
-            String type = asset.endsWith("js") ? "text/javascript" : asset.endsWith("css") ? "text/css" : "text/html";
-            byte[] bytes = input.readAllBytes(); exchange.getResponseHeaders().set("Content-Type", type + "; charset=utf-8");
+            String type = asset.endsWith("js") ? "text/javascript" : asset.endsWith("css") ? "text/css" : asset.endsWith("txt") ? "text/plain" : "text/html";
+            byte[] bytes = input.readAllBytes();
+            if (asset.equals("index.html")) bytes = new String(bytes, StandardCharsets.UTF_8)
+                .replace("__CE_STYLE_NONCE__", nonce).getBytes(StandardCharsets.UTF_8);
+            exchange.getResponseHeaders().set("Content-Type", type + "; charset=utf-8");
             exchange.sendResponseHeaders(200, bytes.length); exchange.getResponseBody().write(bytes);
         }
     }

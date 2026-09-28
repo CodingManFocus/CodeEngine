@@ -48,8 +48,23 @@ jobs:
           cache-provider: basic
           cache-read-only: ${{ github.ref != 'refs/heads/main' || github.event_name == 'pull_request' }}
 
+      - name: Set up Node.js for Studio
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: codeengine-webide/package-lock.json
+
       - name: Build and run tests
         run: ./gradlew --no-daemon --stacktrace build
+
+      - name: Install browser for Studio tests
+        working-directory: codeengine-webide
+        run: npx playwright install --with-deps chromium
+
+      - name: Verify Studio in browser
+        working-directory: codeengine-webide
+        run: npm run test:browser
 
       - name: Prepare build download
         shell: bash
@@ -62,6 +77,7 @@ jobs:
             cp "$jarPath" build/artifacts/
           done
           cp LICENSE.md THIRD_PARTY_NOTICES.md README.md build/artifacts/
+          cp codeengine-webide/dist/THIRD_PARTY_LICENSES.txt build/artifacts/
           git archive --format=zip --output=build/artifacts/codeengine-source.zip HEAD
           cd build/artifacts
           sha256sum *.jar codeengine-source.zip > SHA256SUMS
