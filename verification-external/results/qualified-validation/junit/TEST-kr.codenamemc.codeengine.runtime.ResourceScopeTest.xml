@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="kr.codenamemc.codeengine.runtime.ResourceScopeTest" tests="12" skipped="0" failures="0" errors="0" timestamp="2026-09-28T12:07:25.342Z" hostname="45e6c16efc66" time="0.015">
+  <properties/>
+  <testcase name="guardFailureDiscardsRemainingCallbacksAndPreservesEarlierFailure()" classname="kr.codenamemc.codeengine.runtime.ResourceScopeTest" time="0.004"/>
+  <testcase name="brokenProviderGuardDoesNotPreventIndependentCleanup()" classname="kr.codenamemc.codeengine.runtime.ResourceScopeTest" time="0.001"/>
+  <testcase name="closesEachRegistrationOnceInReverseOrder()" classname="kr.codenamemc.codeengine.runtime.ResourceScopeTest" time="0.001"/>
+  <testcase name="stoppedProviderDoesNotSuppressLocalOrOtherProviderCleanup()" classname="kr.codenamemc.codeengine.runtime.ResourceScopeTest" time="0.001"/>
+  <testcase name="rejectsNullAndRegistrationsDuringOrAfterCleanup()" classname="kr.codenamemc.codeengine.runtime.ResourceScopeTest" time="0.001"/>
+  <testcase name="reentrantCloseDoesNotRunRemainingResourcesEarly()" classname="kr.codenamemc.codeengine.runtime.ResourceScopeTest" time="0.001"/>
+  <testcase name="providerFailureDoesNotPreventIndependentCleanup()" classname="kr.codenamemc.codeengine.runtime.ResourceScopeTest" time="0.001"/>
+  <testcase name="discardingResourcesNeverInvokesUserCode()" classname="kr.codenamemc.codeengine.runtime.ResourceScopeTest" time="0.001"/>
+  <testcase name="stoppedEngineSkipsAndDiscardsAllCleanup()" classname="kr.codenamemc.codeengine.runtime.ResourceScopeTest" time="0.001"/>
+  <testcase name="repeatedFailureInstanceDoesNotInterruptCleanup()" classname="kr.codenamemc.codeengine.runtime.ResourceScopeTest" time="0.001"/>
+  <testcase name="engineStoppedByCleanupSkipsRemainingCallbacks()" classname="kr.codenamemc.codeengine.runtime.ResourceScopeTest" time="0.001"/>
+  <testcase name="attemptsAllResourcesAndAggregatesFailuresInCloseOrder()" classname="kr.codenamemc.codeengine.runtime.ResourceScopeTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

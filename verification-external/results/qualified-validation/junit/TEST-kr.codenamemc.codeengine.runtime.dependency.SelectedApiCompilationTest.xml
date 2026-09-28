@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="kr.codenamemc.codeengine.runtime.dependency.SelectedApiCompilationTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-09-28T12:07:26.090Z" hostname="45e6c16efc66" time="0.562">
+  <properties/>
+  <testcase name="requiresAloneDoesNotExposePluginClasses()" classname="kr.codenamemc.codeengine.runtime.dependency.SelectedApiCompilationTest" time="0.12"/>
+  <testcase name="selectedProviderControlsJavacAndRuntimeRegardlessOfJarOrder()" classname="kr.codenamemc.codeengine.runtime.dependency.SelectedApiCompilationTest" time="0.239"/>
+  <testcase name="publicGenericReturnTypesCannotSilentlyMixDuplicateClasses()" classname="kr.codenamemc.codeengine.runtime.dependency.SelectedApiCompilationTest" time="0.064"/>
+  <testcase name="nestedImportsAndGenericBoundsAreIncluded()" classname="kr.codenamemc.codeengine.runtime.dependency.SelectedApiCompilationTest" time="0.093"/>
+  <testcase name="importMustExistInItsNamedProviderAndExternalImportsRequireFrom()" classname="kr.codenamemc.codeengine.runtime.dependency.SelectedApiCompilationTest" time="0.046"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

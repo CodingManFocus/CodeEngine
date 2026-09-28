@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="kr.codenamemc.codeengine.workspace.ModuleSourceStoreTest" tests="13" skipped="0" failures="0" errors="0" timestamp="2026-09-28T10:22:45.996Z" hostname="45e6c16efc66" time="0.061">
+  <properties/>
+  <testcase name="rejectsSymlinkReadsAndWrites()" classname="kr.codenamemc.codeengine.workspace.ModuleSourceStoreTest" time="0.003"/>
+  <testcase name="[1] id=../x" classname="kr.codenamemc.codeengine.workspace.ModuleSourceStoreTest" time="0.006"/>
+  <testcase name="[2] id=x/../hello" classname="kr.codenamemc.codeengine.workspace.ModuleSourceStoreTest" time="0.0"/>
+  <testcase name="[3] id=/tmp/x" classname="kr.codenamemc.codeengine.workspace.ModuleSourceStoreTest" time="0.001"/>
+  <testcase name="[4] id=a\b" classname="kr.codenamemc.codeengine.workspace.ModuleSourceStoreTest" time="0.001"/>
+  <testcase name="[5] id=." classname="kr.codenamemc.codeengine.workspace.ModuleSourceStoreTest" time="0.0"/>
+  <testcase name="[6] id=.." classname="kr.codenamemc.codeengine.workspace.ModuleSourceStoreTest" time="0.001"/>
+  <testcase name="[7] id=UPPER" classname="kr.codenamemc.codeengine.workspace.ModuleSourceStoreTest" time="0.001"/>
+  <testcase name="[8] id=a-b" classname="kr.codenamemc.codeengine.workspace.ModuleSourceStoreTest" time="0.001"/>
+  <testcase name="[9] id=a.ce" classname="kr.codenamemc.codeengine.workspace.ModuleSourceStoreTest" time="0.001"/>
+  <testcase name="enforcesUtf8ByteLimit()" classname="kr.codenamemc.codeengine.workspace.ModuleSourceStoreTest" time="0.01"/>
+  <testcase name="atomicSaveDetectsStaleEditors()" classname="kr.codenamemc.codeengine.workspace.ModuleSourceStoreTest" time="0.005"/>
+  <testcase name="concurrentSaveHasExactlyOneWinner()" classname="kr.codenamemc.codeengine.workspace.ModuleSourceStoreTest" time="0.01"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="kr.codenamemc.codeengine.compiler.ExternalSourceIsolationTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-09-28T12:07:25.303Z" hostname="45e6c16efc66" time="0.005">
+  <properties/>
+  <testcase name="dependencySourcesCannotBeCompiledIntoTheModuleOrUsedAsItsApi()" classname="kr.codenamemc.codeengine.compiler.ExternalSourceIsolationTest" time="0.005"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

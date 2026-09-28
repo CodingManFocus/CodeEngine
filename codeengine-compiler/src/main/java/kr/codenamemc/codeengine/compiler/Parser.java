@@ -3,6 +3,7 @@ package kr.codenamemc.codeengine.compiler;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import javax.lang.model.SourceVersion;
 import static kr.codenamemc.codeengine.compiler.ModuleAst.*;
@@ -16,14 +17,31 @@ public final class Parser {
         expect("module"); String id = take().text();
         if (!id.matches("[a-z][a-z0-9_]{0,47}")) fail("Invalid module id");
         expect(";");
-        var imports = new ArrayList<String>();
+        var imports = new ArrayList<Import>();
+        var importedOwners = new java.util.HashMap<String, String>();
+        var pluginDependencies = new ArrayList<String>();
         var members = new ArrayList<Member>();
         Set<String> unique = new HashSet<>();
         while (!at("<eof>")) {
             Token keyword = take();
             switch (keyword.text()) {
+                case "requires" -> {
+                    expect("plugin");
+                    String pluginName = pluginName();
+                    if (!unique.add("plugin:" + pluginName.toLowerCase(Locale.ROOT))) {
+                        throw new SourceException(keyword.line(), "Duplicate plugin dependency: " + pluginName);
+                    }
+                    expect(";");
+                    pluginDependencies.add(pluginName);
+                }
                 case "use" -> {
-                    String type = qualifiedName(); expect(";"); imports.add(type);
+                    String type = qualifiedName();
+                    String owner = consume("from") ? pluginName() : "";
+                    String previous = importedOwners.putIfAbsent(type, owner);
+                    if (previous != null && !previous.equals(owner))
+                        throw new SourceException(keyword.line(), "Conflicting providers for imported type: " + type);
+                    expect(";");
+                    imports.add(new Import(type, owner, keyword.line()));
                 }
                 case "state" -> members.add(new Field(until(";")));
                 case "fn" -> {
@@ -67,7 +85,24 @@ public final class Parser {
                 default -> throw new SourceException(keyword.line(), "Unknown declaration: " + keyword.text());
             }
         }
-        return new ModuleAst(id, imports, members);
+        for (Import imported : imports) {
+            String owner = imported.pluginName();
+            if (!owner.isEmpty() && !pluginDependencies.contains(owner)) pluginDependencies.add(owner);
+        }
+        var dependencyNames = new java.util.HashMap<String, String>();
+        for (String name : pluginDependencies) {
+            String previous = dependencyNames.putIfAbsent(name.toLowerCase(Locale.ROOT), name);
+            if (previous != null && !previous.equals(name))
+                throw new SourceException(1, "Inconsistent plugin name case: " + previous + " / " + name);
+        }
+        return new ModuleAst(id, imports, pluginDependencies, members);
+    }
+    private String pluginName() {
+        Token literal = take();
+        if (!literal.text().matches("\"[A-Za-z0-9_.-]+\"")) {
+            throw new SourceException(literal.line(), "Plugin name must be a quoted literal containing letters, digits, '_', '.' or '-'");
+        }
+        return literal.text().substring(1, literal.text().length() - 1);
     }
     private long positiveNumber() {
         Token token = take();

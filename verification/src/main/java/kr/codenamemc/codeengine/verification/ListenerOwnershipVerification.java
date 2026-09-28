@@ -109,7 +109,7 @@ final class ListenerOwnershipVerification {
     }
     private void append(String text) { System.setProperty(prefix + "order", System.getProperty(prefix + "order", "") + text); }
     private int value(String key) { return Integer.parseInt(System.getProperty(prefix + key, "0")); }
-    private int count() { return HandlerList.getRegisteredListeners(engine).size(); }
+    private int count() { return ListenerAssertions.managedListeners(engine).size(); }
     private void check(boolean condition, String message) {
         if (!condition) throw new AssertionError(message);
         passed.accept(message);

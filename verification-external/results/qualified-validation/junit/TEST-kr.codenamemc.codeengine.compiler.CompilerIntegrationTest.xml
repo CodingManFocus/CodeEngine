@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="kr.codenamemc.codeengine.compiler.CompilerIntegrationTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-09-28T12:07:24.178Z" hostname="45e6c16efc66" time="1.122">
+  <properties/>
+  <testcase name="javaErrorsMapToOriginalSourceAndDoNotLeavePartialBuilds()" classname="kr.codenamemc.codeengine.compiler.CompilerIntegrationTest" time="0.586"/>
+  <testcase name="compilesAndLoadsRealBytecode()" classname="kr.codenamemc.codeengine.compiler.CompilerIntegrationTest" time="0.326"/>
+  <testcase name="filenameMustMatchId()" classname="kr.codenamemc.codeengine.compiler.CompilerIntegrationTest" time="0.005"/>
+  <testcase name="sameNameBuildsHaveIsolatedArtifacts()" classname="kr.codenamemc.codeengine.compiler.CompilerIntegrationTest" time="0.202"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

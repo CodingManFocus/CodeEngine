@@ -1,0 +1,23 @@
+{
+  "sourceManifestSha256": "d60ad59d28aefca52f4177e65492861d0b8418b060cbbad77b899140bdd4fb01",
+  "gitBaseCommit": "8ecf81d2747c3868f61676d0b4096b6b1ac7b6d7",
+  "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+  "cpuCount": 9,
+  "java": "openjdk version \"21.0.12.1\" 2026-08-18 LTS\nOpenJDK Runtime Environment Corretto-21.0.12.12.1 (build 21.0.12.1+12-LTS)\nOpenJDK 64-Bit Server VM Corretto-21.0.12.12.1 (build 21.0.12.1+12-LTS, mixed mode, sharing)\n",
+  "paperSha256": "5ffef465eeeb5f2a3c23a24419d97c51afd7dbb4923ff42df9a3f58bba1ccfba",
+  "placeholderApiSha256": "b20cb09db1cd79f76b9172e5114dfde6f34c558069e3bd7b72b14f718bc5dffd",
+  "engineSha256": "0ec430160000eee14c97a3978e70f5b03cb08c2c29fe8a8eebfdd74247c0d6ee",
+  "verificationSha256": "96b61b51583be260e4171b19da6d115aa72a5f656ba2867c6747a4edc82903d3",
+  "forks": 3,
+  "scenario": "benchmark",
+  "warmupTicks": 160,
+  "measurementTicks": 240,
+  "paperPluginRemapping": "default enabled",
+  "paperVersion": "1.21.11 build 132",
+  "placeholderApiVersion": "2.11.6",
+  "cpuModel": "AMD EPYC 9V74 80-Core Processor",
+  "cpu.max": "800000 100000\n",
+  "memory.max": "8589934592\n",
+  "cpu.stat": "usage_usec 1510904454\nuser_usec 1255609277\nsystem_usec 255295176\nnice_usec 0\nnr_periods 68694\nnr_throttled 11\nthrottled_usec 61128\nnr_bursts 0\nburst_usec 0\n",
+  "cpu.stat.after": "usage_usec 1735358120\nuser_usec 1466841103\nsystem_usec 268517017\nnice_usec 0\nnr_periods 70011\nnr_throttled 11\nthrottled_usec 61128\nnr_bursts 0\nburst_usec 0\n"
+}

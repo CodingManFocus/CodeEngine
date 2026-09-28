@@ -1,0 +1,32 @@
+module external;
+use me.clip.placeholderapi.PlaceholderAPI from "PlaceholderAPI";
+use me.clip.placeholderapi.events.ExpansionRegisterEvent from "PlaceholderAPI";
+use me.clip.placeholderapi.expansion.PlaceholderExpansion from "PlaceholderAPI";
+use kr.codenamemc.codeengine.externalverification.BenchmarkRegistry from "CodeEngineExternalVerification";
+
+on ExpansionRegisterEvent event { BenchmarkRegistry.externalEvent(); }
+
+enable {
+    var expansion = new PlaceholderExpansion() {
+        @Override public String getIdentifier() { return "cemodule"; }
+        @Override public String getAuthor() { return "CodeEngine verification"; }
+        @Override public String getVersion() { return "1.0"; }
+        @Override public boolean persist() { return true; }
+        @Override public String onRequest(OfflinePlayer player, String parameters) {
+            return "value:" + parameters;
+        }
+    };
+    if (!expansion.register()) throw new IllegalStateException("Expansion already registered");
+    ctx.onPluginClose("PlaceholderAPI", () -> expansion.unregister());
+    BenchmarkRegistry.install(
+        index -> PlaceholderAPI.setPlaceholders((OfflinePlayer) null, BenchmarkRegistry.singleQuery(index)).hashCode(),
+        index -> PlaceholderAPI.setPlaceholders((OfflinePlayer) null, BenchmarkRegistry.multipleQuery(index)).hashCode(),
+        PlaceholderAPI.class);
+    ctx.onClose(BenchmarkRegistry::clear);
+}
+command codepapi {
+    int index = Integer.parseInt(args[0]);
+    BenchmarkRegistry.consume(PlaceholderAPI.setPlaceholders((OfflinePlayer) null, BenchmarkRegistry.singleQuery(index)).hashCode());
+    BenchmarkRegistry.commandExecuted(true);
+    return true;
+}

@@ -66,7 +66,7 @@ public final class VerificationPlugin extends JavaPlugin {
         for (int iteration = 0; iteration < 20; iteration++) {
             chain = chain.thenCompose(value -> submitSource("probe", good, "reload")).thenAccept(value -> {
                 verifyEvents(1); check(activeTasks() == 1, "no task duplication after reload");
-                check(HandlerList.getRegisteredListeners(engine).size() == 1, "no listener duplication");
+                check(ListenerAssertions.managedListeners(engine).size() == 1, "no listener duplication");
             });
         }
         chain = chain.thenCompose(value -> expectFailure("module probe; command ceprobe { doesNotExist(); return true; }"))
@@ -83,7 +83,7 @@ public final class VerificationPlugin extends JavaPlugin {
                 check(!manager.loadedIds().contains("probe"), "module unload");
                 check(getServer().getCommandMap().getCommand("ceprobe") == null, "command removed");
                 check(getServer().getCommandMap().getCommand("codeengine_probe:ceprobe") == null, "namespaced command removed");
-                check(HandlerList.getRegisteredListeners(engine).isEmpty(), "listeners removed");
+                check(ListenerAssertions.managedListeners(engine).isEmpty(), "listeners removed");
                 check(activeTasks() == 0, "tasks cancelled");
             })
             .thenCompose(value -> new ReloadVerification(this, engine, manager, message -> check(true, message)).run())
@@ -110,7 +110,7 @@ public final class VerificationPlugin extends JavaPlugin {
             check(error != null, "invalid replacement fails");
             check(!manager.loadedIds().contains("probe"), "failed reload leaves module stopped");
             check(activeTasks() == 0, "failed reload leaves no timer");
-            check(HandlerList.getRegisteredListeners(engine).isEmpty(), "failed reload leaves no listener");
+            check(ListenerAssertions.managedListeners(engine).isEmpty(), "failed reload leaves no listener");
             check(getServer().getCommandMap().getCommand("ceprobe") == null, "failed reload removes old command");
             check(getServer().getCommandMap().getCommand("codeengine_probe:ceprobe") == null, "failed reload removes old namespaced command");
             return null;

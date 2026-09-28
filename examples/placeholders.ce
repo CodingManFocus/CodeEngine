@@ -1,0 +1,13 @@
+module placeholders;
+
+use me.clip.placeholderapi.PlaceholderAPI from "PlaceholderAPI";
+
+command ceparse permission "codeengine.examples" {
+    if (!(sender instanceof Player player)) {
+        sender.sendMessage("플레이어만 사용할 수 있습니다.");
+        return true;
+    }
+    String input = String.join(" ", args);
+    player.sendMessage(Component.text(PlaceholderAPI.setPlaceholders(player, input)));
+    return true;
+}

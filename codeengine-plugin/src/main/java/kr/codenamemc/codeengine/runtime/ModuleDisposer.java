@@ -7,13 +7,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 import kr.codenamemc.codeengine.compiler.ModuleCompiler;
 
-/** Owns detached modules until every managed event callback has returned. */
+/** Owns detached modules until every managed callback has returned. */
 final class ModuleDisposer {
     private final JavaPlugin plugin;
     private final long timeoutNanos;
     private final Map<String, Disposal> stopping = new LinkedHashMap<>();
     private volatile Set<String> stoppingIds = Set.of();
     private BukkitTask pollTask;
+    private boolean shutdownCompleted;
     ModuleDisposer(JavaPlugin plugin, long timeoutSeconds) {
         if (timeoutSeconds < 1 || timeoutSeconds > 300)
             throw new IllegalArgumentException("unloadTimeoutSeconds must be between 1 and 300");
@@ -24,6 +25,7 @@ final class ModuleDisposer {
         ModuleScope.requireMain();
         Disposal disposal = detach(module, initialFailure);
         if (module.scope().drained().isDone()) finish(disposal);
+        else if (shutdownCompleted) deferArtifactCleanup(disposal);
         else if (pollTask == null) {
             try { pollTask = plugin.getServer().getScheduler().runTaskTimer(plugin, this::poll, 1, 1); }
             catch (Throwable error) {
@@ -50,7 +52,7 @@ final class ModuleDisposer {
             if (disposal.module.scope().drained().isDone()) finish(disposal);
             else if (!disposal.result.isDone() && System.nanoTime() - disposal.deadline >= 0) {
                 var error = new TimeoutException("Module is still stopping: " + disposal.module.compiled().id()
-                    + "; event callbacks have not returned. New loads are blocked until cleanup completes.");
+                    + "; managed callbacks have not returned. New loads are blocked until cleanup completes.");
                 if (disposal.failure != null) error.addSuppressed(disposal.failure);
                 disposal.result.completeExceptionally(error);
             }
@@ -61,9 +63,24 @@ final class ModuleDisposer {
         if (disposal.finishing) return;
         disposal.finishing = true;
         Throwable failure = disposal.failure;
-        if (disposal.module.module() != null) {
-            try { disposal.module.module().disable(); }
-            catch (Throwable error) { failure = combine(failure, error); }
+        boolean cleanupAllowed = false;
+        try { cleanupAllowed = cleanupAllowed(); }
+        catch (Throwable error) { failure = combine(failure, error); }
+        if (cleanupAllowed) {
+            if (disposal.module.module() != null) {
+                try { disposal.module.module().disable(); }
+                catch (Throwable error) { failure = combine(failure, error); }
+            }
+            try {
+                if (cleanupAllowed()) {
+                    failure = combine(failure, disposal.module.scope().closeResources(() -> cleanupAllowed()));
+                } else failure = skipUserCleanup(disposal.module, failure);
+            } catch (Throwable error) {
+                failure = combine(failure, error);
+                failure = skipUserCleanup(disposal.module, failure);
+            }
+        } else {
+            failure = skipUserCleanup(disposal.module, failure);
         }
         failure = closeArtifacts(disposal.module, failure);
         disposal.failure = failure;
@@ -76,34 +93,61 @@ final class ModuleDisposer {
             plugin.getLogger().log(Level.WARNING, "Deferred module cleanup failed: " + disposal.module.compiled().id(), failure);
         }
     }
+    private boolean cleanupAllowed() {
+        return !shutdownCompleted;
+    }
+    private Throwable skipUserCleanup(LoadedModule module, Throwable failure) {
+        String message = "Engine shutdown completed; user disable/cleanup skipped: " + module.compiled().id();
+        plugin.getLogger().warning(message);
+        module.scope().discardResources();
+        return combine(failure, new IllegalStateException(message));
+    }
     private void stopPollingIfIdle() {
         if (stopping.isEmpty() && pollTask != null) { pollTask.cancel(); pollTask = null; }
     }
     void close(Collection<LoadedModule> loaded) {
         ModuleScope.requireMain();
-        if (pollTask != null) { pollTask.cancel(); pollTask = null; }
-        for (LoadedModule module : loaded) detach(module, null);
-        for (Disposal disposal : List.copyOf(stopping.values())) {
-            // A user disable hook can synchronously initiate engine shutdown.
-            // Its outer finish call must remain the sole owner of final cleanup.
-            if (disposal.finishing) continue;
-            if (disposal.module.scope().drained().isDone()) {
-                finish(disposal);
-                if (disposal.failure != null) plugin.getLogger().log(Level.WARNING,
-                    "Module shutdown failed: " + disposal.module.compiled().id(), disposal.failure);
-                continue;
+        try {
+            if (pollTask != null) {
+                try { pollTask.cancel(); }
+                catch (Throwable error) { plugin.getLogger().log(Level.WARNING, "Could not cancel module cleanup polling", error); }
+                finally { pollTask = null; }
             }
-            String id = disposal.module.compiled().id();
-            plugin.getLogger().warning("Server/plugin shutdown while module events are running: " + id
-                + "; disable hook skipped. Artifacts stay open until callbacks return.");
-            disposal.result.completeExceptionally(new IllegalStateException("Engine stopped while module events are running: " + id));
-            // No Paper API or user disable hook may run on the callback thread after shutdown.
-            disposal.module.scope().drained().thenRun(() -> {
-                Throwable failure = closeArtifacts(disposal.module, disposal.failure);
-                if (failure != null) plugin.getLogger().log(Level.WARNING, "Shutdown artifact cleanup failed: " + id, failure);
-            });
+            for (LoadedModule module : loaded) detach(module, null);
+            for (Disposal disposal : List.copyOf(stopping.values())) {
+                // A user disable hook can synchronously initiate engine shutdown.
+                // Its outer finish call must remain the sole owner of final cleanup.
+                if (disposal.finishing) continue;
+                if (disposal.module.scope().drained().isDone()) {
+                    finish(disposal);
+                    if (disposal.failure != null) plugin.getLogger().log(Level.WARNING,
+                        "Module shutdown failed: " + disposal.module.compiled().id(), disposal.failure);
+                    continue;
+                }
+                deferArtifactCleanup(disposal);
+            }
+        } finally {
+            shutdownCompleted = true;
+            stopping.clear(); stoppingIds = Set.of();
         }
-        stopping.clear(); stoppingIds = Set.of();
+    }
+    private void deferArtifactCleanup(Disposal disposal) {
+        if (disposal.finishing) return;
+        disposal.finishing = true;
+        String id = disposal.module.compiled().id();
+        plugin.getLogger().warning("Server/plugin shutdown while module callbacks are running: " + id
+            + "; disable hook and registered resource cleanup skipped. Artifacts stay open until callbacks return.");
+        disposal.module.scope().discardResources();
+        disposal.failure = combine(disposal.failure, new IllegalStateException("Engine stopped while module callbacks are running: " + id));
+        disposal.result.completeExceptionally(disposal.failure);
+        stopping.remove(id, disposal);
+        stoppingIds = Set.copyOf(stopping.keySet());
+        // The future retains ownership after removal from the main-thread map.
+        // No Paper API or user hook may run on its callback thread after shutdown.
+        disposal.module.scope().drained().thenRun(() -> {
+            Throwable failure = closeArtifacts(disposal.module, null);
+            if (failure != null) plugin.getLogger().log(Level.WARNING, "Shutdown artifact cleanup failed: " + id, failure);
+        });
     }
     private static Throwable closeArtifacts(LoadedModule module, Throwable failure) {
         try { module.loader().close(); }
@@ -113,6 +157,7 @@ final class ModuleDisposer {
         return failure;
     }
     private static Throwable combine(Throwable first, Throwable next) {
+        if (next == null) return first;
         if (first == null) return next;
         if (first != next) first.addSuppressed(next);
         return first;

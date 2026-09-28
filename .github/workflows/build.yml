@@ -58,6 +58,9 @@ jobs:
       - name: Build and run tests
         run: ./gradlew --no-daemon --stacktrace build
 
+      - name: Test benchmark evidence validation
+        run: python3 -m unittest discover -s verification-external -p 'test_*.py'
+
       - name: Install browser for Studio tests
         working-directory: codeengine-webide
         run: npx playwright install --with-deps chromium

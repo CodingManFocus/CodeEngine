@@ -97,3 +97,16 @@ disable { ctx.plugin().getLogger().info("비활성화"); }
 ## 진단
 
 파서 오류는 원본 줄 번호를 표시합니다. javac 본문 오류도 `.ce`의 줄 번호로 매핑합니다. 생성기가 만든 선언/보조 코드에서 발생한 오류는 현재 1행으로 표시될 수 있습니다. 성공한 실행 모듈의 생성 소스와 JAR는 `plugins/CodeEngine/builds/<id>-<unique>/`에서 확인할 수 있으며, 해제·교체 시 정리됩니다. 단독 build 검사 산출물과 컴파일 실패 임시 파일은 즉시 정리합니다. 부분 활성화 실패 후 실행 중인 이벤트가 남은 후보의 산출물은 해당 콜백 반환까지 유지합니다.
+
+## 외부 플러그인 API
+
+`use me.clip.placeholderapi.PlaceholderAPI from "PlaceholderAPI";`로 공개 타입과
+그 타입을 제공할 플러그인을 함께 지정합니다. 제공자의 생존 의존성도 자동으로 추가됩니다.
+JDK/Paper 타입은 기존 `use java.util.List;`처럼 사용합니다.
+`requires plugin "PluginName";`은 API 타입을 가져오지 않고 생존 의존성만 선언합니다. 호출과 오버로드는 Java 컴파일 규칙을 그대로 따릅니다. 외부 이벤트도
+기존 `on EventType event { ... }` 문법을 사용합니다. 제공자별 래퍼는 필요하지 않습니다.
+
+`ctx.onClose(resource)`는 독립 정리, `ctx.onPluginClose("PluginName", resource)`는
+제공자가 살아 있을 때만 호출할 정리를 등록합니다. `ctx.isPluginAvailable("PluginName")`은
+선언된 원래 제공자의 상태를 서버 스레드에서 확인합니다. [상세 계약](plugin-dependencies.md)을
+읽고 사용하세요.

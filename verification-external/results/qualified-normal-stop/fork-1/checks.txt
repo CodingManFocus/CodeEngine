@@ -1,0 +1,9 @@
+PASS module active before ordinary server stop
+PASS module enabled before server stop
+PASS native plugin disabled while provider enabled
+PASS module remained loaded until provider stop
+PASS module disable persists local state after provider invalidation
+PASS independent cleanup persists local state after provider invalidation
+PASS only provider cleanup skipped after provider invalidation
+PASS stopped module artifact retired
+PASS local cleanup was not globally skipped
