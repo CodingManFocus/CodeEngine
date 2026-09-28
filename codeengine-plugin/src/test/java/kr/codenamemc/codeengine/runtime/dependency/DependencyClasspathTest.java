@@ -216,8 +216,29 @@ class DependencyClasspathTest {
                 output.flush();
             }
             try (URLClassLoader provider = loader(jar)) {
+                var lifecycleOnly = DependencyClasspath.prepare("", List.of(
+                    new DependencyClasspath.Provider("Provider", jar, provider)), List.of(), ClassLoader.getPlatformClassLoader());
+                assertTrue(lifecycleOnly.selectedClasses().isEmpty(), mode);
                 assertThrows(IOException.class, () -> prepare(jar, provider), mode);
             }
+        }
+    }
+
+    @Test void unrelatedLifecycleDependencyDoesNotRestrictASelectedApi() throws Exception {
+        Path apiJar = compile("api", Map.of("fixture.Api", "package fixture; public class Api {}"), "");
+        Path lifecycleJar = temporary.resolve("lifecycle.jar");
+        Manifest manifest = new Manifest();
+        manifest.getMainAttributes().put(Attributes.Name.MANIFEST_VERSION, "1.0");
+        manifest.getMainAttributes().putValue("Multi-Release", "true");
+        try (JarOutputStream output = new JarOutputStream(Files.newOutputStream(lifecycleJar), manifest)) {
+            output.flush();
+        }
+        try (URLClassLoader api = loader(apiJar); URLClassLoader lifecycle = loader(lifecycleJar)) {
+            var resolved = DependencyClasspath.prepare("", List.of(
+                new DependencyClasspath.Provider("Api", apiJar, api),
+                new DependencyClasspath.Provider("Lifecycle", lifecycleJar, lifecycle)),
+                List.of(imported("fixture.Api", "Api")), ClassLoader.getPlatformClassLoader());
+            assertEquals(Map.of("fixture.Api", apiJar.toRealPath()), resolved.selectedClasses());
         }
     }
 

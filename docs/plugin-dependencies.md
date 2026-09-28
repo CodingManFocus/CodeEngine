@@ -28,6 +28,7 @@ command placeholders {
   `use`에는 `from`이 필수입니다. `requires plugin`만 쓰고 외부 타입을 가져올 수 없습니다.
 - `requires plugin "PluginName";`은 타입을 가져오지 않는 생존 의존성입니다. API 서명에서
   참조하는 다른 플러그인이나 종료 감지가 필요한 플러그인을 선언할 때 사용할 수 있습니다.
+  생존 확인만 할 때는 제공자의 API JAR 형식 제한을 적용하지 않습니다.
 - 가져온 타입의 생성자, 정적/인스턴스 메서드, 공개 필드, 제네릭,
   익명 클래스, Java 인터페이스 구현을 일반 Java 21 문법으로 사용합니다.
 - 오버로드 선택, 타입 변환, 접근 제한, checked exception은 javac가 검사합니다.
@@ -72,9 +73,10 @@ JAR 전체를 클래스패스에 나란히 넣지 않습니다. 실행할 때는
 **원래 클래스 로더**로 연결합니다. 임시 API JAR는 모듈 JAR에 포함하거나 런타임 로더에
 추가하지 않습니다. singleton·static 상태·타입 동일성을 유지하며 호출마다 검사하지 않습니다.
 
-지원 범위는 Bukkit `plugin.yml`을 쓰는 JavaPlugin과 그 플러그인 JAR에 들어 있는 API입니다.
-`paper-plugin.yml` 제공자, 별도 API/라이브러리 로더, manifest Class-Path, multi-release
-제공 JAR은 현재 지원하지 않습니다. 미선언 제공자·서명 의존성 누락·타입 불일치는 실패로
+`use ... from`의 API 제공 범위는 Bukkit `plugin.yml`을 쓰는 JavaPlugin과 그 플러그인 JAR에 들어 있는 API입니다.
+`requires plugin`만 선언한 경우에는 활성 플러그인의 인스턴스와 종료 여부만 확인합니다.
+`use ... from`은 `paper-plugin.yml` 제공자, 별도 API/라이브러리 로더, manifest Class-Path,
+multi-release 제공 JAR을 현재 지원하지 않습니다. 미선언 제공자·서명 의존성 누락·타입 불일치는 실패로
 처리합니다. 리플렉션의 선언 멤버 조회에도 의존 타입이 필요하므로, 선택한 API 클래스의
 private 서명에 선택적 라이브러리가 빠져 있으면 준비 단계가 실패할 수 있습니다.
 `Object`나 동적 리플렉션으로만 전달되는 타입은 정적 서명 탐색으로 보장하지 않습니다.

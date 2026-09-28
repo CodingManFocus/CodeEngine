@@ -39,37 +39,67 @@ public final class DependencyClasspath {
         }
         Map<String, Provider> byName = new java.util.LinkedHashMap<>();
         Map<String, Set<String>> classesByProvider = new HashMap<>();
-        Set<Path> providerJars = new LinkedHashSet<>();
+        Map<Path, String> selectedJars = new HashMap<>();
+        Map<String, Provider> selectedProviders = new HashMap<>();
         for (Provider requested : providers) {
-            if (byName.containsKey(requested.name())) throw new IOException("Duplicate plugin dependency: " + requested.name());
-            Path jar = requested.jar().toRealPath();
-            if (!Files.isRegularFile(jar)) throw new IOException("Plugin API must be in a JAR: " + requested.name());
-            if (!providerJars.add(jar)) throw new IOException("Plugin dependencies share a JAR: " + requested.name());
-            validateProviderJar(requested.name(), jar);
-            byName.put(requested.name(), new Provider(requested.name(), jar, requested.loader()));
-            classesByProvider.put(requested.name(), ClasspathIndex.read(jar));
+            if (byName.putIfAbsent(requested.name(), requested) != null)
+                throw new IOException("Duplicate plugin dependency: " + requested.name());
         }
-        ApiTypeGraph graph = new ApiTypeGraph(baseEntries, baseClasses, List.copyOf(byName.values()), engineParent);
         for (ModuleAst.Import imported : imports) {
             if (imported.pluginName().isEmpty()) continue;
             Provider provider = byName.get(imported.pluginName());
             if (provider == null) throw new SourceException(imported.line(), "Undeclared provider: " + imported.pluginName());
+            provider = selectProvider(provider, selectedJars, selectedProviders, classesByProvider);
             String binaryName = binaryName(imported.type(), classesByProvider.get(provider.name()));
             if (binaryName == null) throw new SourceException(imported.line(), "Plugin " + provider.name()
                 + " does not contain imported type: " + imported.type());
+        }
+        List<Provider> candidates = providers.stream()
+            .map(provider -> selectedProviders.getOrDefault(provider.name(), provider)).toList();
+        ApiTypeGraph graph = new ApiTypeGraph(baseEntries, baseClasses, candidates, engineParent);
+        for (ModuleAst.Import imported : imports) {
+            if (imported.pluginName().isEmpty()) continue;
+            Provider provider = selectedProviders.get(imported.pluginName());
+            String binaryName = binaryName(imported.type(), classesByProvider.get(provider.name()));
             try { graph.addRoot(binaryName, provider); }
             catch (IOException error) { throw new SourceException(imported.line(), error.getMessage()); }
         }
-        Map<String, Provider> owners = graph.resolve();
+        Map<String, Provider> owners = new HashMap<>();
+        for (var entry : graph.resolve().entrySet()) {
+            owners.put(entry.getKey(), selectProvider(entry.getValue(), selectedJars, selectedProviders, classesByProvider));
+        }
         for (ModuleAst.Import imported : imports) {
             if (!imported.pluginName().isEmpty() || binaryName(imported.type(), baseClasses) != null) continue;
-            for (Set<String> classes : classesByProvider.values()) {
+            for (Provider provider : providers) {
+                Set<String> classes = classesByProvider.get(provider.name());
+                if (classes == null) {
+                    // Only a diagnostic: an unsupported, lifecycle-only JAR is not an API dependency.
+                    try { classes = ClasspathIndex.read(provider.jar()); }
+                    catch (IOException ignored) { continue; }
+                    classesByProvider.put(provider.name(), classes);
+                }
                 if (binaryName(imported.type(), classes) != null)
                     throw new SourceException(imported.line(), "External import must specify its provider: use "
                         + imported.type() + " from \"PluginName\";");
             }
         }
         return new ResolvedClasspath(baseEntries, baseClasses, owners);
+    }
+
+    private static Provider selectProvider(Provider requested, Map<Path, String> selectedJars,
+            Map<String, Provider> selectedProviders, Map<String, Set<String>> classesByProvider) throws IOException {
+        Provider selected = selectedProviders.get(requested.name());
+        if (selected != null) return selected;
+        Path jar = requested.jar().toRealPath();
+        if (!Files.isRegularFile(jar)) throw new IOException("Plugin API must be in a JAR: " + requested.name());
+        String other = selectedJars.putIfAbsent(jar, requested.name());
+        if (other != null && !other.equals(requested.name()))
+            throw new IOException("Plugin dependencies share a JAR: " + requested.name());
+        validateProviderJar(requested.name(), jar);
+        selected = new Provider(requested.name(), jar, requested.loader());
+        classesByProvider.put(requested.name(), ClasspathIndex.read(jar));
+        selectedProviders.put(requested.name(), selected);
+        return selected;
     }
 
     private static String binaryName(String sourceName, Set<String> classes) {

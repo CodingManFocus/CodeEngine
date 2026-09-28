@@ -66,7 +66,7 @@ final class ApiTypeGraph {
         if (baseClasses.contains(type.getName()))
             throw new IOException("Selected API duplicates a server/engine class: " + type.getName());
         for (DependencyClasspath.Provider provider : providers) {
-            if (provider.loader() == type.getClassLoader() && provider.jar().equals(origin)) {
+            if (provider.loader() == type.getClassLoader() && provider.jar().toRealPath().equals(origin)) {
                 owners.put(type.getName(), provider);
                 pending.addLast(type);
                 return;

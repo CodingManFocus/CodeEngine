@@ -94,11 +94,12 @@ public final class ModuleManager implements AutoCloseable {
         try {
             requireOpen();
             PluginDependencyRegistry.Snapshot snapshot = dependencies.snapshot(ast.pluginDependencies());
+            List<DependencyClasspath.Provider> providers = snapshot.providers(ast.imports());
             executeWorker(ast.id(), result, () -> {
                 CompiledModule compiled = null;
                 try {
                     requireOpen();
-                    ResolvedClasspath classpath = DependencyClasspath.prepare(compiler.baseClasspath(), snapshot.providers(), ast.imports(), CodeModule.class.getClassLoader());
+                    ResolvedClasspath classpath = DependencyClasspath.prepare(compiler.baseClasspath(), providers, ast.imports(), CodeModule.class.getClassLoader());
                     compiled = compiler.compile(ast, ast.id(), classpath.selectedClasses());
                     pendingBuilds.add(compiled);
                     requireOpen();
