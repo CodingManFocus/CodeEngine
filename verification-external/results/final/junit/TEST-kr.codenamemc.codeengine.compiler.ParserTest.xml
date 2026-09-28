@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="kr.codenamemc.codeengine.compiler.ParserTest" tests="36" skipped="0" failures="0" errors="0" timestamp="2026-09-28T10:17:11.359Z" hostname="45e6c16efc66" time="0.143">
+  <properties/>
+  <testcase name="dependencyListIsAnImmutableSnapshot()" classname="kr.codenamemc.codeengine.compiler.ParserTest" time="0.018"/>
+  <testcase name="diagnosesOriginalLine()" classname="kr.codenamemc.codeengine.compiler.ParserTest" time="0.006"/>
+  <testcase name="supportsJavaTextBlocks()" classname="kr.codenamemc.codeengine.compiler.ParserTest" time="0.005"/>
+  <testcase name="rejectsJavaUnicodePreprocessing()" classname="kr.codenamemc.codeengine.compiler.ParserTest" time="0.002"/>
+  <testcase name="[1] source=module ../bad;" classname="kr.codenamemc.codeengine.compiler.ParserTest" time="0.006"/>
+  <testcase name="[2] source=module Test;" classname="kr.codenamemc.codeengine.compiler.ParserTest" time="0.002"/>
+  <testcase name="[3] source=module test; unknown {}" classname="kr.codenamemc.codeengine.compiler.ParserTest" time="0.001"/>
+  <testcase name="[4] source=module test; enable {" classname="kr.codenamemc.codeengine.compiler.ParserTest" time="0.004"/>
+  <testcase name="[5] source=module test; state String x = &quot;oops;" classname="kr.codenamemc.codeengine.compiler.ParserTest" time="0.001"/>
+  <testcase name="[6] source=module test; /* never" classname="kr.codenamemc.codeengine.compiler.ParserTest" time="0.001"/>
+  <testcase name="[7] source=module test; every 0 ticks {}" classname="kr.codenamemc.codeengine.compiler.ParserTest" time="0.001"/>
+  <testcase name="[8] source=module test; every 9223372036854775808 ticks {}" classname="kr.codenamemc.codeengine.compiler.ParserTest" time="0.001"/>
+  <testcase name="[9] source=module test; enable {} enable {}" classname="kr.codenamemc.codeengine.compiler.ParserTest" time="0.0"/>
+  <testcase name="[10] source=module test; command hi {return true;} command hi {return true;}" classname="kr.codenamemc.codeengine.compiler.ParserTest" time="0.004"/>
+  <testcase name="[11] source=module test; command ce {return true;}" classname="kr.codenamemc.codeengine.compiler.ParserTest" time="0.001"/>
+  <testcase name="[12] source=module test; on BlockBreakEvent e priority FAST {}" classname="kr.codenamemc.codeengine.compiler.ParserTest" time="0.001"/>
+  <testcase name="[13] source=module test; fn __ceInternal() -&gt; void {}" classname="kr.codenamemc.codeengine.compiler.ParserTest" time="0.001"/>
+  <testcase name="[14] source=module test; state int n = (1];" classname="kr.codenamemc.codeengine.compiler.ParserTest" time="0.001"/>
+  <testcase name="dependencyDeclarationsGenerateNoRuntimeDispatch()" classname="kr.codenamemc.codeengine.compiler.ParserTest" time="0.004"/>
+  <testcase name="moduleWithoutDependenciesKeepsEmptyDependencyList()" classname="kr.codenamemc.codeengine.compiler.ParserTest" time="0.001"/>
+  <testcase name="malformedDependencyReportsLiteralLine()" classname="kr.codenamemc.codeengine.compiler.ParserTest" time="0.0"/>
+  <testcase name="delimitersInsideLiteralsAndCommentsAreNotSyntax()" classname="kr.codenamemc.codeengine.compiler.ParserTest" time="0.001"/>
+  <testcase name="generatesDirectPaperRegistration()" classname="kr.codenamemc.codeengine.compiler.ParserTest" time="0.014"/>
+  <testcase name="[1] declaration=requires plugin LuckPerms;" classname="kr.codenamemc.codeengine.compiler.ParserTest" time="0.002"/>
+  <testcase name="[2] declaration=requires plugin &quot;&quot;;" classname="kr.codenamemc.codeengine.compiler.ParserTest" time="0.001"/>
+  <testcase name="[3] declaration=requires plugin &quot;../LuckPerms&quot;;" classname="kr.codenamemc.codeengine.compiler.ParserTest" time="0.0"/>
+  <testcase name="[4] declaration=requires plugin &quot;Luck Perms&quot;;" classname="kr.codenamemc.codeengine.compiler.ParserTest" time="0.0"/>
+  <testcase name="[5] declaration=requires plugin &quot;Luck:Perms&quot;;" classname="kr.codenamemc.codeengine.compiler.ParserTest" time="0.0"/>
+  <testcase name="[6] declaration=requires module &quot;LuckPerms&quot;;" classname="kr.codenamemc.codeengine.compiler.ParserTest" time="0.001"/>
+  <testcase name="[7] declaration=requires plugin &quot;LuckPerms&quot;" classname="kr.codenamemc.codeengine.compiler.ParserTest" time="0.001"/>
+  <testcase name="[8] declaration=requires plugin &quot;LuckPerms&quot;; requires plugin &quot;luckperms&quot;;" classname="kr.codenamemc.codeengine.compiler.ParserTest" time="0.0"/>
+  <testcase name="[9] declaration=requires plugin &quot;LuckPerms&quot;; requires plugin &quot;LuckPerms&quot;;" classname="kr.codenamemc.codeengine.compiler.ParserTest" time="0.0"/>
+  <testcase name="[10] declaration=requires plugin &quot;Luck\\Perms&quot;;" classname="kr.codenamemc.codeengine.compiler.ParserTest" time="0.0"/>
+  <testcase name="duplicateDependencyReportsDeclarationLine()" classname="kr.codenamemc.codeengine.compiler.ParserTest" time="0.001"/>
+  <testcase name="preservesDependencyOrderAndCaseAlongsideImports()" classname="kr.codenamemc.codeengine.compiler.ParserTest" time="0.001"/>
+  <testcase name="parsesAllDeclarations()" classname="kr.codenamemc.codeengine.compiler.ParserTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

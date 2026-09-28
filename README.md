@@ -23,7 +23,7 @@ Windows에서는 `gradlew.bat clean build`를 사용합니다. 빌드 의존성�
 3. `plugins/CodeEngine/modules/hello.ce` 예제가 생성되고 기본 설정에서는 자동 로드됩니다.
 4. `/cehello`를 실행합니다. 예제 권한 `codeengine.hello`는 OP 또는 권한 플러그인으로 부여합니다.
 
-API JAR는 개발용입니다. 서버의 `plugins/`에는 플러그인 JAR 하나만 설치합니다. `verification` JAR는 임시 테스트 서버 전용이며 배포 서버에 설치하지 않습니다.
+API JAR는 개발용입니다. 서버의 `plugins/`에는 플러그인 JAR 하나만 설치합니다. `verification` 및 `verification-external` JAR는 임시 테스트 서버 전용이며 배포 서버에 설치하지 않습니다.
 
 ### 모듈과 소스 파일
 
@@ -48,6 +48,7 @@ CI는 단위 테스트와 컴파일 통합 테스트를 실행하고 실서버 �
 | `codeengine-plugin` | Paper 생명주기, 모듈별 자원 소유권, 명령, 파일 저장, HTTP 서버 |
 | `codeengine-webide` | React + TypeScript + CodeMirror 6 편집기. 외부 CDN 없이 JAR에서 제공 |
 | `verification` | 실서버 회귀 테스트, Java 기준 구현, 측정 및 브라우저 검증 도구 |
+| `verification-external` | 실제 무료 PlaceholderAPI 비교, 외부 이벤트·종료 검사, 원본 측정 자료 |
 | `examples` | 바로 사용할 수 있는 `.ce` 예제 |
 
 Java 패키지 루트는 `kr.codenamemc.codeengine`입니다. 변수·메서드는 camelCase, 클래스는 Java 관례의 PascalCase를 사용합니다.
@@ -73,6 +74,27 @@ command welcome permission "server.welcome" {
 ```
 
 `/ce load welcome` 실행 후 `/welcome`이 일반 서버 명령으로 등록됩니다. `codeengine_welcome:welcome` 네임스페이스도 등록되며, 다른 명령을 덮어쓰는 대신 충돌을 거부합니다. 자세한 문법은 [언어 명세](docs/language.md)를 참고하세요.
+
+## 외부 Java API
+
+```java
+module placeholders;
+requires plugin "PlaceholderAPI";
+use me.clip.placeholderapi.PlaceholderAPI;
+
+command placeholders {
+    if (sender instanceof Player player)
+        sender.sendMessage(PlaceholderAPI.setPlaceholders(player, "%server_name%"));
+    return true;
+}
+```
+
+공개 생성자·메서드·필드·외부 이벤트를 Java 타입 그대로 사용할 수 있습니다. API는 제공자의
+실제 클래스 로더를 공유하며, 실행 중 호출마다 리플렉션이나 인수 변환을 추가하지 않습니다.
+사용할 placeholder expansion은 별도 설치합니다. `onClose`는 독립 자원 정리를,
+`onPluginClose`는 해당 제공자가 살아 있을 때만 가능한 API 정리를 등록합니다.
+
+[문법·수명주기·지원 제한](docs/plugin-dependencies.md) · [무료 API 비교 검증](verification-external/README.md)
 
 ## 관리 명령
 
@@ -146,7 +168,7 @@ npm run test:browser
 - `unloadTimeoutSeconds`는 기본 10초이며 1~300초로 설정합니다. 시간 초과 시 작업은 실패하지만 클래스로더와 빌드 파일은 유지합니다. `/ce list`의 Stopping 목록에 남고 같은 모듈의 작업을 거부합니다. 콜백이 나중에 반환하면 자동 정리하며, 실패한 reload를 자동 재시작하지 않습니다. 정리 이후 명시적으로 load/reload하세요.
 - 엔진/서버 종료 시에도 실행 중인 콜백 때문에 메인 스레드를 기다리게 하지 않습니다. 이 경우 해당 모듈의 disable을 건너뛰고 경고를 기록하며, 콜백 반환 후 클래스로더와 파일만 정리합니다. 콜백이 끝나지 않으면 JVM 종료까지 자원을 유지합니다. 종료 훅의 실행이 반드시 필요한 모듈은 서버 종료 전에 정상 unload를 완료하세요.
 - 비동기 이벤트 진입·종료에는 원자적 카운터 비용이 있습니다. 동기 이벤트에도 상태 확인과 호출 수 기록 비용이 있으며, 비용 0을 보장하지 않습니다. 이벤트를 기다리는 동안 메인 스레드를 차단하지 않지만 사용자 enable/disable 코드 자체의 실행 시간은 메인 스레드에 영향을 줍니다.
-- 현재 한 파일이 한 모듈입니다. 모듈 의존성 그래프, 모듈 간 클래스 공유, 사용자 정의 최상위 클래스, 별도 식 문법, LSP 자동 완성은 제공하지 않습니다. `use`는 런타임 클래스패스에 있는 타입을 가져옵니다. 다른 플러그인의 독립 ClassLoader API까지 자동 연결하지 않습니다.
+- 현재 한 파일이 한 모듈입니다. 모듈 의존성 그래프, 모듈 간 클래스 공유, 사용자 정의 최상위 클래스, 별도 식 문법, LSP 자동 완성은 제공하지 않습니다. `use`는 런타임 클래스패스에 있는 타입을 가져옵니다. 다른 플러그인의 API는 `requires plugin`으로 선언한 제공자에 한해 연결합니다. [지원 범위](docs/plugin-dependencies.md)를 확인하세요.
 
 ## 검증 재현
 

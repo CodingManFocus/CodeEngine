@@ -1,0 +1,94 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.13/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+> Task :assemble UP-TO-DATE
+> Task :check UP-TO-DATE
+> Task :build UP-TO-DATE
+> Task :codeengine-api:compileJava UP-TO-DATE
+> Task :codeengine-api:processResources NO-SOURCE
+> Task :codeengine-api:classes UP-TO-DATE
+> Task :codeengine-api:jar UP-TO-DATE
+> Task :codeengine-api:sourcesJar UP-TO-DATE
+> Task :codeengine-api:assemble UP-TO-DATE
+> Task :codeengine-api:compileTestJava NO-SOURCE
+> Task :codeengine-api:processTestResources NO-SOURCE
+> Task :codeengine-api:testClasses UP-TO-DATE
+> Task :codeengine-api:test NO-SOURCE
+> Task :codeengine-api:check UP-TO-DATE
+> Task :codeengine-api:build UP-TO-DATE
+> Task :codeengine-compiler:compileJava UP-TO-DATE
+> Task :codeengine-compiler:processResources NO-SOURCE
+> Task :codeengine-compiler:classes UP-TO-DATE
+> Task :codeengine-compiler:jar UP-TO-DATE
+> Task :codeengine-compiler:sourcesJar UP-TO-DATE
+> Task :codeengine-compiler:assemble UP-TO-DATE
+> Task :codeengine-compiler:compileTestJava UP-TO-DATE
+> Task :codeengine-compiler:processTestResources NO-SOURCE
+> Task :codeengine-compiler:testClasses UP-TO-DATE
+> Task :codeengine-compiler:test UP-TO-DATE
+> Task :codeengine-compiler:check UP-TO-DATE
+> Task :codeengine-compiler:build UP-TO-DATE
+> Task :codeengine-plugin:compileJava UP-TO-DATE
+> Task :codeengine-plugin:buildWebIde UP-TO-DATE
+> Task :codeengine-plugin:processResources UP-TO-DATE
+> Task :codeengine-plugin:classes UP-TO-DATE
+> Task :codeengine-plugin:jar UP-TO-DATE
+> Task :codeengine-plugin:sourcesJar UP-TO-DATE
+> Task :codeengine-plugin:assemble UP-TO-DATE
+> Task :codeengine-plugin:compileTestJava UP-TO-DATE
+> Task :codeengine-plugin:processTestResources NO-SOURCE
+> Task :codeengine-plugin:testClasses UP-TO-DATE
+> Task :codeengine-plugin:test UP-TO-DATE
+
+> Task :codeengine-plugin:testWebIde
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> codeengine-studio@0.1.0 test
+> node --import tsx --test tests/*.test.ts
+
+✔ all current declarations, modifiers, Java bodies and Unicode identifiers (4.336349ms)
+✔ DSL words are ordinary Java identifiers in bodies (0.200863ms)
+✔ multiline comments, escaped quotes and Java text blocks do not alter brace depth (0.278009ms)
+✔ repository examples finish with balanced lexical state (2.091043ms)
+✔ snippet completion only at top level, not in strings/comments or Java blocks (9.416019ms)
+✔ folding ignores braces inside comments and strings (2.624868ms)
+✔ snippets cover every supported declaration other than the file header (0.170828ms)
+✔ compiler diagnostics preserve detail and only target the requested module (0.376128ms)
+✔ numeric snippet defaults insert usable values (3.46181ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 223.447741
+
+> Task :codeengine-plugin:check
+> Task :codeengine-plugin:build
+> Task :verification:compileJava UP-TO-DATE
+> Task :verification:processResources UP-TO-DATE
+> Task :verification:classes UP-TO-DATE
+> Task :verification:jar UP-TO-DATE
+> Task :verification:sourcesJar UP-TO-DATE
+> Task :verification:assemble UP-TO-DATE
+> Task :verification:compileTestJava NO-SOURCE
+> Task :verification:processTestResources NO-SOURCE
+> Task :verification:testClasses UP-TO-DATE
+> Task :verification:test NO-SOURCE
+> Task :verification:check UP-TO-DATE
+> Task :verification:build UP-TO-DATE
+> Task :verification-external:compileJava
+> Task :verification-external:processResources
+> Task :verification-external:classes
+> Task :verification-external:jar
+> Task :verification-external:sourcesJar
+> Task :verification-external:assemble
+> Task :verification-external:compileTestJava NO-SOURCE
+> Task :verification-external:processTestResources NO-SOURCE
+> Task :verification-external:testClasses UP-TO-DATE
+> Task :verification-external:test NO-SOURCE
+> Task :verification-external:check UP-TO-DATE
+> Task :verification-external:build
+
+BUILD SUCCESSFUL in 6s
+24 actionable tasks: 5 executed, 19 up-to-date

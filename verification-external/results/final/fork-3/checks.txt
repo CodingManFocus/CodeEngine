@@ -1,0 +1,1883 @@
+PASS invalid dependency fails: missing
+PASS invalid module stays unloaded: missing
+PASS invalid dependency fails: undeclared
+PASS invalid module stays unloaded: undeclared
+PASS invalid dependency fails: failedexternal
+PASS invalid module stays unloaded: failedexternal
+PASS module unloaded
+PASS external API listener removed
+PASS cleanup released test callback reference
+PASS cleanup unregistered only module expansion
+PASS cleanup preserved native expansion
+PASS module command removed
+PASS module loaded
+PASS external API event delivered once
+PASS module and native share exact provider Class identity
+PASS provider invokes module-defined expansion callback
+PASS native expansion remains intact
+PASS module unloaded
+PASS external API listener removed
+PASS cleanup released test callback reference
+PASS cleanup unregistered only module expansion
+PASS cleanup preserved native expansion
+PASS module command removed
+PASS module loaded
+PASS external API event delivered once
+PASS module and native share exact provider Class identity
+PASS provider invokes module-defined expansion callback
+PASS native expansion remains intact
+PASS module unloaded
+PASS external API listener removed
+PASS cleanup released test callback reference
+PASS cleanup unregistered only module expansion
+PASS cleanup preserved native expansion
+PASS module command removed
+PASS module loaded
+PASS external API event delivered once
+PASS module and native share exact provider Class identity
+PASS provider invokes module-defined expansion callback
+PASS native expansion remains intact
+PASS module unloaded
+PASS external API listener removed
+PASS cleanup released test callback reference
+PASS cleanup unregistered only module expansion
+PASS cleanup preserved native expansion
+PASS module command removed
+PASS module loaded
+PASS external API event delivered once
+PASS module and native share exact provider Class identity
+PASS provider invokes module-defined expansion callback
+PASS native expansion remains intact
+PASS module unloaded
+PASS external API listener removed
+PASS cleanup released test callback reference
+PASS cleanup unregistered only module expansion
+PASS cleanup preserved native expansion
+PASS module command removed
+PASS module loaded
+PASS external API event delivered once
+PASS module and native share exact provider Class identity
+PASS provider invokes module-defined expansion callback
+PASS native expansion remains intact
+PASS module unloaded
+PASS external API listener removed
+PASS cleanup released test callback reference
+PASS cleanup unregistered only module expansion
+PASS cleanup preserved native expansion
+PASS module command removed
+PASS module loaded
+PASS external API event delivered once
+PASS module and native share exact provider Class identity
+PASS provider invokes module-defined expansion callback
+PASS native expansion remains intact
+PASS module unloaded
+PASS external API listener removed
+PASS cleanup released test callback reference
+PASS cleanup unregistered only module expansion
+PASS cleanup preserved native expansion
+PASS module command removed
+PASS invalid dependency fails: undeclaredafter
+PASS invalid module stays unloaded: undeclaredafter
+PASS module loaded
+PASS external API event delivered once
+PASS module and native share exact provider Class identity
+PASS provider invokes module-defined expansion callback
+PASS native expansion remains intact
+PASS single API result parity input=0
+PASS multiple API result parity input=0
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=0
+PASS single API result parity input=1
+PASS multiple API result parity input=1
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=1
+PASS single API result parity input=2
+PASS multiple API result parity input=2
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=2
+PASS single API result parity input=3
+PASS multiple API result parity input=3
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=3
+PASS single API result parity input=4
+PASS multiple API result parity input=4
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=4
+PASS single API result parity input=5
+PASS multiple API result parity input=5
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=5
+PASS single API result parity input=6
+PASS multiple API result parity input=6
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=6
+PASS single API result parity input=7
+PASS multiple API result parity input=7
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=7
+PASS single API result parity input=8
+PASS multiple API result parity input=8
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=8
+PASS single API result parity input=9
+PASS multiple API result parity input=9
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=9
+PASS single API result parity input=10
+PASS multiple API result parity input=10
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=10
+PASS single API result parity input=11
+PASS multiple API result parity input=11
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=11
+PASS single API result parity input=12
+PASS multiple API result parity input=12
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=12
+PASS single API result parity input=13
+PASS multiple API result parity input=13
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=13
+PASS single API result parity input=14
+PASS multiple API result parity input=14
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=14
+PASS single API result parity input=15
+PASS multiple API result parity input=15
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=15
+PASS single API result parity input=16
+PASS multiple API result parity input=16
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=16
+PASS single API result parity input=17
+PASS multiple API result parity input=17
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=17
+PASS single API result parity input=18
+PASS multiple API result parity input=18
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=18
+PASS single API result parity input=19
+PASS multiple API result parity input=19
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=19
+PASS single API result parity input=20
+PASS multiple API result parity input=20
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=20
+PASS single API result parity input=21
+PASS multiple API result parity input=21
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=21
+PASS single API result parity input=22
+PASS multiple API result parity input=22
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=22
+PASS single API result parity input=23
+PASS multiple API result parity input=23
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=23
+PASS single API result parity input=24
+PASS multiple API result parity input=24
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=24
+PASS single API result parity input=25
+PASS multiple API result parity input=25
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=25
+PASS single API result parity input=26
+PASS multiple API result parity input=26
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=26
+PASS single API result parity input=27
+PASS multiple API result parity input=27
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=27
+PASS single API result parity input=28
+PASS multiple API result parity input=28
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=28
+PASS single API result parity input=29
+PASS multiple API result parity input=29
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=29
+PASS single API result parity input=30
+PASS multiple API result parity input=30
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=30
+PASS single API result parity input=31
+PASS multiple API result parity input=31
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=31
+PASS single API result parity input=32
+PASS multiple API result parity input=32
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=32
+PASS single API result parity input=33
+PASS multiple API result parity input=33
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=33
+PASS single API result parity input=34
+PASS multiple API result parity input=34
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=34
+PASS single API result parity input=35
+PASS multiple API result parity input=35
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=35
+PASS single API result parity input=36
+PASS multiple API result parity input=36
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=36
+PASS single API result parity input=37
+PASS multiple API result parity input=37
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=37
+PASS single API result parity input=38
+PASS multiple API result parity input=38
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=38
+PASS single API result parity input=39
+PASS multiple API result parity input=39
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=39
+PASS single API result parity input=40
+PASS multiple API result parity input=40
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=40
+PASS single API result parity input=41
+PASS multiple API result parity input=41
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=41
+PASS single API result parity input=42
+PASS multiple API result parity input=42
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=42
+PASS single API result parity input=43
+PASS multiple API result parity input=43
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=43
+PASS single API result parity input=44
+PASS multiple API result parity input=44
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=44
+PASS single API result parity input=45
+PASS multiple API result parity input=45
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=45
+PASS single API result parity input=46
+PASS multiple API result parity input=46
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=46
+PASS single API result parity input=47
+PASS multiple API result parity input=47
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=47
+PASS single API result parity input=48
+PASS multiple API result parity input=48
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=48
+PASS single API result parity input=49
+PASS multiple API result parity input=49
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=49
+PASS single API result parity input=50
+PASS multiple API result parity input=50
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=50
+PASS single API result parity input=51
+PASS multiple API result parity input=51
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=51
+PASS single API result parity input=52
+PASS multiple API result parity input=52
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=52
+PASS single API result parity input=53
+PASS multiple API result parity input=53
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=53
+PASS single API result parity input=54
+PASS multiple API result parity input=54
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=54
+PASS single API result parity input=55
+PASS multiple API result parity input=55
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=55
+PASS single API result parity input=56
+PASS multiple API result parity input=56
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=56
+PASS single API result parity input=57
+PASS multiple API result parity input=57
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=57
+PASS single API result parity input=58
+PASS multiple API result parity input=58
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=58
+PASS single API result parity input=59
+PASS multiple API result parity input=59
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=59
+PASS single API result parity input=60
+PASS multiple API result parity input=60
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=60
+PASS single API result parity input=61
+PASS multiple API result parity input=61
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=61
+PASS single API result parity input=62
+PASS multiple API result parity input=62
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=62
+PASS single API result parity input=63
+PASS multiple API result parity input=63
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=63
+PASS single API result parity input=64
+PASS multiple API result parity input=64
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=64
+PASS single API result parity input=65
+PASS multiple API result parity input=65
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=65
+PASS single API result parity input=66
+PASS multiple API result parity input=66
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=66
+PASS single API result parity input=67
+PASS multiple API result parity input=67
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=67
+PASS single API result parity input=68
+PASS multiple API result parity input=68
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=68
+PASS single API result parity input=69
+PASS multiple API result parity input=69
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=69
+PASS single API result parity input=70
+PASS multiple API result parity input=70
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=70
+PASS single API result parity input=71
+PASS multiple API result parity input=71
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=71
+PASS single API result parity input=72
+PASS multiple API result parity input=72
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=72
+PASS single API result parity input=73
+PASS multiple API result parity input=73
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=73
+PASS single API result parity input=74
+PASS multiple API result parity input=74
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=74
+PASS single API result parity input=75
+PASS multiple API result parity input=75
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=75
+PASS single API result parity input=76
+PASS multiple API result parity input=76
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=76
+PASS single API result parity input=77
+PASS multiple API result parity input=77
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=77
+PASS single API result parity input=78
+PASS multiple API result parity input=78
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=78
+PASS single API result parity input=79
+PASS multiple API result parity input=79
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=79
+PASS single API result parity input=80
+PASS multiple API result parity input=80
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=80
+PASS single API result parity input=81
+PASS multiple API result parity input=81
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=81
+PASS single API result parity input=82
+PASS multiple API result parity input=82
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=82
+PASS single API result parity input=83
+PASS multiple API result parity input=83
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=83
+PASS single API result parity input=84
+PASS multiple API result parity input=84
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=84
+PASS single API result parity input=85
+PASS multiple API result parity input=85
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=85
+PASS single API result parity input=86
+PASS multiple API result parity input=86
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=86
+PASS single API result parity input=87
+PASS multiple API result parity input=87
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=87
+PASS single API result parity input=88
+PASS multiple API result parity input=88
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=88
+PASS single API result parity input=89
+PASS multiple API result parity input=89
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=89
+PASS single API result parity input=90
+PASS multiple API result parity input=90
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=90
+PASS single API result parity input=91
+PASS multiple API result parity input=91
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=91
+PASS single API result parity input=92
+PASS multiple API result parity input=92
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=92
+PASS single API result parity input=93
+PASS multiple API result parity input=93
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=93
+PASS single API result parity input=94
+PASS multiple API result parity input=94
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=94
+PASS single API result parity input=95
+PASS multiple API result parity input=95
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=95
+PASS single API result parity input=96
+PASS multiple API result parity input=96
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=96
+PASS single API result parity input=97
+PASS multiple API result parity input=97
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=97
+PASS single API result parity input=98
+PASS multiple API result parity input=98
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=98
+PASS single API result parity input=99
+PASS multiple API result parity input=99
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=99
+PASS single API result parity input=100
+PASS multiple API result parity input=100
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=100
+PASS single API result parity input=101
+PASS multiple API result parity input=101
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=101
+PASS single API result parity input=102
+PASS multiple API result parity input=102
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=102
+PASS single API result parity input=103
+PASS multiple API result parity input=103
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=103
+PASS single API result parity input=104
+PASS multiple API result parity input=104
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=104
+PASS single API result parity input=105
+PASS multiple API result parity input=105
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=105
+PASS single API result parity input=106
+PASS multiple API result parity input=106
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=106
+PASS single API result parity input=107
+PASS multiple API result parity input=107
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=107
+PASS single API result parity input=108
+PASS multiple API result parity input=108
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=108
+PASS single API result parity input=109
+PASS multiple API result parity input=109
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=109
+PASS single API result parity input=110
+PASS multiple API result parity input=110
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=110
+PASS single API result parity input=111
+PASS multiple API result parity input=111
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=111
+PASS single API result parity input=112
+PASS multiple API result parity input=112
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=112
+PASS single API result parity input=113
+PASS multiple API result parity input=113
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=113
+PASS single API result parity input=114
+PASS multiple API result parity input=114
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=114
+PASS single API result parity input=115
+PASS multiple API result parity input=115
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=115
+PASS single API result parity input=116
+PASS multiple API result parity input=116
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=116
+PASS single API result parity input=117
+PASS multiple API result parity input=117
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=117
+PASS single API result parity input=118
+PASS multiple API result parity input=118
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=118
+PASS single API result parity input=119
+PASS multiple API result parity input=119
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=119
+PASS single API result parity input=120
+PASS multiple API result parity input=120
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=120
+PASS single API result parity input=121
+PASS multiple API result parity input=121
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=121
+PASS single API result parity input=122
+PASS multiple API result parity input=122
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=122
+PASS single API result parity input=123
+PASS multiple API result parity input=123
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=123
+PASS single API result parity input=124
+PASS multiple API result parity input=124
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=124
+PASS single API result parity input=125
+PASS multiple API result parity input=125
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=125
+PASS single API result parity input=126
+PASS multiple API result parity input=126
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=126
+PASS single API result parity input=127
+PASS multiple API result parity input=127
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=127
+PASS single API result parity input=128
+PASS multiple API result parity input=128
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=128
+PASS single API result parity input=129
+PASS multiple API result parity input=129
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=129
+PASS single API result parity input=130
+PASS multiple API result parity input=130
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=130
+PASS single API result parity input=131
+PASS multiple API result parity input=131
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=131
+PASS single API result parity input=132
+PASS multiple API result parity input=132
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=132
+PASS single API result parity input=133
+PASS multiple API result parity input=133
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=133
+PASS single API result parity input=134
+PASS multiple API result parity input=134
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=134
+PASS single API result parity input=135
+PASS multiple API result parity input=135
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=135
+PASS single API result parity input=136
+PASS multiple API result parity input=136
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=136
+PASS single API result parity input=137
+PASS multiple API result parity input=137
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=137
+PASS single API result parity input=138
+PASS multiple API result parity input=138
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=138
+PASS single API result parity input=139
+PASS multiple API result parity input=139
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=139
+PASS single API result parity input=140
+PASS multiple API result parity input=140
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=140
+PASS single API result parity input=141
+PASS multiple API result parity input=141
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=141
+PASS single API result parity input=142
+PASS multiple API result parity input=142
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=142
+PASS single API result parity input=143
+PASS multiple API result parity input=143
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=143
+PASS single API result parity input=144
+PASS multiple API result parity input=144
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=144
+PASS single API result parity input=145
+PASS multiple API result parity input=145
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=145
+PASS single API result parity input=146
+PASS multiple API result parity input=146
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=146
+PASS single API result parity input=147
+PASS multiple API result parity input=147
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=147
+PASS single API result parity input=148
+PASS multiple API result parity input=148
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=148
+PASS single API result parity input=149
+PASS multiple API result parity input=149
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=149
+PASS single API result parity input=150
+PASS multiple API result parity input=150
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=150
+PASS single API result parity input=151
+PASS multiple API result parity input=151
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=151
+PASS single API result parity input=152
+PASS multiple API result parity input=152
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=152
+PASS single API result parity input=153
+PASS multiple API result parity input=153
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=153
+PASS single API result parity input=154
+PASS multiple API result parity input=154
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=154
+PASS single API result parity input=155
+PASS multiple API result parity input=155
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=155
+PASS single API result parity input=156
+PASS multiple API result parity input=156
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=156
+PASS single API result parity input=157
+PASS multiple API result parity input=157
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=157
+PASS single API result parity input=158
+PASS multiple API result parity input=158
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=158
+PASS single API result parity input=159
+PASS multiple API result parity input=159
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=159
+PASS single API result parity input=160
+PASS multiple API result parity input=160
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=160
+PASS single API result parity input=161
+PASS multiple API result parity input=161
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=161
+PASS single API result parity input=162
+PASS multiple API result parity input=162
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=162
+PASS single API result parity input=163
+PASS multiple API result parity input=163
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=163
+PASS single API result parity input=164
+PASS multiple API result parity input=164
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=164
+PASS single API result parity input=165
+PASS multiple API result parity input=165
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=165
+PASS single API result parity input=166
+PASS multiple API result parity input=166
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=166
+PASS single API result parity input=167
+PASS multiple API result parity input=167
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=167
+PASS single API result parity input=168
+PASS multiple API result parity input=168
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=168
+PASS single API result parity input=169
+PASS multiple API result parity input=169
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=169
+PASS single API result parity input=170
+PASS multiple API result parity input=170
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=170
+PASS single API result parity input=171
+PASS multiple API result parity input=171
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=171
+PASS single API result parity input=172
+PASS multiple API result parity input=172
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=172
+PASS single API result parity input=173
+PASS multiple API result parity input=173
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=173
+PASS single API result parity input=174
+PASS multiple API result parity input=174
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=174
+PASS single API result parity input=175
+PASS multiple API result parity input=175
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=175
+PASS single API result parity input=176
+PASS multiple API result parity input=176
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=176
+PASS single API result parity input=177
+PASS multiple API result parity input=177
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=177
+PASS single API result parity input=178
+PASS multiple API result parity input=178
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=178
+PASS single API result parity input=179
+PASS multiple API result parity input=179
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=179
+PASS single API result parity input=180
+PASS multiple API result parity input=180
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=180
+PASS single API result parity input=181
+PASS multiple API result parity input=181
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=181
+PASS single API result parity input=182
+PASS multiple API result parity input=182
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=182
+PASS single API result parity input=183
+PASS multiple API result parity input=183
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=183
+PASS single API result parity input=184
+PASS multiple API result parity input=184
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=184
+PASS single API result parity input=185
+PASS multiple API result parity input=185
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=185
+PASS single API result parity input=186
+PASS multiple API result parity input=186
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=186
+PASS single API result parity input=187
+PASS multiple API result parity input=187
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=187
+PASS single API result parity input=188
+PASS multiple API result parity input=188
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=188
+PASS single API result parity input=189
+PASS multiple API result parity input=189
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=189
+PASS single API result parity input=190
+PASS multiple API result parity input=190
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=190
+PASS single API result parity input=191
+PASS multiple API result parity input=191
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=191
+PASS single API result parity input=192
+PASS multiple API result parity input=192
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=192
+PASS single API result parity input=193
+PASS multiple API result parity input=193
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=193
+PASS single API result parity input=194
+PASS multiple API result parity input=194
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=194
+PASS single API result parity input=195
+PASS multiple API result parity input=195
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=195
+PASS single API result parity input=196
+PASS multiple API result parity input=196
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=196
+PASS single API result parity input=197
+PASS multiple API result parity input=197
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=197
+PASS single API result parity input=198
+PASS multiple API result parity input=198
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=198
+PASS single API result parity input=199
+PASS multiple API result parity input=199
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=199
+PASS single API result parity input=200
+PASS multiple API result parity input=200
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=200
+PASS single API result parity input=201
+PASS multiple API result parity input=201
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=201
+PASS single API result parity input=202
+PASS multiple API result parity input=202
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=202
+PASS single API result parity input=203
+PASS multiple API result parity input=203
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=203
+PASS single API result parity input=204
+PASS multiple API result parity input=204
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=204
+PASS single API result parity input=205
+PASS multiple API result parity input=205
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=205
+PASS single API result parity input=206
+PASS multiple API result parity input=206
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=206
+PASS single API result parity input=207
+PASS multiple API result parity input=207
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=207
+PASS single API result parity input=208
+PASS multiple API result parity input=208
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=208
+PASS single API result parity input=209
+PASS multiple API result parity input=209
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=209
+PASS single API result parity input=210
+PASS multiple API result parity input=210
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=210
+PASS single API result parity input=211
+PASS multiple API result parity input=211
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=211
+PASS single API result parity input=212
+PASS multiple API result parity input=212
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=212
+PASS single API result parity input=213
+PASS multiple API result parity input=213
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=213
+PASS single API result parity input=214
+PASS multiple API result parity input=214
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=214
+PASS single API result parity input=215
+PASS multiple API result parity input=215
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=215
+PASS single API result parity input=216
+PASS multiple API result parity input=216
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=216
+PASS single API result parity input=217
+PASS multiple API result parity input=217
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=217
+PASS single API result parity input=218
+PASS multiple API result parity input=218
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=218
+PASS single API result parity input=219
+PASS multiple API result parity input=219
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=219
+PASS single API result parity input=220
+PASS multiple API result parity input=220
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=220
+PASS single API result parity input=221
+PASS multiple API result parity input=221
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=221
+PASS single API result parity input=222
+PASS multiple API result parity input=222
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=222
+PASS single API result parity input=223
+PASS multiple API result parity input=223
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=223
+PASS single API result parity input=224
+PASS multiple API result parity input=224
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=224
+PASS single API result parity input=225
+PASS multiple API result parity input=225
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=225
+PASS single API result parity input=226
+PASS multiple API result parity input=226
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=226
+PASS single API result parity input=227
+PASS multiple API result parity input=227
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=227
+PASS single API result parity input=228
+PASS multiple API result parity input=228
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=228
+PASS single API result parity input=229
+PASS multiple API result parity input=229
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=229
+PASS single API result parity input=230
+PASS multiple API result parity input=230
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=230
+PASS single API result parity input=231
+PASS multiple API result parity input=231
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=231
+PASS single API result parity input=232
+PASS multiple API result parity input=232
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=232
+PASS single API result parity input=233
+PASS multiple API result parity input=233
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=233
+PASS single API result parity input=234
+PASS multiple API result parity input=234
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=234
+PASS single API result parity input=235
+PASS multiple API result parity input=235
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=235
+PASS single API result parity input=236
+PASS multiple API result parity input=236
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=236
+PASS single API result parity input=237
+PASS multiple API result parity input=237
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=237
+PASS single API result parity input=238
+PASS multiple API result parity input=238
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=238
+PASS single API result parity input=239
+PASS multiple API result parity input=239
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=239
+PASS single API result parity input=240
+PASS multiple API result parity input=240
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=240
+PASS single API result parity input=241
+PASS multiple API result parity input=241
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=241
+PASS single API result parity input=242
+PASS multiple API result parity input=242
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=242
+PASS single API result parity input=243
+PASS multiple API result parity input=243
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=243
+PASS single API result parity input=244
+PASS multiple API result parity input=244
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=244
+PASS single API result parity input=245
+PASS multiple API result parity input=245
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=245
+PASS single API result parity input=246
+PASS multiple API result parity input=246
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=246
+PASS single API result parity input=247
+PASS multiple API result parity input=247
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=247
+PASS single API result parity input=248
+PASS multiple API result parity input=248
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=248
+PASS single API result parity input=249
+PASS multiple API result parity input=249
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=249
+PASS single API result parity input=250
+PASS multiple API result parity input=250
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=250
+PASS single API result parity input=251
+PASS multiple API result parity input=251
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=251
+PASS single API result parity input=252
+PASS multiple API result parity input=252
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=252
+PASS single API result parity input=253
+PASS multiple API result parity input=253
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=253
+PASS single API result parity input=254
+PASS multiple API result parity input=254
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=254
+PASS single API result parity input=255
+PASS multiple API result parity input=255
+PASS native command dispatched
+PASS native command actually executed
+PASS module command dispatched
+PASS module command actually executed
+PASS command result parity input=255
+PASS provider disable invalidated dependent module
+PASS provider disable still releases independent resources
+PASS provider disable removed module command
+PASS provider re-enabled for stale generation check
+PASS invalid dependency fails: stale
+PASS invalid module stays unloaded: stale

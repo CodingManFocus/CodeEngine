@@ -15,10 +15,10 @@ import {
 import { tags } from "@lezer/highlight";
 
 const declarations = new Set(
-  "module use state fn on command every enable disable".split(" "),
+  "module use requires state fn on command every enable disable".split(" "),
 );
 const modifiers = new Set(
-  "priority ignoreCancelled permission ticks after".split(" "),
+  "priority ignoreCancelled permission ticks after plugin".split(" "),
 );
 const javaKeywords = new Set(
   "abstract assert break case catch class const continue default do else enum extends final finally for goto if implements import instanceof interface native new package private protected public record return sealed non-sealed static strictfp super switch synchronized this throw throws transient try var void volatile while yield permits".split(
@@ -118,7 +118,7 @@ export function token(stream: StringStream, state: LexState): string | null {
     if (
       state.depth === 0 &&
       modifiers.has(value) &&
-      ["on", "every", "command"].includes(state.declaration)
+      ["on", "every", "command", "requires"].includes(state.declaration)
     )
       return "keyword";
     if (value === "true" || value === "false" || value === "null")
@@ -160,6 +160,7 @@ export const ceLanguage = StreamLanguage.define<LexState>({
   },
 });
 export const templates = [
+  { label: "requires", detail: "외부 플러그인 API", code: 'requires plugin "${PlaceholderAPI}";' },
   {
     label: "on",
     detail: "이벤트 처리",

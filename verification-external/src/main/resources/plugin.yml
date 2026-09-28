@@ -1,0 +1,10 @@
+name: CodeEngineExternalVerification
+version: 0.1.0
+main: kr.codenamemc.codeengine.externalverification.ExternalVerificationPlugin
+api-version: '1.21.11'
+depend: [CodeEngine, PlaceholderAPI]
+commands:
+  ceexternalverify:
+    description: Run isolated external API lifecycle and performance verification
+  javapapi:
+    description: Native Java API baseline

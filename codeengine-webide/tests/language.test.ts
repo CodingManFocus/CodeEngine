@@ -27,10 +27,12 @@ function scan(source: string) {
 }
 test("all current declarations, modifiers, Java bodies and Unicode identifiers", () => {
   const { tokens, state } = scan(
-    'module hello;\nuse java.util.UUID;\nstate int 수 = 1;\nfn twice(int n) -> int { return n * 2; }\non PlayerJoinEvent event priority HIGH ignoreCancelled { event.setCancelled(true); }\ncommand welcome permission "server.welcome" { return true; }\nevery 20 ticks after 1 ticks {}\nenable {}\ndisable {}',
+    'module hello;\nrequires plugin "PlaceholderAPI";\nuse java.util.UUID;\nstate int 수 = 1;\nfn twice(int n) -> int { return n * 2; }\non PlayerJoinEvent event priority HIGH ignoreCancelled { event.setCancelled(true); }\ncommand welcome permission "server.welcome" { return true; }\nevery 20 ticks after 1 ticks {}\nenable {}\ndisable {}',
   );
   for (const text of [
     "module",
+    "requires",
+    "plugin",
     "use",
     "state",
     "fn",
@@ -126,6 +128,7 @@ test("snippets cover every supported declaration other than the file header", ()
     "every",
     "fn",
     "on",
+    "requires",
     "state",
     "use",
   ]);

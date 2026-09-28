@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="kr.codenamemc.codeengine.web.WebIdeServerTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-09-28T10:22:45.142Z" hostname="45e6c16efc66" time="0.853">
+  <properties/>
+  <testcase name="oversizedBodyRejected()" classname="kr.codenamemc.codeengine.web.WebIdeServerTest" time="0.232"/>
+  <testcase name="operationsReturnPollableJobs()" classname="kr.codenamemc.codeengine.web.WebIdeServerTest" time="0.064"/>
+  <testcase name="saveRequiresRevisionAndProtectsConflicts()" classname="kr.codenamemc.codeengine.web.WebIdeServerTest" time="0.133"/>
+  <testcase name="listAndStaticUiWork()" classname="kr.codenamemc.codeengine.web.WebIdeServerTest" time="0.057"/>
+  <testcase name="crossOriginRequestRejected()" classname="kr.codenamemc.codeengine.web.WebIdeServerTest" time="0.007"/>
+  <testcase name="traversalAndDuplicateArgumentsAreRejected()" classname="kr.codenamemc.codeengine.web.WebIdeServerTest" time="0.096"/>
+  <testcase name="apiRequiresBearer()" classname="kr.codenamemc.codeengine.web.WebIdeServerTest" time="0.009"/>
+  <testcase name="studioAssetsUseNonceAndOnlyPackagedFilesAreServed()" classname="kr.codenamemc.codeengine.web.WebIdeServerTest" time="0.251"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,5 +1,6 @@
 package kr.codenamemc.codeengine.compiler;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
@@ -14,9 +15,17 @@ public final class ModuleCompiler {
     public ModuleCompiler(Path buildRoot, String classpath) {
         this.buildRoot = buildRoot; this.classpath = classpath;
     }
+    public String baseClasspath() { return classpath; }
     public CompiledModule compile(String source, String expectedId) throws IOException, CompilationException {
-        ModuleAst ast = new Parser(source).parse();
+        return compile(source, expectedId, "");
+    }
+    public CompiledModule compile(String source, String expectedId, String additionalClasspath) throws IOException, CompilationException {
+        return compile(new Parser(source).parse(), expectedId, additionalClasspath);
+    }
+    /** Uses the same parsed source and immutable dependency snapshot selected before this build. */
+    public CompiledModule compile(ModuleAst ast, String expectedId, String additionalClasspath) throws IOException, CompilationException {
         if (!ast.id().equals(expectedId)) throw new SourceException(1, "Module id must match file name: " + expectedId);
+        String buildClasspath = buildClasspath(additionalClasspath);
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         if (compiler == null) throw new IOException("A full JDK 21+ is required (jdk.compiler is missing)");
         GeneratedSource generated = new JavaEmitter().emit(ast);
@@ -25,12 +34,14 @@ public final class ModuleCompiler {
         boolean success = false;
         try {
             Path input = directory.resolve("Entry.java"), classes = directory.resolve("classes");
+            Path emptySources = Files.createDirectory(directory.resolve("empty-sources"));
             Files.createDirectories(classes);
             Files.writeString(input, generated.source(), StandardCharsets.UTF_8);
             DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
             try (StandardJavaFileManager manager = compiler.getStandardFileManager(diagnostics, Locale.ROOT, StandardCharsets.UTF_8)) {
                 var units = manager.getJavaFileObjects(input.toFile());
-                var options = List.of("--release", "21", "-encoding", "UTF-8", "-proc:none", "-g", "-classpath", classpath, "-d", classes.toString());
+                var options = List.of("--release", "21", "-encoding", "UTF-8", "-proc:none", "-implicit:none",
+                    "-sourcepath", emptySources.toString(), "-g", "-classpath", buildClasspath, "-d", classes.toString());
                 boolean compiled = compiler.getTask(null, manager, diagnostics, options, null, units).call();
                 if (!compiled) throw new CompilationException(diagnostics.getDiagnostics().stream()
                     .filter(d -> d.getKind() == Diagnostic.Kind.ERROR)
@@ -46,6 +57,12 @@ public final class ModuleCompiler {
             success = true;
             return new CompiledModule(ast.id(), generated.className(), jar, input);
         } finally { if (!success) deleteBuild(directory); }
+    }
+    private String buildClasspath(String additionalClasspath) {
+        Objects.requireNonNull(additionalClasspath, "additionalClasspath");
+        if (additionalClasspath.isEmpty()) return classpath;
+        if (classpath.isEmpty()) return additionalClasspath;
+        return classpath + File.pathSeparator + additionalClasspath;
     }
     public static void deleteBuild(Path directory) throws IOException {
         if (!Files.exists(directory)) return;

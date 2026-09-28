@@ -3,6 +3,7 @@ package kr.codenamemc.codeengine.compiler;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import javax.lang.model.SourceVersion;
 import static kr.codenamemc.codeengine.compiler.ModuleAst.*;
@@ -17,11 +18,21 @@ public final class Parser {
         if (!id.matches("[a-z][a-z0-9_]{0,47}")) fail("Invalid module id");
         expect(";");
         var imports = new ArrayList<String>();
+        var pluginDependencies = new ArrayList<String>();
         var members = new ArrayList<Member>();
         Set<String> unique = new HashSet<>();
         while (!at("<eof>")) {
             Token keyword = take();
             switch (keyword.text()) {
+                case "requires" -> {
+                    expect("plugin");
+                    String pluginName = pluginName();
+                    if (!unique.add("plugin:" + pluginName.toLowerCase(Locale.ROOT))) {
+                        throw new SourceException(keyword.line(), "Duplicate plugin dependency: " + pluginName);
+                    }
+                    expect(";");
+                    pluginDependencies.add(pluginName);
+                }
                 case "use" -> {
                     String type = qualifiedName(); expect(";"); imports.add(type);
                 }
@@ -67,7 +78,14 @@ public final class Parser {
                 default -> throw new SourceException(keyword.line(), "Unknown declaration: " + keyword.text());
             }
         }
-        return new ModuleAst(id, imports, members);
+        return new ModuleAst(id, imports, pluginDependencies, members);
+    }
+    private String pluginName() {
+        Token literal = take();
+        if (!literal.text().matches("\"[A-Za-z0-9_.-]+\"")) {
+            throw new SourceException(literal.line(), "Plugin name must be a quoted literal containing letters, digits, '_', '.' or '-'");
+        }
+        return literal.text().substring(1, literal.text().length() - 1);
     }
     private long positiveNumber() {
         Token token = take();

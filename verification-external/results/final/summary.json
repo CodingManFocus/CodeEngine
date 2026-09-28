@@ -1,0 +1,170 @@
+{
+  "fork-1": {
+    "correctnessChecks": 1883,
+    "apiSingle": {
+      "native": {
+        "medianNs": 212.693359375,
+        "p95Ns": 356.7099609375,
+        "medianBytes": 436.875
+      },
+      "module": {
+        "medianNs": 217.54443359375,
+        "p95Ns": 357.0322265625,
+        "medianBytes": 436.875
+      },
+      "pairedMedianDeltaNs": 1.59814453125,
+      "pairedMedianDeltaBytes": 0.0,
+      "pairs": 240
+    },
+    "apiMultiple": {
+      "native": {
+        "medianNs": 613.07763671875,
+        "p95Ns": 903.98046875,
+        "medianBytes": 908.8125
+      },
+      "module": {
+        "medianNs": 611.58642578125,
+        "p95Ns": 843.7333984375,
+        "medianBytes": 908.8125
+      },
+      "pairedMedianDeltaNs": -19.232421875,
+      "pairedMedianDeltaBytes": 0.0,
+      "pairs": 240
+    },
+    "commandSingle": {
+      "native": {
+        "medianNs": 1158.11328125,
+        "p95Ns": 2429.4453125,
+        "medianBytes": 3044.625
+      },
+      "module": {
+        "medianNs": 1153.69140625,
+        "p95Ns": 2358.328125,
+        "medianBytes": 3044.625
+      },
+      "pairedMedianDeltaNs": 26.80078125,
+      "pairedMedianDeltaBytes": 0.0,
+      "pairs": 240
+    },
+    "coldLoadMillis": [
+      247.187084,
+      244.437844,
+      248.318255,
+      198.796382,
+      302.582631,
+      195.061745
+    ]
+  },
+  "fork-2": {
+    "correctnessChecks": 1883,
+    "apiSingle": {
+      "native": {
+        "medianNs": 222.1025390625,
+        "p95Ns": 342.3623046875,
+        "medianBytes": 436.875
+      },
+      "module": {
+        "medianNs": 222.56689453125,
+        "p95Ns": 371.0087890625,
+        "medianBytes": 436.875
+      },
+      "pairedMedianDeltaNs": 0.53759765625,
+      "pairedMedianDeltaBytes": 0.0,
+      "pairs": 240
+    },
+    "apiMultiple": {
+      "native": {
+        "medianNs": 597.21435546875,
+        "p95Ns": 855.7822265625,
+        "medianBytes": 908.8125
+      },
+      "module": {
+        "medianNs": 600.25537109375,
+        "p95Ns": 858.4521484375,
+        "medianBytes": 908.8125
+      },
+      "pairedMedianDeltaNs": 6.8017578125,
+      "pairedMedianDeltaBytes": 0.0,
+      "pairs": 240
+    },
+    "commandSingle": {
+      "native": {
+        "medianNs": 1102.87109375,
+        "p95Ns": 2014.359375,
+        "medianBytes": 3044.625
+      },
+      "module": {
+        "medianNs": 1108.1171875,
+        "p95Ns": 1599.4453125,
+        "medianBytes": 3044.625
+      },
+      "pairedMedianDeltaNs": 23.43359375,
+      "pairedMedianDeltaBytes": 0.0,
+      "pairs": 240
+    },
+    "coldLoadMillis": [
+      247.227546,
+      246.348665,
+      249.780455,
+      197.548376,
+      199.087838,
+      198.221836
+    ]
+  },
+  "fork-3": {
+    "correctnessChecks": 1883,
+    "apiSingle": {
+      "native": {
+        "medianNs": 207.63720703125,
+        "p95Ns": 247.9521484375,
+        "medianBytes": 436.875
+      },
+      "module": {
+        "medianNs": 206.982421875,
+        "p95Ns": 275.650390625,
+        "medianBytes": 436.875
+      },
+      "pairedMedianDeltaNs": -0.3369140625,
+      "pairedMedianDeltaBytes": 0.0,
+      "pairs": 240
+    },
+    "apiMultiple": {
+      "native": {
+        "medianNs": 577.9169921875,
+        "p95Ns": 731.1513671875,
+        "medianBytes": 908.8125
+      },
+      "module": {
+        "medianNs": 577.92724609375,
+        "p95Ns": 823.3994140625,
+        "medianBytes": 908.8125
+      },
+      "pairedMedianDeltaNs": 0.8662109375,
+      "pairedMedianDeltaBytes": 0.0,
+      "pairs": 240
+    },
+    "commandSingle": {
+      "native": {
+        "medianNs": 1114.4140625,
+        "p95Ns": 1894.734375,
+        "medianBytes": 3044.625
+      },
+      "module": {
+        "medianNs": 1128.7734375,
+        "p95Ns": 1992.140625,
+        "medianBytes": 3044.625
+      },
+      "pairedMedianDeltaNs": 36.3828125,
+      "pairedMedianDeltaBytes": 0.0,
+      "pairs": 240
+    },
+    "coldLoadMillis": [
+      248.754521,
+      247.155169,
+      198.318177,
+      199.156582,
+      198.113769,
+      252.795224
+    ]
+  }
+}

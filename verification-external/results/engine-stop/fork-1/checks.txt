@@ -1,0 +1,6 @@
+PASS invalid dependency fails: lifecycle
+PASS invalid module stays unloaded: lifecycle
+PASS running callback completed before cleanup; local cleanup survives provider stop
+PASS stopped candidate or module is not active
+PASS stopped module command absent
+PASS artifact deleted after callback returned
