@@ -62,13 +62,26 @@ public final class WebIdeServer implements AutoCloseable {
                 send(exchange, 200, snapshot);
             }
             case "PUT /api/file" -> {
-                String revision = exchange.getRequestHeaders().getFirst("If-Match");
-                if (revision == null || !revision.matches("\"(?:new|[0-9a-f]{64})\"")) {
-                    send(exchange, 428, Map.of("error", "If-Match revision required")); return;
-                }
+                String revision = revision(exchange);
+                if (revision == null) return;
                 byte[] bytes = exchange.getRequestBody().readNBytes(ModuleSourceStore.maxBytes + 1);
                 if (bytes.length > ModuleSourceStore.maxBytes) { send(exchange, 413, Map.of("error", "Source exceeds 256 KiB")); return; }
-                send(exchange, 200, store.save(id, new String(bytes, StandardCharsets.UTF_8), revision.substring(1, revision.length() - 1)));
+                send(exchange, 200, store.save(id, new String(bytes, StandardCharsets.UTF_8), revision));
+            }
+            case "DELETE /api/file" -> {
+                String revision = revision(exchange);
+                if (revision == null) return;
+                requireUnloaded(id);
+                store.delete(id, revision);
+                send(exchange, 200, Map.of("deleted", id));
+            }
+            case "POST /api/file/rename" -> {
+                String revision = revision(exchange);
+                if (revision == null) return;
+                requireUnloaded(id);
+                String targetId = ModuleSourceStore.validateId(query.get("to"));
+                requireUnloaded(targetId);
+                send(exchange, 200, store.rename(id, targetId, revision));
             }
             case "POST /api/operation" -> {
                 ModuleSourceStore.validateId(id);
@@ -82,6 +95,18 @@ public final class WebIdeServer implements AutoCloseable {
             }
             default -> send(exchange, 405, Map.of("error", "Unsupported endpoint or method"));
         }
+    }
+    private String revision(HttpExchange exchange) throws IOException {
+        String value = exchange.getRequestHeaders().getFirst("If-Match");
+        if (value == null || !value.matches("\"(?:new|[0-9a-f]{64})\"")) {
+            send(exchange, 428, Map.of("error", "If-Match revision required"));
+            return null;
+        }
+        return value.substring(1, value.length() - 1);
+    }
+    private void requireUnloaded(String id) {
+        ModuleSourceStore.validateId(id);
+        if (loadedIds.get().contains(id)) throw new IllegalStateException("Unload the module before renaming or deleting its file");
     }
     private void staticFile(HttpExchange exchange, String path, String nonce) throws IOException {
         if (!exchange.getRequestMethod().equals("GET")) { send(exchange, 405, Map.of("error", "GET required")); return; }

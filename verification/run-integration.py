@@ -56,7 +56,7 @@ for fork in range(args.start_index,args.start_index+args.forks):
     try:
         wait_for(lambda text: 'Done (' in text,120)
         if args.ui_only:
-            console('ce web')
+            console('ce webide')
             text=wait_for(lambda text:'WebIDE (private session):' in text,10)
             url=re.findall(r'WebIDE \(private session\): (http://\S+)',text)[-1]
             environment=os.environ.copy(); environment['CE_URL']=url; environment['CE_SCREENSHOT']=str(root/'verification/results/webide-desktop.png')
@@ -73,7 +73,7 @@ for fork in range(args.start_index,args.start_index+args.forks):
         if (destination/'generated').exists(): shutil.rmtree(destination/'generated')
         shutil.copytree(data/'builds', destination/'generated')
         if args.ui and fork==args.start_index:
-            console('ce web')
+            console('ce webide')
             text=wait_for(lambda text:'WebIDE (private session):' in text,10)
             url=re.findall(r'WebIDE \(private session\): (http://\S+)',text)[-1]
             environment=os.environ.copy(); environment['CE_URL']=url; environment['CE_SCREENSHOT']=str(root/'verification/results/webide-desktop.png')

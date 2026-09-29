@@ -53,6 +53,21 @@ export class StudioApi {
       body: source,
     });
   }
+  rename(id: string, targetId: string, revision: string) {
+    return this.request<Snapshot>(
+      `file/rename?id=${encodeURIComponent(id)}&to=${encodeURIComponent(targetId)}`,
+      { method: "POST", headers: { "If-Match": `"${revision}"` } },
+    );
+  }
+  delete(id: string, revision: string) {
+    return this.request<{ deleted: string }>(
+      "file?id=" + encodeURIComponent(id),
+      {
+        method: "DELETE",
+        headers: { "If-Match": `"${revision}"` },
+      },
+    );
+  }
   start(id: string, action: string) {
     return this.request<{ job: string }>(
       `operation?id=${encodeURIComponent(id)}&action=${action}`,

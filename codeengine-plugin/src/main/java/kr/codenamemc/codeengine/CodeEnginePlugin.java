@@ -39,7 +39,7 @@ public final class CodeEnginePlugin extends JavaPlugin  {
                     return (Void) null;
                 }));
             }
-            getLogger().info("Code Engine ready. WebIDE is stopped; use /ce web from the server console.");
+            getLogger().info("Code Engine ready. WebIDE is stopped; use /codeengine webide from the server console.");
         } catch (Exception | LinkageError e) {
             getLogger().log(Level.SEVERE, "Code Engine startup failed", e); getServer().getPluginManager().disablePlugin(this);
         }

@@ -64,6 +64,22 @@ class WebIdeServerTest {
         assertEquals(400, request("api/file?id=hello&id=other", "GET", "", "Authorization", "Bearer " + token).statusCode());
         assertEquals(404, request("config.yml", "GET", "").statusCode());
     }
+    @Test void renameAndDeleteRequireRevisionAndAuthentication() throws Exception {
+        String auth = "Bearer " + token;
+        String revision = new com.google.gson.Gson().fromJson(
+            request("api/file?id=hello", "GET", "", "Authorization", auth).body(),
+            com.google.gson.JsonObject.class).get("revision").getAsString();
+        assertEquals(401, request("api/file?id=hello", "DELETE", "").statusCode());
+        assertEquals(428, request("api/file?id=hello", "DELETE", "", "Authorization", auth).statusCode());
+        assertEquals(409, request("api/file/rename?id=hello&to=other", "POST", "", "Authorization", auth, "If-Match", "\"new\"").statusCode());
+        assertEquals(200, request("api/file/rename?id=hello&to=other", "POST", "", "Authorization", auth, "If-Match", "\"" + revision + "\"").statusCode());
+        assertEquals(404, request("api/file?id=hello", "GET", "", "Authorization", auth).statusCode());
+        var renamed = request("api/file?id=other", "GET", "", "Authorization", auth);
+        assertTrue(renamed.body().contains("module other;"));
+        String renamedRevision = new com.google.gson.Gson().fromJson(renamed.body(), com.google.gson.JsonObject.class).get("revision").getAsString();
+        assertEquals(200, request("api/file?id=other", "DELETE", "", "Authorization", auth, "If-Match", "\"" + renamedRevision + "\"").statusCode());
+        assertEquals(404, request("api/file?id=other", "GET", "", "Authorization", auth).statusCode());
+    }
     @Test void operationsReturnPollableJobs() throws Exception {
         var result = request("api/operation?id=hello&action=build", "POST", "", "Authorization", "Bearer " + token);
         assertEquals(202, result.statusCode());

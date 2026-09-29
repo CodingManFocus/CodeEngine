@@ -58,6 +58,40 @@ public final class ModuleSourceStore {
         if (!read(id).revision().equals(expectedRevision)) throw new ConflictException();
         Files.delete(resolve(id));
     }
+    public synchronized Snapshot rename(String id, String targetId, String expectedRevision) throws IOException {
+        validateId(targetId);
+        if (id.equals(targetId)) throw new IllegalArgumentException("Choose a different module id");
+        Snapshot original = read(id);
+        if (!original.revision().equals(expectedRevision)) throw new ConflictException();
+        String source = original.source();
+        // The module declaration is the first token pair, apart from whitespace and comments.
+        java.util.regex.Pattern trivia = java.util.regex.Pattern.compile("(?:\\s+|//[^\\r\\n]*|/\\*[\\s\\S]*?\\*/)*");
+        java.util.regex.Matcher matcher = trivia.matcher(source);
+        int position = 0;
+        position = matcher.region(position, source.length()).lookingAt() ? matcher.end() : position;
+        if (!source.startsWith("module", position) ||
+            (position + 6 < source.length() && Character.isJavaIdentifierPart(source.charAt(position + 6))))
+            throw new IllegalArgumentException("Module declaration not found");
+        position += 6;
+        if (!matcher.region(position, source.length()).lookingAt() || matcher.end() == position)
+            throw new IllegalArgumentException("Module declaration not found");
+        position = matcher.end();
+        if (!source.startsWith(id, position) ||
+            (position + id.length() < source.length() && Character.isJavaIdentifierPart(source.charAt(position + id.length()))))
+            throw new IllegalArgumentException("Module declaration must match the filename");
+        int end = position + id.length();
+        int after = matcher.region(end, source.length()).lookingAt() ? matcher.end() : end;
+        if (after >= source.length() || source.charAt(after) != ';')
+            throw new IllegalArgumentException("Module declaration must end with a semicolon");
+        String renamed = source.substring(0, position) + targetId + source.substring(end);
+        Snapshot created = save(targetId, renamed, "new");
+        try { delete(id, expectedRevision); }
+        catch (IOException failure) {
+            try { delete(targetId, created.revision()); } catch (IOException rollback) { failure.addSuppressed(rollback); }
+            throw failure;
+        }
+        return created;
+    }
     private static String hash(byte[] bytes) {
         try { return HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(bytes)); }
         catch (NoSuchAlgorithmException e) { throw new AssertionError(e); }

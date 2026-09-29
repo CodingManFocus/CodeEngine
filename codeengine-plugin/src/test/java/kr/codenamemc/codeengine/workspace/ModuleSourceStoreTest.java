@@ -35,6 +35,20 @@ class ModuleSourceStoreTest {
         assertThrows(java.io.IOException.class, () -> store.save("large", "가".repeat(100000), "new"));
         assertTrue(store.list().isEmpty());
     }
+    @Test void renameUpdatesOnlyHeaderAndPreservesOriginalOnConflict() throws Exception {
+        var store = new ModuleSourceStore(directory);
+        var original = store.save("hello", "// module hello;\n/* header */ module /* gap */ hello ;\nstate String text = \"module hello;\";", "new");
+        var renamed = store.rename("hello", "welcome", original.revision());
+        assertEquals("// module hello;\n/* header */ module /* gap */ welcome ;\nstate String text = \"module hello;\";", renamed.source());
+        assertEquals(renamed, store.read("welcome"));
+        assertFalse(store.list().contains("hello"));
+        assertThrows(ModuleSourceStore.ConflictException.class, () -> store.delete("welcome", original.revision()));
+        store.save("taken", "module taken;", "new");
+        assertThrows(ModuleSourceStore.ConflictException.class, () -> store.rename("welcome", "taken", renamed.revision()));
+        assertEquals(renamed, store.read("welcome"));
+        assertThrows(ModuleSourceStore.ConflictException.class, () -> store.rename("welcome", "other", original.revision()));
+        assertFalse(store.list().contains("other"));
+    }
     @Test void concurrentSaveHasExactlyOneWinner() throws Exception {
         var store = new ModuleSourceStore(directory); var initial = store.save("test", "original", "new");
         try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {

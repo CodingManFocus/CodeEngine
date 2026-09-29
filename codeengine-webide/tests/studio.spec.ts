@@ -44,6 +44,33 @@ async function setup(page: Page) {
       return files.has(id)
         ? json(files.get(id))
         : json({ error: "File not found" }, 404);
+    if (url.pathname === "/api/file/rename") {
+      const target = url.searchParams.get("to")!;
+      const current = files.get(id);
+      if (loaded.has(id) || loaded.has(target))
+        return json({ error: "Unload first" }, 409);
+      if (
+        !current ||
+        request.headers()["if-match"] !== `"${current.revision}"` ||
+        files.has(target)
+      )
+        return json({ error: "Revision conflict" }, 409);
+      const snapshot = {
+        source: current.source.replace(`module ${id};`, `module ${target};`),
+        revision: String(++revision).padStart(64, "0"),
+      };
+      files.set(target, snapshot);
+      files.delete(id);
+      return json(snapshot);
+    }
+    if (url.pathname === "/api/file" && request.method() === "DELETE") {
+      const current = files.get(id);
+      if (loaded.has(id)) return json({ error: "Unload first" }, 409);
+      if (!current || request.headers()["if-match"] !== `"${current.revision}"`)
+        return json({ error: "Revision conflict" }, 409);
+      files.delete(id);
+      return json({ deleted: id });
+    }
     if (url.pathname === "/api/file") {
       const current = files.get(id),
         match = request.headers()["if-match"];
@@ -189,10 +216,14 @@ test("create, cancel, dirty-close guard and reconnect retain edits", async ({
   page,
 }) => {
   const fixture = await setup(page);
-  await page.getByRole("button", { name: "새 모듈", exact: true }).click();
+  await page
+    .getByRole("button", { name: "새 .ce 파일 만들기", exact: true })
+    .click();
   await page.keyboard.press("Escape");
   await expect(page.getByRole("dialog")).toHaveCount(0);
-  await page.getByRole("button", { name: "새 모듈", exact: true }).click();
+  await page
+    .getByRole("button", { name: "새 .ce 파일 만들기", exact: true })
+    .click();
   await page.locator("#dialogInput").fill("newmodule");
   await page.getByRole("button", { name: "만들기", exact: true }).click();
   await expect(page.locator("#filename")).toContainText("newmodule.ce");
@@ -217,5 +248,37 @@ test("create, cancel, dirty-close guard and reconnect retain edits", async ({
       ...Object.keys(sessionStorage),
     ]),
   ).toEqual([]);
+  expect(fixture.errors).toEqual([]);
+});
+test("rename and delete .ce files with explicit confirmations", async ({
+  page,
+}) => {
+  const fixture = await setup(page);
+  await page.getByRole("button", { name: "이름 변경", exact: true }).click();
+  await expect(
+    page.getByRole("button", { name: "이름 변경", exact: true }).last(),
+  ).toBeDisabled();
+  await page.getByRole("button", { name: "취소" }).click();
+  await page.locator("#unloadButton").click();
+  await page.getByRole("button", { name: "이름 변경", exact: true }).click();
+  await page.locator("#dialogInput").fill("welcome");
+  await page
+    .getByRole("dialog")
+    .getByRole("button", { name: "이름 변경" })
+    .click();
+  await expect(page.locator("#filename")).toContainText("welcome.ce");
+  expect(fixture.files.get("welcome")?.source).toContain("module welcome;");
+  expect(fixture.files.has("hello")).toBe(false);
+  await replaceSource(page, "module welcome;\n// unsaved");
+  await page.getByRole("button", { name: "파일 삭제" }).click();
+  await expect(page.getByRole("dialog")).toContainText(
+    "저장하지 않은 편집 내용도 사라집니다",
+  );
+  await page.getByRole("button", { name: "취소" }).click();
+  expect(fixture.files.has("welcome")).toBe(true);
+  await page.getByRole("button", { name: "파일 삭제" }).click();
+  await page.getByRole("button", { name: "영구 삭제" }).click();
+  expect(fixture.files.has("welcome")).toBe(false);
+  await expect(page.getByRole("tab", { name: "CE welcome.ce" })).toHaveCount(0);
   expect(fixture.errors).toEqual([]);
 });
