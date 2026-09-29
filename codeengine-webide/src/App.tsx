@@ -26,9 +26,9 @@ export default function App() {
     [active, setActive] = useState<string | null>(null);
   const [connected, setConnected] = useState(false),
     [busy, setBusy] = useState("");
-  const [dialog, setDialog] = useState<"connect" | "create" | null>(
-    bootstrapToken ? null : "connect",
-  );
+  const [dialog, setDialog] = useState<
+    "connect" | "create" | "rename" | "delete" | null
+  >(bootstrapToken ? null : "connect");
   const [input, setInput] = useState(""),
     [dialogError, setDialogError] = useState("");
   const [filter, setFilter] = useState(""),
@@ -268,51 +268,108 @@ export default function App() {
     snippet("\n\n" + code)(view, null, end, end);
     view.focus();
   }
-  function showDialog(type: "connect" | "create") {
-    setInput("");
+  function showDialog(type: "connect" | "create" | "rename" | "delete") {
+    setInput(type === "rename" ? (current?.id ?? "") : "");
     setDialogError("");
     setDialog(type);
   }
   async function submitDialog(event: React.FormEvent) {
     event.preventDefault();
     setDialogError("");
-    await run(dialog === "connect" ? "연결 중" : "모듈 생성 중", async () => {
-      if (dialog === "connect") {
-        const value = input.trim();
-        api.setToken(value.includes("#") ? value.split("#").at(-1)! : value);
-        await refresh();
-        setInput("");
-        setDialog(null);
-        log("로컬 세션 연결됨", "success");
-      } else {
-        const id = input.trim();
-        if (!/^[a-z][a-z0-9_]{0,47}$/.test(id))
-          throw new Error(
-            "소문자로 시작하는 영문·숫자·밑줄, 최대 48자로 입력하세요.",
+    await run(
+      dialog === "connect"
+        ? "연결 중"
+        : dialog === "create"
+          ? "파일 생성 중"
+          : dialog === "rename"
+            ? "이름 변경 중"
+            : "파일 삭제 중",
+      async () => {
+        if (dialog === "connect") {
+          const value = input.trim();
+          api.setToken(value.includes("#") ? value.split("#").at(-1)! : value);
+          await refresh();
+          setInput("");
+          setDialog(null);
+          log("로컬 세션 연결됨", "success");
+        } else if (dialog === "rename" || dialog === "delete") {
+          const tab = tabRef.current.find(
+            (item) => item.id === activeRef.current,
           );
-        const source = `module ${id};\n\non PlayerJoinEvent event {\n    event.getPlayer().sendMessage(Component.text("환영합니다!"));\n}\n`;
-        const snapshot = await api.save(id, source, "new");
-        setTabs((previous) => [
-          ...previous,
-          {
-            id,
-            source: snapshot.source,
-            savedSource: snapshot.source,
-            revision: snapshot.revision,
-            scrollTop: 0,
-            scrollLeft: 0,
-            problems: [],
-            conflict: false,
-          },
-        ]);
-        setActive(id);
-        setInput("");
-        setDialog(null);
-        setSidebar(false);
-        await refresh();
-        log(`${id}.ce 생성 완료`, "success");
-      }
-    });
+          if (!tab) throw new Error("먼저 파일을 선택하세요.");
+          if (loaded.includes(tab.id))
+            throw new Error("실행 중인 모듈은 먼저 해제하세요.");
+          if (dialog === "rename") {
+            if (dirty(tab))
+              throw new Error("이름을 변경하기 전에 파일을 저장하세요.");
+            const targetId = input.trim();
+            if (!/^[a-z][a-z0-9_]{0,47}$/.test(targetId))
+              throw new Error(
+                "영문 소문자로 시작하고 숫자와 밑줄만 사용하세요 (최대 48자).",
+              );
+            if (targetId === tab.id)
+              throw new Error("현재 이름과 다른 이름을 입력하세요.");
+            const snapshot = await api.rename(tab.id, targetId, tab.revision);
+            setTabs((previous) =>
+              previous.map((item) =>
+                item.id === tab.id
+                  ? {
+                      ...item,
+                      id: targetId,
+                      source: snapshot.source,
+                      savedSource: snapshot.source,
+                      revision: snapshot.revision,
+                      state: undefined,
+                      problems: [],
+                      conflict: false,
+                    }
+                  : item,
+              ),
+            );
+            setActive(targetId);
+            log(`${tab.id}.ce → ${targetId}.ce 이름 변경 완료`, "success");
+          } else {
+            await api.delete(tab.id, tab.revision);
+            const remaining = tabRef.current.filter(
+              (item) => item.id !== tab.id,
+            );
+            setTabs(remaining);
+            setActive(remaining.at(-1)?.id ?? null);
+            log(`${tab.id}.ce 삭제 완료`, "success");
+          }
+          setDialog(null);
+          setInput("");
+          await refresh();
+        } else {
+          const id = input.trim();
+          if (!/^[a-z][a-z0-9_]{0,47}$/.test(id))
+            throw new Error(
+              "소문자로 시작하는 영문·숫자·밑줄, 최대 48자로 입력하세요.",
+            );
+          const source = `module ${id};\n\non PlayerJoinEvent event {\n    event.getPlayer().sendMessage(Component.text("환영합니다!"));\n}\n`;
+          const snapshot = await api.save(id, source, "new");
+          setTabs((previous) => [
+            ...previous,
+            {
+              id,
+              source: snapshot.source,
+              savedSource: snapshot.source,
+              revision: snapshot.revision,
+              scrollTop: 0,
+              scrollLeft: 0,
+              problems: [],
+              conflict: false,
+            },
+          ]);
+          setActive(id);
+          setInput("");
+          setDialog(null);
+          setSidebar(false);
+          await refresh();
+          log(`${id}.ce 생성 완료`, "success");
+        }
+      },
+    );
   }
   return (
     <div className="studio">
@@ -359,12 +416,12 @@ export default function App() {
               <button
                 className="icon-button"
                 id="newButton"
-                title="새 모듈"
-                aria-label="새 모듈"
+                title="새 .ce 파일 만들기"
+                aria-label="새 .ce 파일 만들기"
                 disabled={!!busy || !connected}
                 onClick={() => showDialog("create")}
               >
-                ＋
+                ＋ <span className="new-file-label">새 .ce 파일</span>
               </button>
             </div>
           </div>
@@ -411,7 +468,8 @@ export default function App() {
           {connected && !modules.length && (
             <p className="sidebar-empty">
               아직 모듈이 없어요.
-              <br />＋ 버튼으로 만들어 보세요.
+              <br />
+              ‘새 .ce 파일’ 버튼으로 만들어 보세요.
             </p>
           )}
           <div className="explorer-bottom">
@@ -556,6 +614,20 @@ export default function App() {
                     {dirty(current) ? "● 저장되지 않음" : "저장됨"}
                   </span>
                   <button
+                    className="file-action"
+                    disabled={!!busy || !connected}
+                    onClick={() => showDialog("rename")}
+                  >
+                    이름 변경
+                  </button>
+                  <button
+                    className="file-action danger"
+                    disabled={!!busy || !connected}
+                    onClick={() => showDialog("delete")}
+                  >
+                    파일 삭제
+                  </button>
+                  <button
                     title="검색 및 치환 (Ctrl/Cmd F)"
                     aria-label="검색 및 치환"
                     onClick={() =>
@@ -653,7 +725,15 @@ export default function App() {
       </footer>
       {dialog && (
         <Dialog
-          title={dialog === "connect" ? "Studio에 연결" : "새 모듈 만들기"}
+          title={
+            dialog === "connect"
+              ? "Studio에 연결"
+              : dialog === "create"
+                ? "새 .ce 파일 만들기"
+                : dialog === "rename"
+                  ? "파일 이름 변경"
+                  : "파일 삭제"
+          }
           onClose={() => {
             if (!busy) {
               setDialog(null);
@@ -665,32 +745,61 @@ export default function App() {
             <p>
               {dialog === "connect" ? (
                 <>
-                  서버 콘솔에서 <code>ce web</code>을 실행하고
+                  서버 콘솔에서 <code>codeengine webide</code>를 실행하고
                   <br />
                   세션 링크 또는 토큰을 입력하세요.
                 </>
-              ) : (
+              ) : dialog === "create" ? (
                 "하나의 파일에서 이벤트, 명령, 작업을 함께 작성하세요."
+              ) : dialog === "rename" ? (
+                <>
+                  {current?.id}.ce의 파일명과 <code>module</code> 선언을 함께
+                  변경합니다.{" "}
+                  {dirty(current!) && "먼저 변경 내용을 저장하세요."}{" "}
+                  {loaded.includes(current!.id) &&
+                    "먼저 실행 중인 모듈을 해제하세요."}
+                </>
+              ) : (
+                <>
+                  {current?.id}.ce를 서버에서 영구 삭제합니다. 저장하지 않은
+                  편집 내용도 사라집니다.{" "}
+                  {loaded.includes(current!.id) &&
+                    "먼저 실행 중인 모듈을 해제하세요."}
+                </>
               )}
             </p>
-            <label htmlFor="dialogInput">
-              {dialog === "connect" ? "세션 링크 / 토큰" : "모듈 ID"}
-            </label>
-            <input
-              id="dialogInput"
-              autoFocus
-              type={dialog === "connect" ? "password" : "text"}
-              autoComplete="off"
-              spellCheck={false}
-              required
-              disabled={!!busy}
-              pattern={dialog === "create" ? "[a-z][a-z0-9_]{0,47}" : undefined}
-              maxLength={dialog === "create" ? 48 : undefined}
-              placeholder={dialog === "create" ? "welcome" : undefined}
-              value={input}
-              onChange={(event) => setInput(event.target.value)}
-            />
-            {dialog === "create" && (
+            {dialog !== "delete" && (
+              <>
+                <label htmlFor="dialogInput">
+                  {dialog === "connect"
+                    ? "세션 링크 / 토큰"
+                    : dialog === "rename"
+                      ? "새 파일명 (.ce 제외)"
+                      : "파일명 (.ce 제외)"}
+                </label>
+                <input
+                  id="dialogInput"
+                  autoFocus
+                  type={dialog === "connect" ? "password" : "text"}
+                  autoComplete="off"
+                  spellCheck={false}
+                  required
+                  disabled={!!busy}
+                  pattern={
+                    dialog === "create" || dialog === "rename"
+                      ? "[a-z][a-z0-9_]{0,47}"
+                      : undefined
+                  }
+                  maxLength={
+                    dialog === "create" || dialog === "rename" ? 48 : undefined
+                  }
+                  placeholder={dialog === "create" ? "welcome" : undefined}
+                  value={input}
+                  onChange={(event) => setInput(event.target.value)}
+                />
+              </>
+            )}
+            {(dialog === "create" || dialog === "rename") && (
               <small>영문 소문자로 시작 · 숫자와 밑줄 허용 · 최대 48자</small>
             )}
             {dialogError && (
@@ -709,8 +818,26 @@ export default function App() {
               >
                 취소
               </button>
-              <button className="primary" disabled={!!busy} type="submit">
-                {busy ? "처리 중…" : dialog === "connect" ? "연결" : "만들기"}
+              <button
+                className={dialog === "delete" ? "destructive" : "primary"}
+                disabled={
+                  !!busy ||
+                  ((dialog === "rename" || dialog === "delete") &&
+                    !!current &&
+                    loaded.includes(current.id)) ||
+                  (dialog === "rename" && !!current && dirty(current))
+                }
+                type="submit"
+              >
+                {busy
+                  ? "처리 중…"
+                  : dialog === "connect"
+                    ? "연결"
+                    : dialog === "create"
+                      ? "만들기"
+                      : dialog === "rename"
+                        ? "이름 변경"
+                        : "영구 삭제"}
               </button>
             </div>
           </form>

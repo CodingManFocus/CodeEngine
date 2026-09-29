@@ -24,7 +24,7 @@ public final class EngineCommands implements TabExecutor, AutoCloseable {
                     sender.sendMessage("Loaded modules: " + String.join(", ", new TreeSet<>(manager.loadedIds())));
                     if (!manager.stoppingIds().isEmpty()) sender.sendMessage("Stopping modules: " + String.join(", ", new TreeSet<>(manager.stoppingIds())));
                 }
-                case "web" -> {
+                case "webide" -> {
                     if (!(sender instanceof ConsoleCommandSender)) { sender.sendMessage("Open WebIDE from the server console."); return true; }
                     if (web == null) web = new WebIdeServer(store, manager::submit, manager::loadedIds, plugin.getConfig().getInt("webPort", 17777));
                     sender.sendMessage("WebIDE (private session): " + web.url());
@@ -46,10 +46,10 @@ public final class EngineCommands implements TabExecutor, AutoCloseable {
         } catch (Exception e) { sender.sendMessage("Failed: " + e.getMessage()); }
         return true;
     }
-    private void help(CommandSender sender) { sender.sendMessage("/ce list | build/load/reload/unload <module> | web | webstop"); }
+    private void help(CommandSender sender) { sender.sendMessage("/ce list | build/load/reload/unload <module> | webide | webstop"); }
     @Override public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (!sender.hasPermission("codeengine.admin")) return List.of();
-        List<String> choices = args.length == 1 ? List.of("list", "build", "load", "reload", "unload", "web", "webstop") : List.of();
+        List<String> choices = args.length == 1 ? List.of("list", "build", "load", "reload", "unload", "webide", "webstop") : List.of();
         if (args.length == 2) choices = new ArrayList<>(manager.loadedIds());
         String prefix = args.length == 0 ? "" : args[args.length - 1].toLowerCase(Locale.ROOT);
         return choices.stream().filter(s -> s.startsWith(prefix)).sorted().toList();

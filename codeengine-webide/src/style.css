@@ -172,6 +172,17 @@ pre {
 }
 .section-heading > div {
   display: flex;
+  align-items: center;
+}
+#newButton {
+  font-size: 11px;
+  color: #d8c5ff;
+  border: 1px solid #4a3c64;
+  padding: 5px 7px;
+}
+#newButton .new-file-label {
+  font-size: 10px;
+  letter-spacing: 0;
 }
 .icon-button {
   font-size: 19px;
@@ -413,14 +424,35 @@ pre {
   color: #93a0b5;
   font-weight: 400;
 }
+.breadcrumb #filename {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .breadcrumb > div {
   display: flex;
   align-items: center;
   gap: 5px;
+  flex-shrink: 0;
 }
 .breadcrumb button {
   padding: 3px 7px;
   font-size: 17px;
+}
+.breadcrumb button.file-action {
+  font-size: 10px;
+  color: #cbbce5;
+  border: 1px solid #393448;
+  white-space: nowrap;
+}
+.breadcrumb button.file-action.danger {
+  color: #f1aab1;
+}
+.dialog-actions button.destructive {
+  background: #813948;
+  color: white;
+  border-color: #a34b5a;
 }
 .breadcrumb #dirtyLabel {
   margin-right: 10px;
