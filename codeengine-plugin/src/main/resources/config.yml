@@ -1,5 +1,6 @@
 # Paper 1.21.11 / JDK 21+. Full server restart for plugin upgrades.
 autoLoad: true
+# Create hello.ce only when Code Engine creates its data folder for the first time.
 seedExample: true
 # Report a timeout after this many seconds; active callbacks are never force-closed.
 unloadTimeoutSeconds: 10
