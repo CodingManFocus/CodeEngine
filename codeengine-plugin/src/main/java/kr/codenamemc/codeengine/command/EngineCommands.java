@@ -6,6 +6,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import kr.codenamemc.codeengine.runtime.ModuleManager;
 import kr.codenamemc.codeengine.workspace.ModuleSourceStore;
 import kr.codenamemc.codeengine.web.WebIdeServer;
+import kr.codenamemc.codeengine.intelligence.IntelligenceArtifacts;
 
 public final class EngineCommands implements TabExecutor, AutoCloseable {
     private final JavaPlugin plugin;
@@ -26,7 +27,13 @@ public final class EngineCommands implements TabExecutor, AutoCloseable {
                 }
                 case "webide" -> {
                     if (!(sender instanceof ConsoleCommandSender)) { sender.sendMessage("Open WebIDE from the server console."); return true; }
-                    if (web == null) web = new WebIdeServer(store, manager::submit, manager::loadedIds, plugin.getConfig().getInt("webPort", 17777));
+                    if (web == null) {
+                        var artifacts = IntelligenceArtifacts.paper(plugin.getDataFolder().toPath().resolve("webide-api-cache"),
+                            plugin.getServer().getBukkitVersion(), plugin.getServer().getMinecraftVersion(), plugin.getServer().getVersion());
+                        try {
+                            web = new WebIdeServer(store, manager::submit, manager::loadedIds, plugin.getConfig().getInt("webPort", 17777), artifacts);
+                        } catch (Exception error) { artifacts.close(); throw error; }
+                    }
                     sender.sendMessage("WebIDE (private session): " + web.url());
                 }
                 case "webstop" -> { if (web != null) { web.close(); web = null; } sender.sendMessage("WebIDE stopped"); }

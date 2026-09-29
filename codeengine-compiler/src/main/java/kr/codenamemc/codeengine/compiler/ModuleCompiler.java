@@ -10,6 +10,7 @@ import javax.tools.*;
 
 /** Each build uses a fresh immutable directory; failed builds never overwrite live JARs. */
 public final class ModuleCompiler {
+    public static final int javaRelease = 21;
     private final Path buildRoot;
     private final String classpath;
     public ModuleCompiler(Path buildRoot, String classpath) {
@@ -38,7 +39,7 @@ public final class ModuleCompiler {
             DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
             try (StandardJavaFileManager manager = compiler.getStandardFileManager(diagnostics, Locale.ROOT, StandardCharsets.UTF_8)) {
                 var units = manager.getJavaFileObjects(input.toFile());
-                var options = List.of("--release", "21", "-encoding", "UTF-8", "-proc:none", "-implicit:none",
+                var options = List.of("--release", Integer.toString(javaRelease), "-encoding", "UTF-8", "-proc:none", "-implicit:none",
                     "-sourcepath", emptySources.toString(), "-g", "-classpath", buildClasspath, "-d", classes.toString());
                 boolean compiled = compiler.getTask(null, manager, diagnostics, options, null, units).call();
                 if (!compiled) throw new CompilationException(diagnostics.getDiagnostics().stream()

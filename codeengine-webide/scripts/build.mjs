@@ -12,11 +12,20 @@ const result = await build({
   legalComments: "inline",
   define: { "process.env.NODE_ENV": '"production"' },
 });
+const workerResult = await build({
+  entryPoints: ["src/intelligence/worker.ts"],
+  bundle: true,
+  minify: true,
+  outfile: "dist/intelligence-worker.js",
+  target: ["es2022"],
+  metafile: true,
+  legalComments: "inline",
+});
 await rename("dist/app.css", "dist/style.css");
 await copyFile("index.html", "dist/index.html");
 const packages = [
   ...new Set(
-    Object.keys(result.metafile.inputs)
+    Object.keys({ ...result.metafile.inputs, ...workerResult.metafile.inputs })
       .map((path) => path.match(/node_modules\/((?:@[^/]+\/)?[^/]+)/)?.[1])
       .filter(Boolean),
   ),

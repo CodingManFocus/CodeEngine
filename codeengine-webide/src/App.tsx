@@ -10,6 +10,8 @@ import { Welcome } from "./components/Welcome";
 import { OutputPanel, type LogEntry } from "./components/OutputPanel";
 import { Editor, type DocumentTab } from "./components/Editor";
 import { Dialog } from "./components/Dialog";
+import { IntelligenceClient } from "./intelligence/client";
+import type { IntelligenceStatus } from "./intelligence/protocol";
 
 const bootstrapToken = initialToken();
 const api = new StudioApi(bootstrapToken);
@@ -20,6 +22,10 @@ const actionLabels: Record<string, string> = {
   unload: "모듈 해제",
 };
 export default function App() {
+  const [intelligence] = useState(() => new IntelligenceClient());
+  const [intelligenceStatus, setIntelligenceStatus] =
+    useState<IntelligenceStatus>(intelligence.status);
+  const [connectionGeneration, setConnectionGeneration] = useState(0);
   const [modules, setModules] = useState<string[]>([]),
     [loaded, setLoaded] = useState<string[]>([]);
   const [tabs, setTabs] = useState<DocumentTab[]>([]),
@@ -94,6 +100,14 @@ export default function App() {
   useEffect(() => {
     if (bootstrapToken) void run("연결 중", refresh);
   }, []);
+  useEffect(
+    () => intelligence.subscribe(setIntelligenceStatus),
+    [intelligence],
+  );
+  useEffect(() => {
+    if (connected) intelligence.start(api.authorization);
+    return () => intelligence.stop();
+  }, [connected, connectionGeneration, intelligence]);
   useEffect(() => {
     const handler = (event: BeforeUnloadEvent) => {
       if (tabRef.current.some(dirty)) {
@@ -289,6 +303,7 @@ export default function App() {
           const value = input.trim();
           api.setToken(value.includes("#") ? value.split("#").at(-1)! : value);
           await refresh();
+          setConnectionGeneration((previous) => previous + 1);
           setInput("");
           setDialog(null);
           log("로컬 세션 연결됨", "success");
@@ -603,6 +618,26 @@ export default function App() {
               </button>
             </div>
           )}
+          <div
+            className={"intelligence-status " + intelligenceStatus.phase}
+            id="intelligenceStatus"
+            role="status"
+          >
+            <span title={intelligenceStatus.message}>
+              {intelligenceStatus.phase === "ready"
+                ? `브라우저 코드 분석 · ${intelligenceStatus.version ?? "API 준비됨"}`
+                : intelligenceStatus.message}
+              {intelligenceStatus.approximate &&
+                " · 동일 버전 SNAPSHOT (서버 빌드와 다를 수 있음)"}
+            </span>
+            {intelligenceStatus.phase === "error" && connected && (
+              <button
+                onClick={() => intelligence.start(api.authorization, true)}
+              >
+                API 다시 준비
+              </button>
+            )}
+          </div>
           {current ? (
             <>
               <div className="breadcrumb">
@@ -671,6 +706,7 @@ export default function App() {
                 </div>
               )}
               <Editor
+                intelligence={intelligence}
                 document={current}
                 locked={!!busy}
                 wrap={wrap}

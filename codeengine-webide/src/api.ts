@@ -23,6 +23,9 @@ export class StudioApi {
   setToken(value: string) {
     this.token = value;
   }
+  get authorization() {
+    return "Bearer " + this.token;
+  }
   async request<T>(path: string, options: RequestInit = {}): Promise<T> {
     const response = await fetch("/api/" + path, {
       ...options,
