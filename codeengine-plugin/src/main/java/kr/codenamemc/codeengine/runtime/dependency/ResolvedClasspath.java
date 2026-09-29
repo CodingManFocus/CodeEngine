@@ -23,13 +23,24 @@ public final class ResolvedClasspath {
 
     public Map<String, Path> selectedClasses() { return selectedClasses; }
 
-    public ModuleClassLoader newLoader(Path moduleJar, ClassLoader engineParent) throws IOException {
+    /** Reads and validates the generated JAR before entering the server-thread lifecycle. */
+    public PreparedModule prepareLoader(Path moduleJar) throws IOException {
         Path jar = moduleJar.toRealPath();
         Set<String> moduleClasses = ClasspathIndex.read(jar);
         for (String name : moduleClasses) {
             if (baseClasses.contains(name) || owners.containsKey(name))
                 throw new IOException("Generated module duplicates an engine/server/provider class: " + name);
         }
-        return new ModuleClassLoader(jar, engineParent, baseEntries, owners, moduleClasses);
+        return new PreparedModule(jar, Set.copyOf(moduleClasses));
     }
+
+    public ModuleClassLoader newLoader(PreparedModule prepared, ClassLoader engineParent) throws IOException {
+        return new ModuleClassLoader(prepared.jar(), engineParent, baseEntries, owners, prepared.classes());
+    }
+
+    public ModuleClassLoader newLoader(Path moduleJar, ClassLoader engineParent) throws IOException {
+        return newLoader(prepareLoader(moduleJar), engineParent);
+    }
+
+    public record PreparedModule(Path jar, Set<String> classes) { }
 }

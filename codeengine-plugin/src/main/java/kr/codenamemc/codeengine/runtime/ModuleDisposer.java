@@ -5,7 +5,6 @@ import java.util.concurrent.*;
 import java.util.logging.Level;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
-import kr.codenamemc.codeengine.compiler.ModuleCompiler;
 
 /** Owns detached modules until every managed callback has returned. */
 final class ModuleDisposer {
@@ -26,7 +25,7 @@ final class ModuleDisposer {
         Disposal disposal = detach(module, initialFailure);
         if (module.scope().drained().isDone()) finish(disposal);
         else if (shutdownCompleted) deferArtifactCleanup(disposal);
-        else if (pollTask == null) {
+        if (!shutdownCompleted && pollTask == null) {
             try { pollTask = plugin.getServer().getScheduler().runTaskTimer(plugin, this::poll, 1, 1); }
             catch (Throwable error) {
                 // Preserve ownership and artifacts if the scheduler is already stopping.
@@ -49,7 +48,13 @@ final class ModuleDisposer {
         ModuleScope.requireMain();
         for (Disposal disposal : List.copyOf(stopping.values())) {
             if (stopping.get(disposal.module.compiled().id()) != disposal) continue;
-            if (disposal.module.scope().drained().isDone()) finish(disposal);
+            if (disposal.cleanup != null) {
+                if (disposal.cleanup.isDone()) complete(disposal);
+                else if (!disposal.result.isDone() && System.nanoTime() - disposal.deadline >= 0) {
+                    disposal.result.completeExceptionally(new TimeoutException("Build artifacts are still being deleted: "
+                        + disposal.module.compiled().id() + "; new loads are blocked until cleanup completes."));
+                }
+            } else if (disposal.module.scope().drained().isDone()) finish(disposal);
             else if (!disposal.result.isDone() && System.nanoTime() - disposal.deadline >= 0) {
                 var error = new TimeoutException("Module is still stopping: " + disposal.module.compiled().id()
                     + "; managed callbacks have not returned. New loads are blocked until cleanup completes.");
@@ -82,7 +87,12 @@ final class ModuleDisposer {
         } else {
             failure = skipUserCleanup(disposal.module, failure);
         }
-        failure = closeArtifacts(disposal.module, failure);
+        disposal.failure = closeLoader(disposal.module, failure);
+        disposal.cleanup = BuildCleanup.delete(disposal.module.compiled().jar().getParent());
+        if (shutdownCompleted) disposal.cleanup.whenComplete((ignored, error) -> completeAfterShutdown(disposal, error));
+    }
+    private void complete(Disposal disposal) {
+        Throwable failure = combine(disposal.failure, cleanupFailure(disposal.cleanup));
         disposal.failure = failure;
         stopping.remove(disposal.module.compiled().id(), disposal);
         stoppingIds = Set.copyOf(stopping.keySet());
@@ -92,6 +102,20 @@ final class ModuleDisposer {
         } else if (!disposal.result.completeExceptionally(failure)) {
             plugin.getLogger().log(Level.WARNING, "Deferred module cleanup failed: " + disposal.module.compiled().id(), failure);
         }
+    }
+    private void completeAfterShutdown(Disposal disposal, Throwable error) {
+        Throwable failure = combine(disposal.failure, unwrap(error));
+        disposal.failure = failure;
+        if (failure == null) disposal.result.complete(null);
+        else if (!disposal.result.completeExceptionally(failure))
+            plugin.getLogger().log(Level.WARNING, "Shutdown artifact cleanup failed: " + disposal.module.compiled().id(), failure);
+    }
+    private static Throwable cleanupFailure(CompletableFuture<Void> cleanup) {
+        try { cleanup.join(); return null; }
+        catch (CompletionException error) { return unwrap(error); }
+    }
+    private static Throwable unwrap(Throwable error) {
+        return error instanceof CompletionException && error.getCause() != null ? error.getCause() : error;
     }
     private boolean cleanupAllowed() {
         return !shutdownCompleted;
@@ -117,11 +141,13 @@ final class ModuleDisposer {
             for (Disposal disposal : List.copyOf(stopping.values())) {
                 // A user disable hook can synchronously initiate engine shutdown.
                 // Its outer finish call must remain the sole owner of final cleanup.
-                if (disposal.finishing) continue;
+                if (disposal.finishing) {
+                    if (disposal.cleanup != null) disposal.cleanup.whenComplete((ignored, error) -> completeAfterShutdown(disposal, error));
+                    continue;
+                }
                 if (disposal.module.scope().drained().isDone()) {
                     finish(disposal);
-                    if (disposal.failure != null) plugin.getLogger().log(Level.WARNING,
-                        "Module shutdown failed: " + disposal.module.compiled().id(), disposal.failure);
+                    if (disposal.cleanup != null) disposal.cleanup.whenComplete((ignored, error) -> completeAfterShutdown(disposal, error));
                     continue;
                 }
                 deferArtifactCleanup(disposal);
@@ -145,14 +171,15 @@ final class ModuleDisposer {
         // The future retains ownership after removal from the main-thread map.
         // No Paper API or user hook may run on its callback thread after shutdown.
         disposal.module.scope().drained().thenRun(() -> {
-            Throwable failure = closeArtifacts(disposal.module, null);
-            if (failure != null) plugin.getLogger().log(Level.WARNING, "Shutdown artifact cleanup failed: " + id, failure);
+            Throwable failure = closeLoader(disposal.module, null);
+            BuildCleanup.delete(disposal.module.compiled().jar().getParent()).whenComplete((ignored, error) -> {
+                Throwable finalFailure = combine(failure, unwrap(error));
+                if (finalFailure != null) plugin.getLogger().log(Level.WARNING, "Shutdown artifact cleanup failed: " + id, finalFailure);
+            });
         });
     }
-    private static Throwable closeArtifacts(LoadedModule module, Throwable failure) {
+    private static Throwable closeLoader(LoadedModule module, Throwable failure) {
         try { module.loader().close(); }
-        catch (Throwable error) { failure = combine(failure, error); }
-        try { ModuleCompiler.deleteBuild(module.compiled().jar().getParent()); }
         catch (Throwable error) { failure = combine(failure, error); }
         return failure;
     }
@@ -168,6 +195,7 @@ final class ModuleDisposer {
         private final CompletableFuture<Void> result = new CompletableFuture<>();
         private Throwable failure;
         private boolean finishing;
+        private CompletableFuture<Void> cleanup;
         Disposal(LoadedModule module, Throwable failure, long deadline) {
             this.module = module; this.failure = failure; this.deadline = deadline;
         }

@@ -104,7 +104,8 @@ public final class ModuleManager implements AutoCloseable {
                     pendingBuilds.add(compiled);
                     requireOpen();
                     CompiledModule ready = compiled;
-                    schedule(() -> completeCompilation(ready, classpath, snapshot, operation, result), ready, result);
+                    ResolvedClasspath.PreparedModule prepared = operation.equals("build") ? null : classpath.prepareLoader(ready.jar());
+                    schedule(() -> completeCompilation(ready, classpath, prepared, snapshot, operation, result), ready, result);
                 } catch (Throwable e) { cleanup(compiled); fail(ast.id(), e, result); }
             });
         } catch (Throwable e) { fail(ast.id(), e, result); }
@@ -120,7 +121,7 @@ public final class ModuleManager implements AutoCloseable {
         }
     }
     @FunctionalInterface private interface WorkerAction { void run() throws Exception; }
-    private void completeCompilation(CompiledModule compiled, ResolvedClasspath classpath,
+    private void completeCompilation(CompiledModule compiled, ResolvedClasspath classpath, ResolvedClasspath.PreparedModule prepared,
             PluginDependencyRegistry.Snapshot snapshot, String operation, CompletableFuture<String> result) {
         ModuleScope.requireMain();
         try {
@@ -128,10 +129,10 @@ public final class ModuleManager implements AutoCloseable {
             snapshot.validate();
             if (operation.equals("build")) {
                 cleanup(compiled); result.complete("Build succeeded: " + compiled.id());
-            } else load(compiled, classpath, snapshot, operation, result);
+            } else load(compiled, classpath, prepared, snapshot, operation, result);
         } catch (Throwable error) { cleanup(compiled); fail(compiled.id(), error, result); }
     }
-    private void load(CompiledModule compiled, ResolvedClasspath classpath,
+    private void load(CompiledModule compiled, ResolvedClasspath classpath, ResolvedClasspath.PreparedModule prepared,
             PluginDependencyRegistry.Snapshot snapshot, String operation, CompletableFuture<String> result) {
         ModuleScope.requireMain();
         URLClassLoader loader = null;
@@ -144,7 +145,7 @@ public final class ModuleManager implements AutoCloseable {
             Files.createDirectories(data);
             scope = new ModuleScope(plugin, compiled.id(), data, snapshot::available);
             snapshot.validate();
-            loader = classpath.newLoader(compiled.jar(), CodeModule.class.getClassLoader());
+            loader = classpath.newLoader(prepared, CodeModule.class.getClassLoader());
             // Publish ownership before any module class initializer, constructor or hook can
             // reenter shutdown. Its activation guard keeps artifacts open until this call exits.
             candidate = new LoadedModule(null, scope, loader, compiled);
@@ -248,8 +249,9 @@ public final class ModuleManager implements AutoCloseable {
     }
     private void cleanup(CompiledModule compiled) {
         if (compiled == null || !pendingBuilds.remove(compiled)) return;
-        try { ModuleCompiler.deleteBuild(compiled.jar().getParent()); }
-        catch (java.io.IOException e) { plugin.getLogger().log(Level.WARNING, "Build cleanup failed", e); }
+        BuildCleanup.delete(compiled.jar().getParent()).whenComplete((ignored, error) -> {
+            if (error != null) plugin.getLogger().log(Level.WARNING, "Build cleanup failed: " + compiled.id(), error);
+        });
     }
     @Override public void close() {
         ModuleScope.requireMain();

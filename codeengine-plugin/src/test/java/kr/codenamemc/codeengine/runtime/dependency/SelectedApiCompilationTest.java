@@ -47,7 +47,9 @@ class SelectedApiCompilationTest {
             assertFalse(resolved.selectedClasses().containsKey("shaded.Unused"));
             var compiled = compiler().compile(ast, ast.id(), resolved.selectedClasses());
             assertNull(System.getProperty("codeengine.selectedApiInitialized"), "signature inspection/compilation must not initialize API");
-            try (ModuleClassLoader module = resolved.newLoader(compiled.jar(), engineParent);
+            var prepared = resolved.prepareLoader(compiled.jar());
+            assertTrue(prepared.classes().contains(compiled.className()));
+            try (ModuleClassLoader module = resolved.newLoader(prepared, engineParent);
                  JarFile generated = new JarFile(compiled.jar().toFile())) {
                 assertNull(generated.getEntry("shared/Api.class"), "selected API view must not be packaged into module");
                 assertSame(b.loadClass("shared.Api"), module.loadClass("shared.Api"));
