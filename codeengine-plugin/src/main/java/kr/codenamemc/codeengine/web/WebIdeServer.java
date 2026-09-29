@@ -10,10 +10,13 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.function.*;
 import kr.codenamemc.codeengine.workspace.ModuleSourceStore;
+import kr.codenamemc.codeengine.intelligence.IntelligenceArtifacts;
+import java.nio.file.Files;
 
 /** Loopback-only authenticated editor. No CDN, cookies, CORS or token persistence. */
 public final class WebIdeServer implements AutoCloseable {
     private final ModuleSourceStore store;
+    private final IntelligenceArtifacts intelligence;
     private final BiFunction<String, String, CompletableFuture<String>> operations;
     private final Supplier<Set<String>> loadedIds;
     private final HttpServer server;
@@ -24,10 +27,14 @@ public final class WebIdeServer implements AutoCloseable {
     private final java.security.SecureRandom random = new java.security.SecureRandom();
     public WebIdeServer(ModuleSourceStore store, BiFunction<String, String, CompletableFuture<String>> operations,
                         Supplier<Set<String>> loadedIds, int port) throws IOException {
-        this.store = store; this.operations = operations; this.loadedIds = loadedIds;
+        this(store, operations, loadedIds, port, null);
+    }
+    public WebIdeServer(ModuleSourceStore store, BiFunction<String, String, CompletableFuture<String>> operations,
+                        Supplier<Set<String>> loadedIds, int port, IntelligenceArtifacts intelligence) throws IOException {
+        this.store = store; this.operations = operations; this.loadedIds = loadedIds; this.intelligence = intelligence;
         server = HttpServer.create(new InetSocketAddress(InetAddress.getByName("127.0.0.1"), port), 16);
         pool = new ThreadPoolExecutor(2, 4, 30, TimeUnit.SECONDS, new ArrayBlockingQueue<>(32),
-            task -> { Thread t = new Thread(task, "CodeEngine-WebIDE"); t.setDaemon(true); return t; }, new ThreadPoolExecutor.CallerRunsPolicy());
+            task -> { Thread t = new Thread(task, "CodeEngine-WebIDE"); t.setDaemon(true); return t; }, new ThreadPoolExecutor.AbortPolicy());
         server.setExecutor(pool); server.createContext("/", this::handle); server.start();
     }
     public String url() { return "http://127.0.0.1:" + server.getAddress().getPort() + "/#" + security.token(); }
@@ -38,7 +45,7 @@ public final class WebIdeServer implements AutoCloseable {
             exchange.getResponseHeaders().set("Referrer-Policy", "no-referrer");
             byte[] nonceBytes = new byte[18]; random.nextBytes(nonceBytes);
             String nonce = Base64.getEncoder().encodeToString(nonceBytes);
-            exchange.getResponseHeaders().set("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self' 'nonce-" + nonce + "'; style-src-attr 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'");
+            exchange.getResponseHeaders().set("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self' 'nonce-" + nonce + "'; style-src-attr 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; worker-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'");
             if (!security.validHost(exchange)) { send(exchange, 403, Map.of("error", "Invalid host")); return; }
             String path = exchange.getRequestURI().getPath();
             if (!path.startsWith("/api/")) { staticFile(exchange, path, nonce); return; }
@@ -55,6 +62,29 @@ public final class WebIdeServer implements AutoCloseable {
     private void api(HttpExchange exchange, String path, Map<String, String> query) throws IOException {
         String method = exchange.getRequestMethod(), id = query.get("id");
         switch (method + " " + path) {
+            case "GET /api/intelligence" -> {
+                if (intelligence == null) send(exchange, 200, Map.of("status", "error", "message", "API artifacts are unavailable", "artifacts", List.of()));
+                else send(exchange, 200, intelligence.request());
+            }
+            case "POST /api/intelligence/retry" -> {
+                if (intelligence == null) send(exchange, 200, Map.of("status", "error", "message", "API artifacts are unavailable", "artifacts", List.of()));
+                else send(exchange, 200, intelligence.retry());
+            }
+            case "GET /api/intelligence/artifact" -> {
+                var artifact = intelligence == null ? null : intelligence.artifact(id);
+                if (artifact == null) { send(exchange, 404, Map.of("error", "Artifact not found or not ready")); return; }
+                exchange.getResponseHeaders().set("Content-Type", "application/java-archive");
+                exchange.getResponseHeaders().set("ETag", "\"" + artifact.descriptor().sha256() + "\"");
+                // This handler is always dispatched by HttpServer's bounded WebIDE executor.
+                try (InputStream input = Files.newInputStream(artifact.path())) {
+                    exchange.sendResponseHeaders(200, artifact.descriptor().size());
+                    byte[] bytes = new byte[32768];
+                    for (int count; (count = input.read(bytes)) >= 0;) {
+                        if (Thread.currentThread().isInterrupted()) throw new InterruptedIOException("WebIDE stopped");
+                        exchange.getResponseBody().write(bytes, 0, count);
+                    }
+                }
+            }
             case "GET /api/modules" -> send(exchange, 200, Map.of("modules", store.list(), "loaded", loadedIds.get()));
             case "GET /api/file" -> {
                 var snapshot = store.read(id);
@@ -110,7 +140,7 @@ public final class WebIdeServer implements AutoCloseable {
     }
     private void staticFile(HttpExchange exchange, String path, String nonce) throws IOException {
         if (!exchange.getRequestMethod().equals("GET")) { send(exchange, 405, Map.of("error", "GET required")); return; }
-        Map<String, String> assets = Map.of("/", "index.html", "/app.js", "app.js", "/style.css", "style.css", "/THIRD_PARTY_LICENSES.txt", "THIRD_PARTY_LICENSES.txt");
+        Map<String, String> assets = Map.of("/", "index.html", "/app.js", "app.js", "/intelligence-worker.js", "intelligence-worker.js", "/style.css", "style.css", "/THIRD_PARTY_LICENSES.txt", "THIRD_PARTY_LICENSES.txt");
         String asset = assets.get(path);
         if (asset == null) { send(exchange, 404, Map.of("error", "Not found")); return; }
         try (InputStream input = getClass().getResourceAsStream("/webide/" + asset)) {
@@ -139,5 +169,5 @@ public final class WebIdeServer implements AutoCloseable {
         }
         return result;
     }
-    @Override public void close() { server.stop(0); pool.shutdownNow(); }
+    @Override public void close() { if (intelligence != null) intelligence.close(); server.stop(0); pool.shutdownNow(); }
 }

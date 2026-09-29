@@ -35,9 +35,14 @@ import {
   closeBracketsKeymap,
   completionKeymap,
 } from "@codemirror/autocomplete";
-import { lintGutter, setDiagnostics } from "@codemirror/lint";
+import { lintGutter } from "@codemirror/lint";
 import { codeEngine } from "../language";
-import { toDiagnostics, type Problem } from "../diagnostics";
+import { type Problem } from "../diagnostics";
+import type { IntelligenceClient } from "../intelligence/client";
+import {
+  intelligenceExtension,
+  refreshIntelligenceDiagnostics,
+} from "../intelligence/editor";
 
 export interface DocumentTab {
   id: string;
@@ -52,6 +57,7 @@ export interface DocumentTab {
 }
 const editable = new Compartment();
 const wrapping = new Compartment();
+const intelligence = new Compartment();
 const theme = EditorView.theme(
   {
     "&": {
@@ -112,6 +118,7 @@ const theme = EditorView.theme(
   { dark: true },
 );
 interface Props {
+  intelligence: IntelligenceClient;
   document: DocumentTab;
   locked: boolean;
   wrap: boolean;
@@ -146,6 +153,12 @@ export function Editor(props: Props) {
       search({ top: true }),
       lintGutter(),
       codeEngine(),
+      intelligence.of(
+        intelligenceExtension(
+          latest.current.intelligence,
+          () => latest.current.document.problems,
+        ),
+      ),
       theme,
       indentUnit.of("    "),
       EditorState.tabSize.of(4),
@@ -206,6 +219,12 @@ export function Editor(props: Props) {
         wrapping.reconfigure(
           latest.current.wrap ? EditorView.lineWrapping : [],
         ),
+        intelligence.reconfigure(
+          intelligenceExtension(
+            latest.current.intelligence,
+            () => latest.current.document.problems,
+          ),
+        ),
       ],
     });
     view.scrollDOM.scrollTop = document.scrollTop;
@@ -236,13 +255,7 @@ export function Editor(props: Props) {
   }, [props.wrap]);
   useLayoutEffect(() => {
     const view = viewRef.current;
-    if (view)
-      view.dispatch(
-        setDiagnostics(
-          view.state,
-          toDiagnostics(view.state.doc, props.document.problems),
-        ),
-      );
+    if (view) refreshIntelligenceDiagnostics(view);
   }, [props.document.id, props.document.problems]);
   return <div id="editor" className="editor" ref={container} />;
 }

@@ -994,3 +994,42 @@ dialog .dialog-error {
     animation: none;
   }
 }
+/* API preparation never blocks editing or the existing file operations. */
+.intelligence-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 16px;
+  min-height: 30px;
+  color: #899bb1;
+  background: #131923;
+  font-size: 11px;
+  border-bottom: 1px solid #252d3c;
+}
+.intelligence-status > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.intelligence-status.error {
+  color: #f1be85;
+}
+.intelligence-status.ready {
+  color: #9ccba7;
+}
+.intelligence-status button {
+  flex-shrink: 0;
+  font-size: 11px;
+}
+.ce-api-tooltip {
+  padding: 8px 12px;
+  max-width: min(680px, 85vw);
+  max-height: 240px;
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font:
+    12px/1.6 Consolas,
+    monospace;
+}

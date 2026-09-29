@@ -47,9 +47,52 @@ class WebIdeServerTest {
         var js = request("app.js", "GET", ""); assertEquals(200, js.statusCode());
         assertTrue(js.headers().firstValue("Content-Type").orElseThrow().startsWith("text/javascript"));
         assertEquals(200, request("style.css", "GET", "").statusCode());
+        assertEquals(200, request("intelligence-worker.js", "GET", "").statusCode());
+        assertTrue(page.headers().firstValue("Content-Security-Policy").orElseThrow().contains("worker-src 'self'"));
         assertEquals(200, request("THIRD_PARTY_LICENSES.txt", "GET", "").statusCode());
         assertEquals(404, request("src/App.tsx", "GET", "").statusCode());
         assertEquals(404, request("package.json", "GET", "").statusCode());
+    }
+    @Test void artifactEndpointsAreAuthenticatedAndStreamOnlyRegisteredFiles() throws Exception {
+        server.close();
+        var source = java.nio.file.Files.write(directory.resolve("fixture.jar"), new byte[] { 80, 75, 3, 4, 10 });
+        var entered = new java.util.concurrent.CountDownLatch(1);
+        var release = new java.util.concurrent.CountDownLatch(1);
+        var artifacts = new kr.codenamemc.codeengine.intelligence.IntelligenceArtifacts(directory.resolve("api-cache"), "fixture", root -> {
+            entered.countDown(); release.await();
+            return new kr.codenamemc.codeengine.intelligence.IntelligenceArtifacts.Prepared("fixture", "exact", "fixture", java.util.List.of(source));
+        });
+        server = new WebIdeServer(new ModuleSourceStore(directory.resolve("modules")),
+            (id, action) -> CompletableFuture.completedFuture("ok"), Set::of, 0, artifacts);
+        String[] parts = server.url().split("#"); address = parts[0]; token = parts[1];
+        try {
+            assertEquals(401, request("api/intelligence", "GET", "").statusCode());
+            assertEquals(401, request("api/intelligence/artifact?id=anything", "GET", "").statusCode());
+            assertEquals(1, entered.getCount(), "Unauthenticated traffic must not trigger downloads");
+            String auth = "Bearer " + token;
+            var loading = request("api/intelligence", "GET", "", "Authorization", auth);
+            assertTrue(loading.body().contains("loading"));
+            assertTrue(entered.await(5, java.util.concurrent.TimeUnit.SECONDS));
+            assertEquals(404, request("api/intelligence/artifact?id=anything", "GET", "", "Authorization", auth).statusCode());
+            release.countDown();
+            com.google.gson.JsonObject state = null;
+            long deadline = System.nanoTime() + java.util.concurrent.TimeUnit.SECONDS.toNanos(10);
+            do {
+                state = new com.google.gson.Gson().fromJson(request("api/intelligence", "GET", "", "Authorization", auth).body(), com.google.gson.JsonObject.class);
+                if (!state.get("status").getAsString().equals("loading")) break;
+                Thread.sleep(10);
+            } while (System.nanoTime() < deadline);
+            assertEquals("ready", state.get("status").getAsString(), state.toString());
+            var artifact = state.getAsJsonArray("artifacts").get(0).getAsJsonObject();
+            var result = client.send(HttpRequest.newBuilder(URI.create(address.substring(0, address.length() - 1) + artifact.get("url").getAsString()))
+                .header("Authorization", auth).build(), HttpResponse.BodyHandlers.ofByteArray());
+            assertEquals(200, result.statusCode());
+            assertArrayEquals(java.nio.file.Files.readAllBytes(source), result.body());
+            assertEquals("application/java-archive", result.headers().firstValue("Content-Type").orElseThrow());
+            assertEquals("\"" + artifact.get("sha256").getAsString() + "\"", result.headers().firstValue("ETag").orElseThrow());
+            assertEquals(404, request("api/intelligence/artifact?id=..%2Fconfig.yml", "GET", "", "Authorization", auth).statusCode());
+            assertEquals(401, request("api/intelligence", "GET", "", "Authorization", auth, "Origin", "https://evil.example").statusCode());
+        } finally { release.countDown(); }
     }
     @Test void crossOriginRequestRejected() throws Exception {
         assertEquals(401, request("api/modules", "GET", "", "Authorization", "Bearer " + token, "Origin", "https://evil.example").statusCode());

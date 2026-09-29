@@ -12,6 +12,7 @@
 - `ModuleManager`: 큐와 busy 상태, 스레드 전환, 로딩 및 실패 복구, ClassLoader 폐기.
 - `EngineCommands`: 관리자 명령과 WebIDE 세션 생명주기.
 - `WebSecurity` / `WebIdeServer` / `JobRegistry`: 요청 인증·라우팅·완료 상태 관리.
+- `IntelligenceArtifacts` / `MavenArtifactResolver` / `StandardApiArtifacts`: 전용 워커에서 WebIDE용 JAR 자료를 확보·캐시하며, 브라우저가 타입 분석을 수행하도록 바이트만 제공. [상세 구조](webide-intelligence.md).
 - `CodeEnginePlugin`: 설정·구성 요소 조립·시작 및 종료.
 
 ## 실행 경로
