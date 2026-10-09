@@ -13,3 +13,9 @@ Paper API, JUnit, and optional Playwright/Chromium verification tools retain the
 ## Studio runtime dependencies
 
 The plugin bundles React, React DOM, Scheduler, CodeMirror 6, Lezer, and their runtime dependencies under their respective MIT licenses. Exact versions are locked in `codeengine-webide/package-lock.json`. The Studio build collects each bundled package's full license into `webide/THIRD_PARTY_LICENSES.txt` in the JAR (also available at `/THIRD_PARTY_LICENSES.txt` from Studio). TypeScript, esbuild, tsx and Playwright are build/test tools and are not bundled into the plugin.
+
+## WebIDE artifact resolver
+
+The plugin embeds Apache Maven Resolver 1.9.22, Maven's resolver provider 3.9.9, and their runtime dependencies. Maven, Maven Resolver, Apache HttpComponents, Apache Commons, and `javax.inject` use Apache License 2.0; SLF4J uses the MIT license; Plexus components retain their upstream Apache/MIT licenses. Packages are relocated under `kr.codenamemc.codeengine.internal` to avoid conflicts with server plugins. Upstream `META-INF/LICENSE` and `META-INF/NOTICE` files are preserved and appended by the shaded build. Dependency versions and the complete dependency graph are available through the Gradle `dependencies` task.
+
+Paper API and its transitive API dependencies are downloaded from the official Paper/Maven repositories at runtime, only when an authenticated WebIDE requests intelligence artifacts. Java SE class files are copied from the server's installed JDK for that WebIDE session. These artifacts retain their respective upstream licenses and are cached separately from the distributed Code Engine plugin.
