@@ -11,9 +11,9 @@ import java.util.jar.JarOutputStream;
 import javax.tools.ToolProvider;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-final class ProviderFixtures {
+public final class ProviderFixtures {
     private ProviderFixtures() { }
-    static Path compile(Path temporary, String id, Map<String, String> sources, String classpath) throws IOException {
+    public static Path compile(Path temporary, String id, Map<String, String> sources, String classpath) throws IOException {
         Path root = Files.createDirectory(temporary.resolve(id));
         Path classes = Files.createDirectory(root.resolve("classes"));
         List<Path> inputs = new ArrayList<>();
