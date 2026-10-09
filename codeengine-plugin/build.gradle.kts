@@ -1,11 +1,13 @@
 import java.net.URLClassLoader
 import java.util.jar.JarInputStream
 import java.util.zip.ZipFile
+import org.gradle.process.CommandLineArgumentProvider
 
 plugins {
     `java-library`
     id("com.gradleup.shadow") version "8.3.6"
 }
+val mockitoAgent by configurations.creating
 dependencies {
     implementation(project(":codeengine-api"))
     implementation(project(":codeengine-compiler"))
@@ -15,6 +17,13 @@ dependencies {
     implementation("org.apache.maven.resolver:maven-resolver-transport-file:1.9.22")
     compileOnly("io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT")
     testImplementation("io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT")
+    testImplementation("org.mockito:mockito-core:5.17.0")
+    mockitoAgent("org.mockito:mockito-core:5.17.0") { isTransitive = false }
+}
+tasks.test {
+    jvmArgumentProviders.add(CommandLineArgumentProvider {
+        listOf("-javaagent:${mockitoAgent.singleFile.absolutePath}")
+    })
 }
 // Keep every upstream notice independently; flat META-INF merges alone lose provenance.
 val dependencyNoticesDirectory = layout.buildDirectory.dir("generated/dependency-notices")

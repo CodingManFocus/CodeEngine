@@ -1,6 +1,6 @@
 # 외부 Java API
 
-Code Engine 모듈은 설치된 Bukkit 플러그인의 공개 Java API를 직접 호출할 수 있습니다.
+Code Engine 모듈은 설치된 Bukkit/Paper 플러그인의 공개 Java API를 직접 호출할 수 있습니다.
 별도 애드온이나 API별 래퍼를 작성할 필요가 없습니다. `use 타입 from "플러그인명";`으로
 Java 타입과 그 타입을 제공할 플러그인을 함께 지정합니다.
 
@@ -21,9 +21,9 @@ command placeholders {
 
 ## Java 호출 규칙
 
-- `use fully.qualified.ClassName from "정확한 plugin.yml 이름";`은 해당 플러그인의 타입을
-  선택하고 설치·활성화 상태에 대한 생존 의존성을 자동으로 추가합니다. 파일 이름이나
-  패키지 이름으로 플러그인을 추측하지 않습니다.
+- `use fully.qualified.ClassName from "정확한 플러그인 이름";`은 `plugin.yml` 또는
+  `paper-plugin.yml`의 `name`에 지정된 플러그인의 타입을 선택하고 설치·활성화 상태에 대한
+  생존 의존성을 자동으로 추가합니다. 파일 이름이나 패키지 이름으로 플러그인을 추측하지 않습니다.
 - JDK/Paper 타입은 `use java.util.List;`처럼 기존 문법을 사용합니다. 외부 타입의
   `use`에는 `from`이 필수입니다. `requires plugin`만 쓰고 외부 타입을 가져올 수 없습니다.
 - `requires plugin "PluginName";`은 타입을 가져오지 않는 생존 의존성입니다. API 서명에서
@@ -73,9 +73,11 @@ JAR 전체를 클래스패스에 나란히 넣지 않습니다. 실행할 때는
 **원래 클래스 로더**로 연결합니다. 임시 API JAR는 모듈 JAR에 포함하거나 런타임 로더에
 추가하지 않습니다. singleton·static 상태·타입 동일성을 유지하며 호출마다 검사하지 않습니다.
 
-`use ... from`의 API 제공 범위는 Bukkit `plugin.yml`을 쓰는 JavaPlugin과 그 플러그인 JAR에 들어 있는 API입니다.
+`use ... from`의 API 제공 범위는 Bukkit `plugin.yml` 또는 Paper `paper-plugin.yml`을 쓰는
+JavaPlugin과 그 플러그인 JAR에 들어 있는 API입니다. 두 형식 모두 동일한 문법을 사용하며,
+Paper 제공자의 API도 해당 플러그인의 원래 클래스 로더로 연결합니다.
 `requires plugin`만 선언한 경우에는 활성 플러그인의 인스턴스와 종료 여부만 확인합니다.
-`use ... from`은 `paper-plugin.yml` 제공자, 별도 API/라이브러리 로더, manifest Class-Path,
+`use ... from`은 별도 API/라이브러리 로더, manifest Class-Path,
 multi-release 제공 JAR을 현재 지원하지 않습니다. 미선언 제공자·서명 의존성 누락·타입 불일치는 실패로
 처리합니다. 리플렉션의 선언 멤버 조회에도 의존 타입이 필요하므로, 선택한 API 클래스의
 private 서명에 선택적 라이브러리가 빠져 있으면 준비 단계가 실패할 수 있습니다.

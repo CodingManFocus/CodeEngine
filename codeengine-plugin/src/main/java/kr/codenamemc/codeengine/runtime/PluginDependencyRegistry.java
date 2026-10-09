@@ -6,7 +6,6 @@ import java.util.function.Consumer;
 import org.bukkit.event.*;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 import kr.codenamemc.codeengine.compiler.ModuleAst;
 import kr.codenamemc.codeengine.compiler.SourceException;
@@ -69,9 +68,11 @@ final class PluginDependencyRegistry implements Listener, AutoCloseable {
             for (Binding binding : bindings) {
                 Plugin plugin = binding.plugin();
                 Integer line = importedProviders.get(plugin.getName());
-                if (!(plugin instanceof JavaPlugin) || !(plugin.getPluginMeta() instanceof PluginDescriptionFile)) {
+                // Both plugin.yml and paper-plugin.yml providers use JavaPlugin. Keep
+                // their actual defining loader; metadata format does not determine API access.
+                if (!(plugin instanceof JavaPlugin)) {
                     if (line != null) throw new SourceException(line,
-                        "Only legacy Bukkit JavaPlugin API providers are supported: " + plugin.getName());
+                        "Only JavaPlugin API providers are supported: " + plugin.getName());
                     continue;
                 }
                 var source = plugin.getClass().getProtectionDomain().getCodeSource();
