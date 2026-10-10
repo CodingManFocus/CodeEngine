@@ -22,7 +22,7 @@ final class SelectedApiJar {
         Path output = directory.resolve("selected-api.jar");
         try (JarOutputStream target = new JarOutputStream(Files.newOutputStream(output))) {
             for (var group : byJar.entrySet()) {
-                try (JarFile source = new JarFile(group.getKey().toFile())) {
+                try (JarFile source = new JarFile(group.getKey().toFile(), true, JarFile.OPEN_READ, JarFile.runtimeVersion())) {
                     for (String binaryName : group.getValue()) {
                         String name = binaryName.replace('.', '/') + ".class";
                         JarEntry original = source.getJarEntry(name);

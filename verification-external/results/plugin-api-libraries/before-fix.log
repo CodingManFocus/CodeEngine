@@ -1,0 +1,6 @@
+Exception in thread "main" java.io.IOException: API signature exposes org.semver4j.Semver from an undeclared plugin or unsupported library loader; declare its provider explicitly
+	at kr.codenamemc.codeengine.runtime.dependency.ApiTypeGraph.include(ApiTypeGraph.java:75)
+	at kr.codenamemc.codeengine.runtime.dependency.ApiTypeGraph.inspect(ApiTypeGraph.java:94)
+	at kr.codenamemc.codeengine.runtime.dependency.ApiTypeGraph.resolve(ApiTypeGraph.java:41)
+	at kr.codenamemc.codeengine.runtime.dependency.DependencyClasspath.prepare(DependencyClasspath.java:68)
+	at VerifyBetterModelApi.main(VerifyBetterModelApi.java:46)

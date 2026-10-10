@@ -99,7 +99,7 @@ public final class ModuleManager implements AutoCloseable {
                 CompiledModule compiled = null;
                 try {
                     requireOpen();
-                    ResolvedClasspath classpath = DependencyClasspath.prepare(compiler.baseClasspath(), providers, ast.imports(), CodeModule.class.getClassLoader());
+                    ResolvedClasspath classpath = DependencyClasspath.prepare(compiler.baseClasspath(), providers, snapshot.plugins(), ast.imports(), CodeModule.class.getClassLoader());
                     compiled = compiler.compile(ast, ast.id(), classpath.selectedClasses());
                     pendingBuilds.add(compiled);
                     requireOpen();

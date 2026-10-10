@@ -1,0 +1,4 @@
+PASS: selected 261 API/signature types
+PASS: Semver source is semver4j.jar, original Class identity retained
+PASS: original modelcheck source compiles and invokes real BetterModel.model; missing-model message matches
+PASS: native BetterModel.platform().semver().getMajor() library call

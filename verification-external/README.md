@@ -8,6 +8,9 @@ server: its final checks deliberately disable PlaceholderAPI or CodeEngine.
 The measured results and retained raw evidence are documented
 in [QUALIFIED-IMPORTS.md](QUALIFIED-IMPORTS.md); [REPORT.md](REPORT.md) retains the initial implementation measurements.
 
+Separate library loaders and the real BetterModel API are covered by
+[PLUGIN-API-LIBRARIES.md](PLUGIN-API-LIBRARIES.md). That check runs without a Paper server.
+
 ## What is compared
 
 `NativeApiWork.java` and `external.ce` independently call the same public
