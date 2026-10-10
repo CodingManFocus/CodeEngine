@@ -10,11 +10,11 @@ import java.util.stream.Collectors;
 public final class ResolvedClasspath {
     private final Set<Path> baseEntries;
     private final Set<String> baseClasses;
-    private final Map<String, DependencyClasspath.Provider> owners;
+    private final Map<String, ResolvedApiType> owners;
     private final Map<String, Path> selectedClasses;
 
     ResolvedClasspath(Set<Path> baseEntries, Set<String> baseClasses,
-                      Map<String, DependencyClasspath.Provider> owners) {
+                      Map<String, ResolvedApiType> owners) {
         this.baseEntries = Set.copyOf(baseEntries);
         this.baseClasses = Set.copyOf(baseClasses);
         this.owners = Map.copyOf(owners);

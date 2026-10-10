@@ -38,7 +38,11 @@ final class PluginDependencyRegistry implements Listener, AutoCloseable {
                 throw new IllegalStateException("Required plugin was stopped; restart the server before using it again: " + name);
             bindings.add(new Binding(provider, provider.getClass().getClassLoader()));
         }
-        return new Snapshot(bindings);
+        List<DependencyClasspath.PluginOrigin> plugins = new ArrayList<>();
+        for (Plugin plugin : engine.getServer().getPluginManager().getPlugins()) {
+            plugins.add(new DependencyClasspath.PluginOrigin(plugin.getName(), localSource(plugin), plugin.getClass().getClassLoader()));
+        }
+        return new Snapshot(bindings, plugins);
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
@@ -53,11 +57,24 @@ final class PluginDependencyRegistry implements Listener, AutoCloseable {
 
     @Override public void close() { HandlerList.unregisterAll(this); }
 
+    // Capture metadata only here; canonicalization and JAR reads happen on the compiler worker.
+    private static Path localSource(Plugin plugin) {
+        var source = plugin.getClass().getProtectionDomain().getCodeSource();
+        if (source == null || source.getLocation() == null || !source.getLocation().getProtocol().equals("file")) return null;
+        try { return Path.of(source.getLocation().toURI()).toAbsolutePath().normalize(); }
+        catch (java.net.URISyntaxException | IllegalArgumentException error) { return null; }
+    }
+
     private record Binding(Plugin plugin, ClassLoader loader) { }
 
     final class Snapshot {
         private final List<Binding> bindings;
-        private Snapshot(List<Binding> bindings) { this.bindings = List.copyOf(bindings); }
+        private final List<DependencyClasspath.PluginOrigin> plugins;
+        private Snapshot(List<Binding> bindings, List<DependencyClasspath.PluginOrigin> plugins) {
+            this.bindings = List.copyOf(bindings);
+            this.plugins = List.copyOf(plugins);
+        }
+        List<DependencyClasspath.PluginOrigin> plugins() { return plugins; }
         List<DependencyClasspath.Provider> providers(List<ModuleAst.Import> imports) {
             Map<String, Integer> importedProviders = new HashMap<>();
             for (ModuleAst.Import imported : imports) {
@@ -75,17 +92,12 @@ final class PluginDependencyRegistry implements Listener, AutoCloseable {
                         "Only JavaPlugin API providers are supported: " + plugin.getName());
                     continue;
                 }
-                var source = plugin.getClass().getProtectionDomain().getCodeSource();
-                if (source == null || source.getLocation() == null || !source.getLocation().getProtocol().equals("file")) {
+                Path jar = localSource(plugin);
+                if (jar == null) {
                     if (line != null) throw new SourceException(line, "Provider has no local plugin JAR: " + plugin.getName());
                     continue;
                 }
-                try {
-                    Path jar = Path.of(source.getLocation().toURI()).toAbsolutePath().normalize();
-                    providers.add(new DependencyClasspath.Provider(plugin.getName(), jar, binding.loader()));
-                } catch (java.net.URISyntaxException | IllegalArgumentException error) {
-                    if (line != null) throw new SourceException(line, "Invalid provider JAR location: " + plugin.getName());
-                }
+                providers.add(new DependencyClasspath.Provider(plugin.getName(), jar, binding.loader()));
             }
             return List.copyOf(providers);
         }

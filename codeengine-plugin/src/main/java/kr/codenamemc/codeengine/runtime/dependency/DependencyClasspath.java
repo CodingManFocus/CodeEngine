@@ -28,7 +28,21 @@ public final class DependencyClasspath {
         }
     }
 
+    /** Captured on the server thread. A missing source still identifies a plugin's defining loader. */
+    public record PluginOrigin(String name, Path jar, ClassLoader loader) {
+        public PluginOrigin {
+            Objects.requireNonNull(name);
+            Objects.requireNonNull(loader);
+        }
+    }
+
     public static ResolvedClasspath prepare(String baseClasspath, List<Provider> providers,
+                                            List<ModuleAst.Import> imports, ClassLoader engineParent) throws IOException {
+        return prepare(baseClasspath, providers, providers.stream()
+            .map(provider -> new PluginOrigin(provider.name(), provider.jar(), provider.loader())).toList(), imports, engineParent);
+    }
+
+    public static ResolvedClasspath prepare(String baseClasspath, List<Provider> providers, List<PluginOrigin> knownPlugins,
                                             List<ModuleAst.Import> imports, ClassLoader engineParent) throws IOException {
         Set<Path> baseEntries = new LinkedHashSet<>();
         Set<String> baseClasses = new HashSet<>();
@@ -56,7 +70,16 @@ public final class DependencyClasspath {
         }
         List<Provider> candidates = providers.stream()
             .map(provider -> selectedProviders.getOrDefault(provider.name(), provider)).toList();
-        ApiTypeGraph graph = new ApiTypeGraph(baseEntries, baseClasses, candidates, engineParent);
+        List<PluginOrigin> plugins = new java.util.ArrayList<>();
+        for (PluginOrigin plugin : knownPlugins) {
+            Path jar = plugin.jar();
+            if (jar != null) {
+                try { jar = jar.toRealPath(); }
+                catch (IOException ignored) { jar = jar.toAbsolutePath().normalize(); }
+            }
+            plugins.add(new PluginOrigin(plugin.name(), jar, plugin.loader()));
+        }
+        ApiTypeGraph graph = new ApiTypeGraph(baseEntries, baseClasses, candidates, plugins, engineParent);
         for (ModuleAst.Import imported : imports) {
             if (imported.pluginName().isEmpty()) continue;
             Provider provider = selectedProviders.get(imported.pluginName());
@@ -64,9 +87,16 @@ public final class DependencyClasspath {
             try { graph.addRoot(binaryName, provider); }
             catch (IOException error) { throw new SourceException(imported.line(), error.getMessage()); }
         }
-        Map<String, Provider> owners = new HashMap<>();
-        for (var entry : graph.resolve().entrySet()) {
-            owners.put(entry.getKey(), selectProvider(entry.getValue(), selectedJars, selectedProviders, classesByProvider));
+        Map<String, ResolvedApiType> owners = graph.resolve();
+        Set<Path> validated = new HashSet<>();
+        for (var selected : owners.values()) {
+            if (!validated.add(selected.jar())) continue;
+            Provider plugin = candidates.stream().filter(provider -> {
+                try { return provider.jar().toRealPath().equals(selected.jar()); }
+                catch (IOException ignored) { return false; }
+            }).findFirst().orElse(null);
+            if (plugin != null) selectProvider(plugin, selectedJars, selectedProviders, classesByProvider);
+            else validateLibraryJar(selected.jar());
         }
         for (ModuleAst.Import imported : imports) {
             if (!imported.pluginName().isEmpty() || binaryName(imported.type(), baseClasses) != null) continue;
@@ -109,6 +139,15 @@ public final class DependencyClasspath {
             int separator = candidate.lastIndexOf('.');
             if (separator < 0) return null;
             candidate = candidate.substring(0, separator) + '$' + candidate.substring(separator + 1);
+        }
+    }
+
+    private static void validateLibraryJar(Path path) throws IOException {
+        try (JarFile jar = new JarFile(path.toFile())) {
+            var manifest = jar.getManifest();
+            String extraClasspath = manifest == null ? null : manifest.getMainAttributes().getValue(Attributes.Name.CLASS_PATH);
+            if (extraClasspath != null && !extraClasspath.isBlank())
+                throw new IOException("API library JARs with manifest Class-Path are not supported: " + path.getFileName());
         }
     }
 

@@ -24,7 +24,7 @@ command placeholders {
 - `use fully.qualified.ClassName from "정확한 플러그인 이름";`은 `plugin.yml` 또는
   `paper-plugin.yml`의 `name`에 지정된 플러그인의 타입을 선택하고 설치·활성화 상태에 대한
   생존 의존성을 자동으로 추가합니다. 파일 이름이나 패키지 이름으로 플러그인을 추측하지 않습니다.
-- JDK/Paper 타입은 `use java.util.List;`처럼 기존 문법을 사용합니다. 외부 타입의
+- JDK/Paper 타입은 `use java.util.List;`처럼 기존 문법을 사용합니다. 플러그인 API 타입의
   `use`에는 `from`이 필수입니다. `requires plugin`만 쓰고 외부 타입을 가져올 수 없습니다.
 - `requires plugin "PluginName";`은 타입을 가져오지 않는 생존 의존성입니다. API 서명에서
   참조하는 다른 플러그인이나 종료 감지가 필요한 플러그인을 선언할 때 사용할 수 있습니다.
@@ -69,16 +69,48 @@ PluginA와 PluginB에 모두 `com.example.api.ExampleApi`가 있으면 위 선�
 내부 호출은 해당 플러그인의 로더가 계속 담당합니다.
 
 javac에는 선택한 클래스 정의만 담은 **컴파일 전용 임시 JAR**를 제공합니다. 원본 제공자
-JAR 전체를 클래스패스에 나란히 넣지 않습니다. 실행할 때는 제공자가 이미 사용하는
-**원래 클래스 로더**로 연결합니다. 임시 API JAR는 모듈 JAR에 포함하거나 런타임 로더에
+JAR 전체를 클래스패스에 나란히 넣지 않습니다. 실행할 때는 준비 단계에서 확인한
+**원래 Class 객체**로 연결합니다. 임시 API JAR는 모듈 JAR에 포함하거나 런타임 로더에
 추가하지 않습니다. singleton·static 상태·타입 동일성을 유지하며 호출마다 검사하지 않습니다.
 
 `use ... from`의 API 제공 범위는 Bukkit `plugin.yml` 또는 Paper `paper-plugin.yml`을 쓰는
 JavaPlugin과 그 플러그인 JAR에 들어 있는 API입니다. 두 형식 모두 동일한 문법을 사용하며,
 Paper 제공자의 API도 해당 플러그인의 원래 클래스 로더로 연결합니다.
+
+API 서명에서 참조하는 **별도 라이브러리 JAR의 타입**도 수집합니다. 예를 들어 BetterModel이
+Paper의 라이브러리 로더로 읽은 `org.semver4j.Semver`는 별도의 플러그인 선언 없이 연결됩니다.
+각 타입의 실제 Class 객체·정의 로더·로컬 source JAR를 확인하고, API 제공자가 같은 Class로
+접근할 수 있는지도 검사합니다. 라이브러리를 모듈 로더에서 다시 정의하지 않습니다.
+필요한 클래스만 선택하며, 라이브러리 JAR 전체나 서버에서 우연히 보이는 타입을 노출하지 않습니다.
+API 서명에 이미 선택된 라이브러리 타입은 반환값, 전체 클래스명 또는 일반 `use`로 참조할 수 있습니다.
+`use ... from`의 직접 가져오기는 계속 지정한 플러그인 본체 JAR의 타입을 선택합니다.
+
+```java
+module bettermodel_test;
+use kr.toxicity.model.api.BetterModel from "BetterModel";
+
+command modelcheck {
+    if (BetterModel.model("demon_knight").isPresent()) {
+        sender.sendMessage(Component.text("모델을 찾았습니다!"));
+    } else {
+        sender.sendMessage(Component.text("모델이 없습니다."));
+    }
+    return true;
+}
+```
+
+[examples/bettermodel_test.ce](../examples/bettermodel_test.ce)도 참고하세요. BetterModel과 모델은
+서버에 별도로 설치해야 합니다. 설치한 BetterModel 버전의 Java 요구사항도 충족해야 합니다.
+
+다른 플러그인의 JAR 또는 본체 로더에서 온 타입은 라이브러리로 자동 취급하지 않습니다.
+`requires plugin "OtherPlugin";` 또는 해당 플러그인의 `use ... from`으로 명시해야 합니다.
+플러그인 목록의 인스턴스·로더·source 위치는 서버 스레드에서 스냅샷으로 캡처하고,
+JAR 읽기와 타입 탐색은 컴파일 워커가 처리합니다. Paper 내부 로더 API나 private 필드를 사용하지 않습니다.
+
 `requires plugin`만 선언한 경우에는 활성 플러그인의 인스턴스와 종료 여부만 확인합니다.
-`use ... from`은 별도 API/라이브러리 로더, manifest Class-Path,
-multi-release 제공 JAR을 현재 지원하지 않습니다. 미선언 제공자·서명 의존성 누락·타입 불일치는 실패로
+로컬 JAR 출처가 없는 타입, manifest Class-Path 및 multi-release **플러그인 본체** JAR은
+현재 지원하지 않습니다. multi-release **라이브러리**는 현재 JVM이 선택하는 클래스 정의를
+컴파일용 JAR에 평탄화하여 사용합니다. 미선언 제공자·서명 의존성 누락·타입 불일치는 실패로
 처리합니다. 리플렉션의 선언 멤버 조회에도 의존 타입이 필요하므로, 선택한 API 클래스의
 private 서명에 선택적 라이브러리가 빠져 있으면 준비 단계가 실패할 수 있습니다.
 `Object`나 동적 리플렉션으로만 전달되는 타입은 정적 서명 탐색으로 보장하지 않습니다.
@@ -133,4 +165,5 @@ disable {
 hot reload/re-enable은 지원하지 않으며, 같은 인스턴스를 다시 켜도 재시작 전에는 재사용을
 거부합니다. 런타임 내부 의존성 그래프나 private 필드를 변경하지 않습니다.
 
-검증 방법과 실제 측정은 [외부 API 검증](../verification-external/README.md)을 참고하세요.
+검증 방법과 실제 측정은 [외부 API 검증](../verification-external/README.md), 별도 라이브러리와
+BetterModel 검증은 [라이브러리 API 검증](../verification-external/PLUGIN-API-LIBRARIES.md)을 참고하세요.

@@ -1,0 +1,12 @@
+module bettermodel_test;
+
+use kr.toxicity.model.api.BetterModel from "BetterModel";
+
+command modelcheck {
+    if (BetterModel.model("demon_knight").isPresent()) {
+        sender.sendMessage(Component.text("모델을 찾았습니다!"));
+    } else {
+        sender.sendMessage(Component.text("모델이 없습니다."));
+    }
+    return true;
+}

@@ -11,12 +11,12 @@ import java.util.Set;
 public final class ModuleClassLoader extends URLClassLoader {
     static { registerAsParallelCapable(); }
     private final Set<Path> baseEntries;
-    private final Map<String, DependencyClasspath.Provider> owners;
+    private final Map<String, ResolvedApiType> owners;
     private final Path moduleJar;
     private final Set<String> moduleClasses;
 
     ModuleClassLoader(Path moduleJar, ClassLoader parent, Set<Path> baseEntries,
-                      Map<String, DependencyClasspath.Provider> owners, Set<String> moduleClasses) throws IOException {
+                      Map<String, ResolvedApiType> owners, Set<String> moduleClasses) throws IOException {
         super(new URL[]{moduleJar.toUri().toURL()}, parent);
         this.baseEntries = baseEntries;
         this.owners = owners;
@@ -28,9 +28,9 @@ public final class ModuleClassLoader extends URLClassLoader {
         synchronized (getClassLoadingLock(name)) {
             Class<?> type = findLoadedClass(name);
             if (type == null) {
-                DependencyClasspath.Provider provider = owners.get(name);
+                ResolvedApiType selected = owners.get(name);
                 if (moduleClasses.contains(name)) type = loadModuleClass(name);
-                else if (provider != null) type = loadProviderClass(name, provider);
+                else if (selected != null) type = selected.type();
                 else {
                     type = getParent().loadClass(name);
                     if (!allowedParent(type))
@@ -48,14 +48,6 @@ public final class ModuleClassLoader extends URLClassLoader {
         Class<?> type = findClass(name);
         if (type.getClassLoader() != this || !moduleJar.equals(ClassOrigin.path(type)))
             throw new ClassNotFoundException("Generated module class resolved outside its own JAR: " + name);
-        return type;
-    }
-
-    private static Class<?> loadProviderClass(String name, DependencyClasspath.Provider provider) throws ClassNotFoundException {
-        Class<?> type = provider.loader().loadClass(name);
-        if (type.getClassLoader() != provider.loader() || !provider.jar().equals(ClassOrigin.path(type)))
-            throw new ClassNotFoundException("Plugin " + provider.name() + " resolved " + name
-                + " from a different loader or JAR than its compile-time API");
         return type;
     }
 

@@ -1,0 +1,27 @@
+{
+  "date": "2026-10-10",
+  "baselineCommit": "c3505156a1667ddf8b3ab40aad0bbdf3ec49ed5b",
+  "relatedTests": {
+    "tests": 96,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "unitTestJdk": "Temurin 21.0.12.1+1",
+  "betterModelVerificationJdk": "Temurin 25.0.4.1+1",
+  "betterModel": "3.5.0 Paper",
+  "paperApi": "1.21.11-R0.1-20260511.115010-91",
+  "selectedApiTypes": 261,
+  "originalCommandExecuted": true,
+  "modelManager": "test proxy returning null",
+  "livePaperServer": false,
+  "beforeFixSemverErrorReproduced": true,
+  "inputSha256": {
+    "bettermodel.jar": "0f983569b45e82f657fd6267f68115cc679fa066f0e8eec2ce328596dcb57ed6",
+    "caffeine.jar": "9d9d2cfd681fd9272ded3d27c9930db12f89f732345975aa113ebc223bbf1224",
+    "dynamicuv.jar": "f15e0d2b3c0449e1d2e7b86a8c05100cf3f7e6bbde30867604bfd138913b9839",
+    "java-mesh.jar": "0b6a1604f1d6d2934374a4a235c11f2b25409987d68b656abacacb110267be38",
+    "semver4j.jar": "43d5e02f60e2b1f8ff0c92139f612a547691a1debe6bea32b0a70ba5a3bcbdd7",
+    "paper-api.jar": "c577b181c11a8674310e56c92a91e31c010b7f04c9bd10b91c3be18374401070"
+  }
+}
