@@ -12,6 +12,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.apache.maven.repository.internal.MavenRepositorySystemUtils;
 import org.eclipse.aether.DefaultRepositorySystemSession;
 import org.eclipse.aether.RepositorySystem;
+import org.eclipse.aether.artifact.Artifact;
 import org.eclipse.aether.artifact.DefaultArtifact;
 import org.eclipse.aether.collection.CollectRequest;
 import org.eclipse.aether.connector.basic.BasicRepositoryConnectorFactory;
@@ -23,6 +24,9 @@ import org.eclipse.aether.repository.RepositoryPolicy;
 import org.eclipse.aether.resolution.ArtifactResult;
 import org.eclipse.aether.resolution.DependencyRequest;
 import org.eclipse.aether.resolution.DependencyResolutionException;
+import org.eclipse.aether.resolution.VersionRangeRequest;
+import org.eclipse.aether.resolution.VersionRangeResolutionException;
+import org.eclipse.aether.resolution.VersionRangeResult;
 import org.eclipse.aether.spi.connector.RepositoryConnectorFactory;
 import org.eclipse.aether.spi.connector.transport.TransporterFactory;
 import org.eclipse.aether.transfer.AbstractTransferListener;
@@ -32,12 +36,14 @@ import org.eclipse.aether.transport.file.FileTransporterFactory;
 import org.eclipse.aether.transport.http.HttpTransporterFactory;
 import org.eclipse.aether.util.artifact.JavaScopes;
 import org.eclipse.aether.util.filter.DependencyFilterUtils;
+import org.eclipse.aether.version.Version;
 
 /** Downloads opaque Maven artifacts. It never loads classes or builds an IDE type index. */
 public final class MavenArtifactResolver {
     private static final int MAX_ARTIFACTS = 96;
     private static final long MAX_ARTIFACT_BYTES = 64L * 1024 * 1024;
     private static final long MAX_TRANSFER_BYTES = 192L * 1024 * 1024;
+    private static final String PAPER_API = "io.papermc.paper:paper-api";
     private static final List<RemoteRepository> REPOSITORIES = List.of(
         new RemoteRepository.Builder("papermc", "default", "https://repo.papermc.io/repository/maven-public/").build(),
         new RemoteRepository.Builder("central", "default", "https://maven-central.storage-download.googleapis.com/maven2/").build());
@@ -55,42 +61,60 @@ public final class MavenArtifactResolver {
 
     /** Must be called on the dedicated background worker, never on a server tick. */
     public List<Path> resolve(String version, Path cacheDirectory) throws IOException {
+        return resolve(version, cacheDirectory, true);
+    }
+
+    /** Paper API's transitive dependencies only: a fork supplies its own API JAR. */
+    public List<Path> resolveDependencies(String version, Path cacheDirectory) throws IOException {
+        return resolve(version, cacheDirectory, false);
+    }
+
+    /** Published paper-api versions from repository metadata; callers filter them by Minecraft version. */
+    public List<String> versions(Path cacheDirectory) throws IOException {
+        checkInterrupted();
+        Files.createDirectories(cacheDirectory);
+        RepositorySystem system = newRepositorySystem();
+        try {
+            VersionRangeResult result = system.resolveVersionRange(newSession(system, cacheDirectory),
+                new VersionRangeRequest(new DefaultArtifact(PAPER_API + ":jar:[0,)"), repositories, null));
+            checkInterrupted();
+            if (result.getVersions().isEmpty() && !result.getExceptions().isEmpty()) {
+                Exception cause = result.getExceptions().getFirst();
+                throw new IOException("Could not list published Paper API versions: " + cause.getMessage(), cause);
+            }
+            return result.getVersions().stream().map(Version::toString).toList();
+        } catch (VersionRangeResolutionException exception) {
+            checkInterrupted();
+            throw new IOException("Could not list published Paper API versions: " + exception.getMessage(), exception);
+        } finally {
+            system.shutdown();
+        }
+    }
+
+    private List<Path> resolve(String version, Path cacheDirectory, boolean includeApi) throws IOException {
         // Validate before interpreting the caller's value as a Maven coordinate or cache path.
         new PaperApiVersion(version, "validation", "validation");
         checkInterrupted();
         Files.createDirectories(cacheDirectory);
         RepositorySystem system = newRepositorySystem();
         try {
-            DefaultRepositorySystemSession session = MavenRepositorySystemUtils.newSession();
-            session.setLocalRepositoryManager(system.newLocalRepositoryManager(session,
-                new LocalRepository(cacheDirectory.toFile())));
-            session.setIgnoreArtifactDescriptorRepositories(true);
-            session.setChecksumPolicy(RepositoryPolicy.CHECKSUM_POLICY_FAIL);
-            session.setUpdatePolicy(RepositoryPolicy.UPDATE_POLICY_DAILY);
-            session.setConfigProperty("aether.connector.connectTimeout", 15_000);
-            session.setConfigProperty("aether.connector.requestTimeout", 30_000);
-            session.setConfigProperty("aether.connector.http.retryHandler.count", 0);
-            // Keep transfers on the worker: cancellation and transfer limits have one owner.
-            session.setConfigProperty("aether.connector.basic.threads", 1);
-            session.setConfigProperty("aether.metadataResolver.threads", 1);
-            session.setConfigProperty("aether.dependencyCollector.impl", "df");
-            session.setTransferListener(new TransferLimits(Thread.currentThread()));
-            session.setReadOnly();
-
             CollectRequest collect = new CollectRequest(
-                new Dependency(new DefaultArtifact("io.papermc.paper:paper-api:jar:" + version), JavaScopes.COMPILE),
+                new Dependency(new DefaultArtifact(PAPER_API + ":jar:" + version), JavaScopes.COMPILE),
                 repositories);
             DependencyRequest request = new DependencyRequest(collect,
                 DependencyFilterUtils.classpathFilter(JavaScopes.COMPILE));
-            List<ArtifactResult> resolved = system.resolveDependencies(session, request).getArtifactResults();
+            List<ArtifactResult> resolved = system.resolveDependencies(newSession(system, cacheDirectory), request)
+                .getArtifactResults();
             checkInterrupted();
             List<Path> paths = new ArrayList<>();
             Set<Path> seen = new HashSet<>();
             long totalBytes = 0;
             for (ArtifactResult result : resolved) {
                 checkInterrupted();
-                if (!"jar".equals(result.getArtifact().getExtension())) continue;
-                Path path = result.getArtifact().getFile().toPath().toRealPath();
+                Artifact artifact = result.getArtifact();
+                if (!"jar".equals(artifact.getExtension())) continue;
+                if (!includeApi && PAPER_API.equals(artifact.getGroupId() + ":" + artifact.getArtifactId())) continue;
+                Path path = artifact.getFile().toPath().toRealPath();
                 if (!seen.add(path)) continue;
                 long bytes = Files.size(path);
                 totalBytes += bytes;
@@ -99,7 +123,7 @@ public final class MavenArtifactResolver {
                 }
                 paths.add(path);
             }
-            if (paths.isEmpty()) throw new IOException("Paper API resolution returned no JAR files.");
+            if (includeApi && paths.isEmpty()) throw new IOException("Paper API resolution returned no JAR files.");
             return List.copyOf(paths);
         } catch (DependencyResolutionException exception) {
             checkInterrupted();
@@ -108,6 +132,25 @@ public final class MavenArtifactResolver {
         } finally {
             system.shutdown();
         }
+    }
+
+    private static DefaultRepositorySystemSession newSession(RepositorySystem system, Path cacheDirectory) {
+        DefaultRepositorySystemSession session = MavenRepositorySystemUtils.newSession();
+        session.setLocalRepositoryManager(system.newLocalRepositoryManager(session,
+            new LocalRepository(cacheDirectory.toFile())));
+        session.setIgnoreArtifactDescriptorRepositories(true);
+        session.setChecksumPolicy(RepositoryPolicy.CHECKSUM_POLICY_FAIL);
+        session.setUpdatePolicy(RepositoryPolicy.UPDATE_POLICY_DAILY);
+        session.setConfigProperty("aether.connector.connectTimeout", 15_000);
+        session.setConfigProperty("aether.connector.requestTimeout", 30_000);
+        session.setConfigProperty("aether.connector.http.retryHandler.count", 0);
+        // Keep transfers on the worker: cancellation and transfer limits have one owner.
+        session.setConfigProperty("aether.connector.basic.threads", 1);
+        session.setConfigProperty("aether.metadataResolver.threads", 1);
+        session.setConfigProperty("aether.dependencyCollector.impl", "df");
+        session.setTransferListener(new TransferLimits(Thread.currentThread()));
+        session.setReadOnly();
+        return session;
     }
 
     @SuppressWarnings("deprecation")

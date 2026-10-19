@@ -29,7 +29,8 @@ public final class EngineCommands implements TabExecutor, AutoCloseable {
                     if (!(sender instanceof ConsoleCommandSender)) { sender.sendMessage("Open WebIDE from the server console."); return true; }
                     if (web == null) {
                         var artifacts = IntelligenceArtifacts.paper(plugin.getDataFolder().toPath().resolve("webide-api-cache"),
-                            plugin.getServer().getBukkitVersion(), plugin.getServer().getMinecraftVersion(), plugin.getServer().getVersion());
+                            plugin.getServer().getName(), plugin.getServer().getBukkitVersion(), plugin.getServer().getMinecraftVersion(),
+                            plugin.getServer().getVersion(), bukkitApiLocation());
                         try {
                             web = new WebIdeServer(store, manager::submit, manager::loadedIds, plugin.getConfig().getInt("webPort", 17777), artifacts);
                         } catch (Exception error) { artifacts.close(); throw error; }
@@ -52,6 +53,14 @@ public final class EngineCommands implements TabExecutor, AutoCloseable {
             }
         } catch (Exception e) { sender.sendMessage("Failed: " + e.getMessage()); }
         return true;
+    }
+    /** Only converts the loader's URL; the file is inspected later on the API worker. */
+    private static java.nio.file.Path bukkitApiLocation() {
+        var domain = org.bukkit.Bukkit.class.getProtectionDomain();
+        var source = domain == null ? null : domain.getCodeSource();
+        if (source == null || source.getLocation() == null || !source.getLocation().getProtocol().equals("file")) return null;
+        try { return java.nio.file.Path.of(source.getLocation().toURI()); }
+        catch (java.net.URISyntaxException | IllegalArgumentException ignored) { return null; }
     }
     private void help(CommandSender sender) { sender.sendMessage("/ce list | build/load/reload/unload <module> | webide | webstop"); }
     @Override public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
