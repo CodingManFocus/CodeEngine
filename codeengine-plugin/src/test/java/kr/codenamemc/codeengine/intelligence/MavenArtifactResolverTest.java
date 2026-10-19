@@ -53,6 +53,26 @@ class MavenArtifactResolverTest {
         assertEquals(result, resolver.resolve(VERSION, temporary.resolve("cache")));
     }
 
+    @Test void listsPublishedVersionsAndResolvesDependenciesWithoutTheApi() throws Exception {
+        Path repository = temporary.resolve("repository");
+        artifact(repository, "fixture", "leaf", "2", "jar", "");
+        artifact(repository, "io.papermc.paper", "paper-api", VERSION, "jar", """
+            <dependencies><dependency><groupId>fixture</groupId><artifactId>leaf</artifactId><version>2</version></dependency></dependencies>
+            """);
+        Path metadata = repository.resolve("io/papermc/paper/paper-api/maven-metadata.xml");
+        Files.writeString(metadata, """
+            <metadata><groupId>io.papermc.paper</groupId><artifactId>paper-api</artifactId>
+              <versioning><versions><version>26.1.build.3-stable</version><version>%s</version></versions>
+              <lastUpdated>20260929130000</lastUpdated></versioning>
+            </metadata>
+            """.formatted(VERSION));
+        checksum(metadata);
+        MavenArtifactResolver resolver = resolver(repository);
+        assertTrue(resolver.versions(temporary.resolve("cache")).containsAll(List.of("26.1.build.3-stable", VERSION)));
+        assertEquals(List.of("leaf-2.jar"), resolver.resolveDependencies(VERSION, temporary.resolve("cache")).stream()
+            .map(path -> path.getFileName().toString()).toList());
+    }
+
     @Test void dependencyPomCannotAddAnotherRepository() throws Exception {
         Path allowed = temporary.resolve("allowed");
         Path untrusted = temporary.resolve("untrusted");

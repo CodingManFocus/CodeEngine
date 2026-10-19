@@ -146,7 +146,7 @@ async function initialize(authorization: string, retry = false) {
       phase: "ready",
       message: `${classes.size.toLocaleString()}개 타입 준비됨`,
       version: manifest.version,
-      approximate: manifest.resolution === "compatible-snapshot",
+      note: resolutionNote(manifest.resolution),
     });
     await pruneCache(manifest.artifacts.map((item) => item.sha256));
   } catch (error) {
@@ -154,6 +154,18 @@ async function initialize(authorization: string, retry = false) {
       phase: "error",
       message: error instanceof Error ? error.message : String(error),
     });
+  }
+}
+function resolutionNote(resolution: Manifest["resolution"]) {
+  switch (resolution) {
+    case "compatible-snapshot":
+      return "동일 버전 SNAPSHOT (서버 빌드와 다를 수 있음)";
+    case "fork-runtime":
+      return "서버 API JAR + 동일 MC 버전 Paper 의존성";
+    case "compatible-fork":
+      return "동일 MC 버전 Paper API (포크 전용 API 제외)";
+    default:
+      return undefined;
   }
 }
 scope.onmessage = ({ data }) => {

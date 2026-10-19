@@ -21,7 +21,8 @@ API 워커는 작업자 1개와 제한된 큐를 사용합니다. 메인 스레�
 
 - 공식 Paper의 최신 버전은 공개된 `<mc>.build.<build>-<channel>` 좌표를 사용합니다. Minecraft 버전이 다르면 거부합니다.
 - 구버전은 `<mc>-R0.1-SNAPSHOT`을 사용합니다. 같은 Minecraft 버전의 API이며 실행 Paper 빌드와 정확히 일치한다는 의미는 아닙니다. Studio에 이 차이를 표시합니다.
-- Maven 좌표를 식별할 수 없는 개발 빌드나 포크는 오류를 표시합니다. 임의의 최신 버전으로 조용히 대체하지 않습니다.
+- Purpur·Folia 등 Paper 포크(`Server#getName()`이 `Paper`가 아님)는 Paper와 같은 `<mc>.build.<build>-<channel>` 형식을 쓰지만 빌드 번호가 포크 자체의 번호이므로 Paper 좌표로 해석하지 않습니다. 서버가 `Bukkit` 클래스를 로드한 API JAR(예: `libraries/.../purpur-api-*.jar`)를 그대로 전달하고, 그 의존성(Adventure 등)은 같은 Minecraft 버전에 공개된 가장 높은 Paper 빌드(구버전은 같은 `<mc>-R0.1-SNAPSHOT`)에서 가져옵니다(`fork-runtime`). 해당 JAR가 서버 내부 클래스를 포함한 셰이드 JAR이거나 파일이 아니면 같은 Minecraft 버전의 Paper API로 대신하고 포크 전용 API가 빠졌음을 Studio에 표시합니다(`compatible-fork`). 같은 Minecraft 버전의 Paper API가 없으면 오류를 표시합니다.
+- Paper에서 Maven 좌표를 식별할 수 없는 개발 빌드는 오류를 표시합니다. 임의의 최신 버전이나 다른 Minecraft 버전으로 조용히 대체하지 않습니다.
 - Code Engine 컴파일 대상인 Java 21에 맞는 표준 타입을 제공합니다. JDK 21에서는 공개 패키지의 런타임 클래스 자료를 복사하며, 더 최신 JDK에서는 `ct.sym`의 Java 21 API 시그니처 자료를 사용합니다.
 - 서버 캐시는 Paper·서버·JDK·Code Engine API·컴파일 대상의 식별자로 구분하고, SHA-256으로 파일을 다시 검사합니다. 캐시가 온전하면 네트워크 없이 준비할 수 있습니다. 손상된 자료는 재확보합니다.
 - 브라우저 IndexedDB는 API JAR의 콘텐츠 해시를 키로 사용합니다. 소스와 토큰을 저장하지 않으며, 저장소를 사용할 수 없어도 세션 안에서는 동작합니다. 새 자료 준비 완료 후 사용하지 않는 JAR 캐시를 정리합니다.

@@ -12,7 +12,7 @@ export interface Manifest {
   message: string;
   version?: string;
   requestedVersion?: string;
-  resolution?: "exact" | "compatible-snapshot";
+  resolution?: "exact" | "compatible-snapshot" | "fork-runtime" | "compatible-fork";
   javaVersion?: number;
   artifacts: Artifact[];
 }
@@ -20,7 +20,8 @@ export interface IntelligenceStatus {
   phase: "idle" | "loading" | "ready" | "error";
   message: string;
   version?: string;
-  approximate?: boolean;
+  /** Shown next to the version when the API is not the exact published Paper build. */
+  note?: string;
 }
 export type QueryKind = "complete" | "hover" | "signature" | "diagnostics";
 export type QueryResult<K extends QueryKind> = ReturnType<

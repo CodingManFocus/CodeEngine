@@ -627,8 +627,7 @@ export default function App() {
               {intelligenceStatus.phase === "ready"
                 ? `브라우저 코드 분석 · ${intelligenceStatus.version ?? "API 준비됨"}`
                 : intelligenceStatus.message}
-              {intelligenceStatus.approximate &&
-                " · 동일 버전 SNAPSHOT (서버 빌드와 다를 수 있음)"}
+              {intelligenceStatus.note && ` · ${intelligenceStatus.note}`}
             </span>
             {intelligenceStatus.phase === "error" && connected && (
               <button

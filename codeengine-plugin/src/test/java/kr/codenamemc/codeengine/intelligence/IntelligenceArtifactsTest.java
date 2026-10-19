@@ -144,6 +144,56 @@ class IntelligenceArtifactsTest {
         }
     }
 
+    @Test void forkUsesItsLoadedApiJarAndPaperDependenciesOfTheSameMinecraftVersion() throws Exception {
+        Path repository = directory.resolve("repository");
+        Files.createDirectories(repository.resolve("io/papermc/paper/paper-api"));
+        mavenArtifact(repository, "fixture", "adventure", "1", "");
+        mavenArtifact(repository, "io.papermc.paper", "paper-api", "26.3.build.40-stable",
+            "<dependencies><dependency><groupId>fixture</groupId><artifactId>adventure</artifactId><version>1</version></dependency></dependencies>");
+        Path metadata = repository.resolve("io/papermc/paper/paper-api/maven-metadata.xml");
+        Files.writeString(metadata, "<metadata><groupId>io.papermc.paper</groupId><artifactId>paper-api</artifactId><versioning><versions>"
+            + "<version>26.3.build.40-stable</version><version>26.2.build.900-stable</version></versions></versioning></metadata>");
+        sha1(metadata);
+        var resolver = new MavenArtifactResolver(List.of(new org.eclipse.aether.repository.RemoteRepository.Builder(
+            "fixture", "default", repository.toUri().toString()).build()));
+
+        Path purpurApi = jar(directory.resolve("purpur-api-26.3.jar"), "org/bukkit/Bukkit.class", "org/purpurmc/purpur/PurpurConfig.class");
+        var prepared = IntelligenceArtifacts.paperApi(resolver, directory.resolve("maven"), "Purpur",
+            "26.3.build.2652-stable", "26.3", "26.3-2652-abcdef (MC: 26.3)", purpurApi);
+        assertEquals("fork-runtime", prepared.resolution());
+        assertEquals("Purpur 26.3.build.2652-stable", prepared.version());
+        assertEquals(List.of("purpur-api-26.3.jar", "adventure-1.jar"),
+            prepared.jars().stream().map(path -> path.getFileName().toString()).toList());
+
+        // A shaded server JAR is not an API library: fall back to Paper's API, and say so.
+        Path shaded = jar(directory.resolve("server.jar"), "org/bukkit/Bukkit.class", "net/minecraft/server/MinecraftServer.class");
+        var fallback = IntelligenceArtifacts.paperApi(resolver, directory.resolve("maven"), "Purpur",
+            "26.3.build.2652-stable", "26.3", "", shaded);
+        assertEquals("compatible-fork", fallback.resolution());
+        assertEquals("26.3.build.40-stable", fallback.version());
+        assertEquals(List.of("adventure-1.jar", "paper-api-26.3.build.40-stable.jar"),
+            fallback.jars().stream().map(path -> path.getFileName().toString()).sorted().toList());
+    }
+
+    private static Path jar(Path target, String... entries) throws IOException {
+        try (var output = new java.util.jar.JarOutputStream(Files.newOutputStream(target))) {
+            for (String entry : entries) { output.putNextEntry(new java.util.jar.JarEntry(entry)); output.closeEntry(); }
+        }
+        return target;
+    }
+    private static void mavenArtifact(Path repository, String group, String name, String version, String body) throws Exception {
+        Path folder = Files.createDirectories(repository.resolve(group.replace('.', '/') + "/" + name + "/" + version));
+        Path pom = Files.writeString(folder.resolve(name + "-" + version + ".pom"), "<project xmlns=\"http://maven.apache.org/POM/4.0.0\">"
+            + "<modelVersion>4.0.0</modelVersion><groupId>" + group + "</groupId><artifactId>" + name + "</artifactId><version>"
+            + version + "</version>" + body + "</project>");
+        sha1(pom);
+        sha1(jar(folder.resolve(name + "-" + version + ".jar"), name + ".txt"));
+    }
+    private static void sha1(Path file) throws Exception {
+        String digest = java.util.HexFormat.of().formatHex(java.security.MessageDigest.getInstance("SHA-1").digest(Files.readAllBytes(file)));
+        Files.writeString(file.resolveSibling(file.getFileName() + ".sha1"), digest);
+    }
+
     private static IntelligenceArtifacts.Prepared prepared(Path source) {
         return new IntelligenceArtifacts.Prepared("1.21.11-R0.1-SNAPSHOT", "compatible-snapshot", "fixture", List.of(source));
     }

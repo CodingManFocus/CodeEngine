@@ -33,6 +33,22 @@ class PaperApiVersionTest {
             () -> new PaperApiVersion("[26.2.build,)", "exact", "invalid"));
     }
 
+    @Test void forkBuildNumberIsNeverTreatedAsAPaperBuild() {
+        // Purpur 26.3 build 2652 reports Paper's format with its own build number.
+        var published = java.util.List.of("26.2.build.900-stable", "26.3.build.11-beta", "26.3.build.40-stable",
+            "26.3.build.9-rc", "1.21.11-R0.1-SNAPSHOT");
+        PaperApiVersion base = PaperApiVersion.forFork("26.3.build.2652-stable", "26.3", published);
+        assertEquals("26.3.build.40-stable", base.version());
+        assertEquals("fork", base.compatibility());
+        assertThrows(IllegalArgumentException.class,
+            () -> PaperApiVersion.forFork("26.4.build.1-stable", "26.4", published));
+        assertEquals("1.21.11-R0.1-SNAPSHOT", PaperApiVersion.forFork("1.21.11-R0.1-SNAPSHOT", "1.21.11", java.util.List.of()).version());
+        assertThrows(IllegalArgumentException.class,
+            () -> PaperApiVersion.forFork("1.21.10-R0.1-SNAPSHOT", "1.21.11", published));
+        assertTrue(PaperApiVersion.isPaper("Paper"));
+        assertFalse(PaperApiVersion.isPaper("Purpur"));
+    }
+
     @Test void explicitCoordinateInServerDescriptionCanBeUsedWithoutInventingABuild() {
         assertEquals("26.1.2.build.23-alpha",
             PaperApiVersion.from("unknown", "26.1.2", "Paper 26.1.2.build.23-alpha (MC: 26.1.2)").version());

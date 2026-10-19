@@ -55,15 +55,43 @@ public final class IntelligenceArtifacts implements AutoCloseable {
         }, new ThreadPoolExecutor.AbortPolicy());
     }
 
-    public static IntelligenceArtifacts paper(Path cache, String bukkitVersion, String minecraftVersion, String serverVersion) {
+    /** {@code serverApi} is where Bukkit was loaded from; it is only inspected on the worker. */
+    public static IntelligenceArtifacts paper(Path cache, String serverName, String bukkitVersion, String minecraftVersion,
+                                              String serverVersion, Path serverApi) {
         // Version parsing is intentionally deferred too: unsupported versions become an editor status.
-        return new IntelligenceArtifacts(cache, bukkitVersion, bukkitVersion + "|" + minecraftVersion + "|" + serverVersion, root -> {
-            PaperApiVersion target = PaperApiVersion.from(bukkitVersion, minecraftVersion, serverVersion);
-            List<Path> jars = new ArrayList<>(new MavenArtifactResolver().resolve(target.version(), root.resolve("maven")));
+        String identity = serverName + "|" + bukkitVersion + "|" + minecraftVersion + "|" + serverVersion + "|" + serverApi;
+        return new IntelligenceArtifacts(cache, bukkitVersion, identity, root -> {
+            Prepared api = paperApi(new MavenArtifactResolver(), root.resolve("maven"), serverName, bukkitVersion,
+                minecraftVersion, serverVersion, serverApi);
+            List<Path> jars = new ArrayList<>(api.jars());
             jars.add(StandardApiArtifacts.codeEngine(root));
             jars.add(StandardApiArtifacts.javaRuntime(root));
-            return new Prepared(target.version(), target.compatibility(), target.detail(), jars);
+            return new Prepared(api.version(), api.resolution(), api.message(), jars);
         });
+    }
+
+    static Prepared paperApi(MavenArtifactResolver resolver, Path maven, String serverName, String bukkitVersion,
+                             String minecraftVersion, String serverVersion, Path serverApi) throws IOException {
+        if (PaperApiVersion.isPaper(serverName)) {
+            PaperApiVersion target = PaperApiVersion.from(bukkitVersion, minecraftVersion, serverVersion);
+            return new Prepared(target.version(), target.compatibility(), target.detail(), resolver.resolve(target.version(), maven));
+        }
+        // A fork reuses Paper's version format with its own build numbers, so its coordinate is not
+        // a Paper artifact. Its loaded API JAR is exact; Paper of the same Minecraft version supplies
+        // the API's dependency set (Adventure, Guava, ...), which forks inherit.
+        PaperApiVersion base = PaperApiVersion.forFork(bukkitVersion, minecraftVersion,
+            PaperApiVersion.isLegacy(bukkitVersion) ? List.of() : resolver.versions(maven));
+        Path local = ServerApiJar.standalone(serverApi);
+        if (local == null) {
+            return new Prepared(base.version(), "compatible-fork", serverName + " API JAR is not available as a standalone"
+                + " library; using Paper API " + base.version() + " without fork-specific API.", resolver.resolve(base.version(), maven));
+        }
+        List<Path> jars = new ArrayList<>();
+        // The fork's API comes first so its classes win over any same-named class.
+        jars.add(local);
+        jars.addAll(resolver.resolveDependencies(base.version(), maven));
+        return new Prepared(serverName + " " + bukkitVersion, "fork-runtime", "The API is the running " + serverName
+            + " server's own JAR; its dependencies come from Paper API " + base.version() + ".", jars);
     }
 
     /** Nonblocking and safe even if accidentally called on the server tick thread. */

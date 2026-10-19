@@ -1,5 +1,6 @@
 package kr.codenamemc.codeengine.intelligence;
 
+import java.util.Collection;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,12 +21,18 @@ public record PaperApiVersion(String version, String compatibility, String detai
         }
     }
 
+    /** Forks (Purpur, Folia, ...) keep Paper's version format but number builds independently. */
+    public static boolean isPaper(String serverName) {
+        return "Paper".equalsIgnoreCase(serverName);
+    }
+
+    public static boolean isLegacy(String bukkitVersion) {
+        return bukkitVersion != null && LEGACY_VERSION.matcher(bukkitVersion).matches();
+    }
+
     public static PaperApiVersion from(String bukkitVersion, String minecraftVersion, String serverVersion) {
         Objects.requireNonNull(bukkitVersion, "bukkitVersion");
-        Objects.requireNonNull(minecraftVersion, "minecraftVersion");
-        if (!MINECRAFT_VERSION.matcher(minecraftVersion).matches()) {
-            throw new IllegalArgumentException("Unsupported Minecraft version: " + minecraftVersion);
-        }
+        requireMinecraftVersion(minecraftVersion);
         Matcher build = BUILD_VERSION.matcher(bukkitVersion);
         if (build.matches() && build.group(1).equals(minecraftVersion)) {
             return exact(bukkitVersion);
@@ -49,7 +56,46 @@ public record PaperApiVersion(String version, String compatibility, String detai
             + bukkitVersion + " for Minecraft " + minecraftVersion + ".");
     }
 
+    /**
+     * A fork's build number is not a Paper build, so only its Minecraft version selects the Paper
+     * base: the same legacy snapshot, or the newest published Paper build of that Minecraft version.
+     */
+    public static PaperApiVersion forFork(String bukkitVersion, String minecraftVersion, Collection<String> published) {
+        Objects.requireNonNull(bukkitVersion, "bukkitVersion");
+        Objects.requireNonNull(published, "published");
+        requireMinecraftVersion(minecraftVersion);
+        Matcher legacy = LEGACY_VERSION.matcher(bukkitVersion);
+        if (legacy.matches()) {
+            if (legacy.group(1).equals(minecraftVersion)) return fork(bukkitVersion, minecraftVersion);
+        } else {
+            String newest = null;
+            long newestBuild = -1;
+            for (String candidate : published) {
+                Matcher build = BUILD_VERSION.matcher(candidate);
+                if (!build.matches() || !build.group(1).equals(minecraftVersion)) continue;
+                long number;
+                try { number = Long.parseLong(build.group(2)); } catch (NumberFormatException ignored) { continue; }
+                if (number > newestBuild) { newestBuild = number; newest = candidate; }
+            }
+            if (newest != null) return fork(newest, minecraftVersion);
+        }
+        throw new IllegalArgumentException("No published Paper API for Minecraft " + minecraftVersion
+            + " is available as the base of this Paper fork (Bukkit version " + bukkitVersion + ").");
+    }
+
+    private static void requireMinecraftVersion(String minecraftVersion) {
+        Objects.requireNonNull(minecraftVersion, "minecraftVersion");
+        if (!MINECRAFT_VERSION.matcher(minecraftVersion).matches()) {
+            throw new IllegalArgumentException("Unsupported Minecraft version: " + minecraftVersion);
+        }
+    }
+
     private static PaperApiVersion exact(String version) {
         return new PaperApiVersion(version, "exact", "The API uses the server's published Paper build coordinate.");
+    }
+
+    private static PaperApiVersion fork(String version, String minecraftVersion) {
+        return new PaperApiVersion(version, "fork", "Paper API " + version + " is the published base for Minecraft "
+            + minecraftVersion + "; it is not the fork's own build.");
     }
 }
